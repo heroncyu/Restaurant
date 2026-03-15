@@ -18,8 +18,8 @@ public class InfoDisplay extends JPanel {
   private ReputationLabel reputationLabel = new ReputationLabel();
   private TempsLabel chrono;
 
-  private InfoBouton pauseButton = new InfoBouton("⏸");
-  private InfoBouton accelererButton = new InfoBouton("⏩ x1");
+  private InfoBouton pauseButton = new InfoBouton("Pause");
+  private InfoBouton accelererButton = new InfoBouton(">> x1");
 
   public InfoDisplay(Simulation simulation) {
     this.simulation = simulation;
@@ -57,9 +57,9 @@ public class InfoDisplay extends JPanel {
     public void actionPerformed(ActionEvent e) {
       simulation.setStop(!simulation.isStop());
       if (simulation.isStop()) {
-        pauseButton.setText("▶");
+        pauseButton.setText("Go");
       } else {
-        pauseButton.setText("⏸");
+        pauseButton.setText("Pause");
       }
     }
   }
@@ -69,10 +69,10 @@ public class InfoDisplay extends JPanel {
     public void actionPerformed(ActionEvent e) {
       if (simulation.getSpeedMultiplier() == 1) {
         simulation.setSpeedMultiplier(2);
-        accelererButton.setText("⏩ x2");
+        accelererButton.setText(">> x2");
       } else {
         simulation.setSpeedMultiplier(1);
-        accelererButton.setText("⏩ x1");
+        accelererButton.setText(">> x1");
       }
     }
   }
