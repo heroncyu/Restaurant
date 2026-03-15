@@ -50,6 +50,8 @@ public class Simulation {
 
     private boolean stop = false;
     private boolean constructionModeActive = false;
+    private boolean alerteStock = false;
+
 
     private Zone zoneBlockSelec = null;
 
@@ -75,10 +77,10 @@ public class Simulation {
 
         chronometre = GameBuilder.buildChronometer();
 
-        comptoirS = map.getBlock(7,6);
-        comptoirC = map.getBlock(7,5);
-        entree = map.getBlock(6,10);
-        four = map.getBlock(6, 3);
+        comptoirS = map.getBlock(22,10);
+        comptoirC = map.getBlock(22,9);
+        entree = map.getBlock(19,20);
+        four = map.getBlock(17, 6);
 
 
         for(Meuble meuble : meubles) {
@@ -97,16 +99,18 @@ public class Simulation {
 
     public void nextRound() {
         if (!constructionModeActive && !stop) {
+            alerteStock = !stockageRepository.auMoinsUneRecetteDisponible(recettes);
+
             generateClient();
             satisfactionUpdate();
             moveClients();
 
-            assignerServeurPrendre();
             moveServeurs();
-
-            assignerCuisinier();
             moveCuisiniers();
             updateCuisson();
+
+            assignerServeurPrendre();
+            assignerCuisinier();
             verifierCommandesPretes();
 
             chronometre.increment();
@@ -187,7 +191,9 @@ public class Simulation {
     }
 
     private void generateClient() {
-        if (manager.aDesTablesVides()) {
+        ArrayList<Recette> disponibles = stockageRepository.recettesDisponibles(recettes);
+
+        if (manager.aDesTablesVides() && !disponibles.isEmpty()) {
 
             int reputation = reputationRepository.getReputation();
             if (reputation < 25) {
@@ -382,6 +388,7 @@ public class Simulation {
                 int duree = commande.getPlat().getRecette().getTempsPreparation();
 
                 tempsCuisson.put(cuisinier, duree);
+                commandesCuisson.add(commande);
 
                 manager.changerEtatCuisinier(cuisinier, "CUISINE");
                 manager.donnerDestinationCuisinier(cuisinier, null);
@@ -415,6 +422,7 @@ public class Simulation {
             int qualite = SimulationUtility.calculerQualite(cuisinier);
             commande.getPlat().setQualite(qualite);
 
+            commandesCuisson.remove(commande);
             commandesPretes.add(commande);
             manager.libererCuisinier(cuisinier);
 
@@ -503,6 +511,27 @@ public class Simulation {
         if (chronometre.getHour().getValue() == GameConfiguration.END_OF_DAY_HOUR && chronometre.getMinute().getValue() == 0) {
             stop = true;
             chronometre.init();
+
+            int loyer = GameConfiguration.LOYER;
+            argentRepository.retirerMonnaie(loyer);
+            dayStatistics.addCoutLoyer(loyer);
+
+            for(Serveur serveur : manager.getServeurs()){
+                int salaire = serveur.getSalaireBase();
+                argentRepository.retirerMonnaie(salaire);
+                dayStatistics.addCoutSalaires(salaire);
+            }
+
+            for(Cuisinier cuisinier : manager.getCuisiniers()){
+                int salaire = cuisinier.getSalaireBase();
+                argentRepository.retirerMonnaie(salaire);
+                dayStatistics.addCoutSalaires(salaire);
+            }
+
+            dayStatistics.calculRevenus();
+            dayStatistics.calculDepenses();
+            dayStatistics.calculBenefices();
+
             return true;
         }
         return false;
@@ -547,6 +576,10 @@ public class Simulation {
         }
     }
 
+    public boolean isAlerteStock() {
+        return alerteStock;
+    }
+
     public boolean isStop() {
         return stop;
     }
@@ -568,18 +601,18 @@ public class Simulation {
     }
 
     public ArrayList<Commande> getCommandesEnAttente() {
-        return commandesEnAttente;
+        return new ArrayList<>(commandesEnAttente);
     }
 
     public ArrayList<Commande> getCommandesACuisiner() {
-        return commandesACuisiner;
+        return new ArrayList<>(commandesACuisiner);
     }
 
     public ArrayList<Commande> getCommandesCuisson() {
-        return commandesCuisson;
+        return new ArrayList<>(commandesCuisson);
     }
 
     public ArrayList<Commande> getCommandesPretes() {
-        return commandesPretes;
+        return new ArrayList<>(commandesPretes);
     }
 }

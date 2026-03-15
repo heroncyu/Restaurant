@@ -62,7 +62,7 @@ public class DayStatistics {
     }
     
     public int calculDepenses() {
-        this.depensesDuJour += this.coutLoyerDuJour + this.coutSalairesDuJour + this.coutConstructionDuJour + this.achatDujour;
+        this.depensesDuJour = this.coutLoyerDuJour + this.coutSalairesDuJour + this.coutConstructionDuJour + this.achatDujour;
         return this.depensesDuJour;
     }
 

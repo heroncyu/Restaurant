@@ -27,39 +27,27 @@ public class GameBuilder {
         HashMap<String,Zone> zones = new HashMap<>();
 
         Zone cuisine = new Zone("CUISINE");
-        cuisine.ajouterBlock(map.getBlock(5, 3));
-        cuisine.ajouterBlock(map.getBlock(5, 4));
-        cuisine.ajouterBlock(map.getBlock(5, 5));
-        cuisine.ajouterBlock(map.getBlock(6, 3));
-        cuisine.ajouterBlock(map.getBlock(6, 4));
-        cuisine.ajouterBlock(map.getBlock(6, 5));
-        cuisine.ajouterBlock(map.getBlock(7, 3));
-        cuisine.ajouterBlock(map.getBlock(7, 4));
-        cuisine.ajouterBlock(map.getBlock(7, 5));
+        for(int line = 14; line <= 23; line++){
+            for(int col = 4; col <= 9; col++){
+                cuisine.ajouterBlock(map.getBlock(line,col));
+            }
+        }
         zones.put("CUISINE",cuisine);
 
         Zone salle = new Zone("SALLE");
-        salle.ajouterBlock(map.getBlock(5, 6));
-        salle.ajouterBlock(map.getBlock(5, 7));
-        salle.ajouterBlock(map.getBlock(5, 8));
-        salle.ajouterBlock(map.getBlock(5, 9));
-        salle.ajouterBlock(map.getBlock(6, 6));
-        salle.ajouterBlock(map.getBlock(6, 7));
-        salle.ajouterBlock(map.getBlock(6, 8));
-        salle.ajouterBlock(map.getBlock(6, 9));
-        salle.ajouterBlock(map.getBlock(7, 6));
-        salle.ajouterBlock(map.getBlock(7, 7));
-        salle.ajouterBlock(map.getBlock(7, 8));
-        salle.ajouterBlock(map.getBlock(7, 9));
+        for(int line = 14; line <= 23; line++){
+            for(int col = 10; col <= 19; col++){
+                salle.ajouterBlock(map.getBlock(line,col));
+            }
+        }
         zones.put("SALLE",salle);
 
         Zone reserve = new Zone("RESERVE");
-        reserve.ajouterBlock(map.getBlock(5, 1));
-        reserve.ajouterBlock(map.getBlock(5, 2));
-        reserve.ajouterBlock(map.getBlock(6, 1));
-        reserve.ajouterBlock(map.getBlock(6, 2));
-        reserve.ajouterBlock(map.getBlock(7, 1));
-        reserve.ajouterBlock(map.getBlock(7, 2));
+        for(int line = 14; line <= 23; line++){
+            for(int col = 0; col <= 3; col++){
+                reserve.ajouterBlock(map.getBlock(line,col));
+            }
+        }
         zones.put("RESERVE",reserve);
 
         Zone constructible = new Zone("CONSTRUCTIBLE");
@@ -72,10 +60,14 @@ public class GameBuilder {
         ArrayList<Meuble> meubles = new ArrayList<>();
 
 
-        meubles.add(new Meuble(map.getBlock(5, 3), 200,"FOUR"));
-        meubles.add(new Meuble(map.getBlock(6, 8), 200,"TABLE"));
-        meubles.add(new Meuble(map.getBlock(7, 9), 200,"PLANTE"));
-        meubles.add(new Meuble(map.getBlock(5, 9), 200,"PLANTE"));
+        meubles.add(new Meuble(map.getBlock(17, 6), 200,"FOUR"));
+
+        meubles.add(new Meuble(map.getBlock(15, 12), 200, "TABLE"));
+        meubles.add(new Meuble(map.getBlock(15, 15), 200, "TABLE"));
+
+        meubles.add(new Meuble(map.getBlock(23, 10), 200, "PLANTE"));
+        meubles.add(new Meuble(map.getBlock(23, 19), 200, "PLANTE"));
+        meubles.add(new Meuble(map.getBlock(14, 19), 200, "PLANTE"));
 
 
         return meubles;
@@ -84,7 +76,7 @@ public class GameBuilder {
     public static ArrayList<Cuisinier> buildCuisiniers(Map map){
         ArrayList<Cuisinier> cuisiniers = new ArrayList<>();
 
-        cuisiniers.add(new Cuisinier(map.getBlock(6,3),1,150,"Jean"));
+        cuisiniers.add(new Cuisinier(map.getBlock(22,5),1,150,"Jean"));
 
         return cuisiniers;
     }
@@ -92,7 +84,7 @@ public class GameBuilder {
     public static ArrayList<Serveur> buildServeurs(Map map) {
         ArrayList<Serveur> serveurs = new ArrayList<>();
 
-        serveurs.add(new Serveur(map.getBlock(7,6),1,100,"Marie"));
+        serveurs.add(new Serveur(map.getBlock(22,10),1,100,"Marie"));
 
         return serveurs;
     }
