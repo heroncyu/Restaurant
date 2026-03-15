@@ -9,6 +9,7 @@ import engine.mobile.Meuble;
 import engine.mobile.Serveur;
 import gui.info.JourLabel;
 import gui.info.MonnaieLabel;
+import gui.info.ReputationLabel;
 import gui.info.TempsLabel;
 
 import java.awt.*;
@@ -102,10 +103,10 @@ public class PaintStrategy {
         int y = position.getLine() * blockSize;
 
         graphics.setColor(Color.BLUE);
-        graphics.fillOval(x + (blockSize - 60) / 2, y + (blockSize - 60) / 2, blockSize - 20, blockSize - 20);
+        graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
 
         graphics.setFont(new Font("Dialog", Font.PLAIN, 18));
-        graphics.drawString((String.valueOf(client.getSatisfaction())), x + 10, y + 10);
+        graphics.drawString((String.valueOf(client.getSatisfaction())), x + 5, y + 5);
 
     }
 
@@ -117,10 +118,10 @@ public class PaintStrategy {
         int x = position.getColumn() * blockSize;
 
         graphics.setColor(Color.YELLOW);
-        graphics.fillOval(x + (blockSize - 60) / 2, y + (blockSize - 60) / 2, blockSize - 20, blockSize - 20);
+        graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
         graphics.setColor(new Color(240, 231, 230));
         graphics.setFont(new Font("Dialog", Font.PLAIN, 18));
-        graphics.drawString(cuisinier.getName(), x + 10, y + 10);
+        graphics.drawString(cuisinier.getName(), x + 5, y + 5);
     }
 
     public void paint(Serveur serveur, Graphics graphics) {
@@ -131,10 +132,10 @@ public class PaintStrategy {
         int x = position.getColumn() * blockSize;
 
         graphics.setColor(Color.RED);
-        graphics.fillOval(x + (blockSize - 60) / 2, y + (blockSize - 60) / 2, blockSize - 20, blockSize - 20);
+        graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
         graphics.setColor(new Color(240, 231, 230));
         graphics.setFont(new Font("Dialog", Font.PLAIN, 18));
-        graphics.drawString(serveur.getName(), x + 10, y + 10);
+        graphics.drawString(serveur.getName(), x + 5, y + 5);
     }
 
     public void paint(JLabel label, Graphics graphics) {
@@ -174,6 +175,15 @@ public class PaintStrategy {
             g2d.fillRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
 
             g2d.setColor(Color.WHITE);
+            g2d.drawRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
+            
+        } else if (label instanceof ReputationLabel) {
+            Graphics2D g2d = (Graphics2D) graphics;
+
+            g2d.setColor(Color.CYAN);
+            g2d.fillRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
+
+            g2d.setColor(Color.BLACK);
             g2d.drawRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
         }
 

@@ -15,6 +15,7 @@ public class InfoDisplay extends JPanel {
 
   private MonnaieLabel goldLabel = new MonnaieLabel(font);
   private JourLabel jourLabel = new JourLabel(font);
+  private ReputationLabel reputationLabel = new ReputationLabel();
   private TempsLabel chrono;
 
   private InfoBouton pauseButton = new InfoBouton("⏸");
@@ -30,6 +31,7 @@ public class InfoDisplay extends JPanel {
     JPanel panelGauche = new JPanel(new FlowLayout(FlowLayout.LEFT));
     panelGauche.setOpaque(false);
     panelGauche.add(goldLabel);
+    panelGauche.add(reputationLabel);
 
     JPanel panelDroit = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     panelDroit.setOpaque(false);

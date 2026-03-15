@@ -26,9 +26,9 @@ public class OrderDisplay extends JPanel {
 
     public OrderDisplay(Simulation simulation) {
         this.simulation = simulation;
-        setBackground(Color.gray);
+        setBackground(Color.WHITE);
 
-        setLayout(new GridLayout(1, 4));
+        setLayout(new GridLayout(1, 4, 1, 0));
 
         initPanels();
         updateAll();
@@ -45,6 +45,11 @@ public class OrderDisplay extends JPanel {
         panelCommandesCuisson.setLayout(new BoxLayout(panelCommandesCuisson, BoxLayout.Y_AXIS));
         panelCommandesPretes.setLayout(new BoxLayout(panelCommandesPretes, BoxLayout.Y_AXIS));
 
+        panelCommandesEnAttente.setBackground(Color.gray);
+        panelCommandesACuisiner.setBackground(Color.gray);
+        panelCommandesCuisson.setBackground(Color.gray);
+        panelCommandesPretes.setBackground(Color.gray);
+
         labelEnAttente = new JLabel("Commandes en attente : 0");
         labelACuisiner = new JLabel("Commandes à cuisiner : 0");
         labelCuisson = new JLabel("Commandes en cuisson : 0");
@@ -54,6 +59,11 @@ public class OrderDisplay extends JPanel {
         labelACuisiner.setFont(labelTitreFont);
         labelCuisson.setFont(labelTitreFont);
         labelPretes.setFont(labelTitreFont);
+
+        labelEnAttente.setAlignmentX(CENTER_ALIGNMENT);
+        labelACuisiner.setAlignmentX(CENTER_ALIGNMENT);
+        labelCuisson.setAlignmentX(CENTER_ALIGNMENT);
+        labelPretes.setAlignmentX(CENTER_ALIGNMENT);
 
         add(panelCommandesEnAttente);
         add(panelCommandesACuisiner);
