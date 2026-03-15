@@ -76,7 +76,7 @@ public class GameBuilder {
     public static ArrayList<Cuisinier> buildCuisiniers(Map map){
         ArrayList<Cuisinier> cuisiniers = new ArrayList<>();
 
-        cuisiniers.add(new Cuisinier(map.getBlock(22,5),1,150,"Jean"));
+        cuisiniers.add(new Cuisinier(map.getBlock(22,5),1,100,"Jean"));
 
         return cuisiniers;
     }
@@ -84,7 +84,7 @@ public class GameBuilder {
     public static ArrayList<Serveur> buildServeurs(Map map) {
         ArrayList<Serveur> serveurs = new ArrayList<>();
 
-        serveurs.add(new Serveur(map.getBlock(22,10),1,100,"Marie"));
+        serveurs.add(new Serveur(map.getBlock(22,10),1,50,"Marie"));
 
         return serveurs;
     }
@@ -110,7 +110,7 @@ public class GameBuilder {
         pasta.ajouterIngredient(ingredients.get(6), 1);
         recettes.add(pasta);
 
-        Recette jiJia = new Recette("Ji Jia", 13, 15);
+        Recette jiJia = new Recette("Poulet frit", 13, 15);
         jiJia.ajouterIngredient(ingredients.get(7), 1);
         jiJia.ajouterIngredient(ingredients.get(8), 1);
         jiJia.ajouterIngredient(ingredients.get(4), 1);

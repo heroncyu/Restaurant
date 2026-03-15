@@ -512,7 +512,7 @@ public class Simulation {
             stop = true;
             chronometre.init();
 
-            int loyer = GameConfiguration.LOYER;
+            int loyer = ZoneManager.calculerLoyer(zones);
             argentRepository.retirerMonnaie(loyer);
             dayStatistics.addCoutLoyer(loyer);
 

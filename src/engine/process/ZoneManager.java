@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import config.GameConfiguration;
 import engine.map.Block;
 import engine.map.Map;
 import engine.map.Zone;
@@ -76,5 +77,16 @@ public class ZoneManager {
 
         }
         return voisinsConstructibles;
+    }
+
+    public static int calculerLoyer(HashMap<String,Zone> zones){
+        int nbCases = 0;
+
+        for(String nomZone : zones.keySet()){
+            if(!nomZone.equals("CONSTRUCTIBLE")){
+                nbCases += zones.get(nomZone).getBlocks().size();
+            }
+        }
+        return  nbCases * GameConfiguration.LOYER_PAR_CASE;
     }
 }

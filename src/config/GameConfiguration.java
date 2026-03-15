@@ -21,5 +21,5 @@ public class GameConfiguration {
 
     public static final int END_OF_DAY_HOUR = 22;
     public static final int INITIAL_REPUTATION = 50;
-    public static final int LOYER = 50;
+    public static final int LOYER_PAR_CASE = 1;
 }

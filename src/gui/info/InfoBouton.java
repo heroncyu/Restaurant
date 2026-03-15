@@ -8,9 +8,9 @@ public class InfoBouton extends JButton {
     public InfoBouton(String texte) {
         super(texte);
 
-        setBorderPainted(false); // Enlève la bordure
-        setContentAreaFilled(false); // Rend le fond transparent
-        setFocusPainted(false); // Enlève le petit cadre de sélection
+        setBorderPainted(false);
+        setContentAreaFilled(false);
+        setFocusPainted(false);
         setOpaque(false);
 
         setBorder(BorderFactory.createEmptyBorder(5, 5, 12, 5));
