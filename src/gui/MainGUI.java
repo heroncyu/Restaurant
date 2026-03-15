@@ -10,7 +10,6 @@ import config.GameConfiguration;
 import engine.process.ArgentRepository;
 import engine.process.Simulation;
 import gui.info.InfoDisplay;
-import gui.info.OrderDisplay;
 import gui.menu.MenuDisplay;
 
 public class MainGUI extends JFrame implements Runnable {
@@ -105,6 +104,7 @@ public class MainGUI extends JFrame implements Runnable {
             }
             dashboard.repaint();
             infoDisplay.repaint();
+            orderDisplay.repaint();
         }
     }
 }

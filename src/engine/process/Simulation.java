@@ -567,4 +567,19 @@ public class Simulation {
         return this.manager;
     }
 
+    public ArrayList<Commande> getCommandesEnAttente() {
+        return commandesEnAttente;
+    }
+
+    public ArrayList<Commande> getCommandesACuisiner() {
+        return commandesACuisiner;
+    }
+
+    public ArrayList<Commande> getCommandesCuisson() {
+        return commandesCuisson;
+    }
+
+    public ArrayList<Commande> getCommandesPretes() {
+        return commandesPretes;
+    }
 }
