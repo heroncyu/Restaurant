@@ -15,10 +15,11 @@ public class GameConfiguration {
     public static final int LINE_COUNT = GAME_HEIGHT / BLOCK_SIZE;
     public static final int COLUMN_COUNT = GAME_WIDTH / BLOCK_SIZE;
 
-    public static final int GAME_SPEED = 250;
+    public static final int GAME_SPEED = 100;
 
     public static final int INITIAL_MONEY = 1000;
 
     public static final int END_OF_DAY_HOUR = 22;
     public static final int INITIAL_REPUTATION = 50;
+    public static final int LOYER = 50;
 }

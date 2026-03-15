@@ -46,6 +46,10 @@ public class GameDisplay extends JPanel {
             paintStrategy.paint(g);
         }
 
+        if(simulation.isAlerteStock()){
+            paintStrategy.paint(g,getWidth());
+        }
+
     }
 
 }

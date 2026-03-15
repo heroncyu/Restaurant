@@ -54,6 +54,10 @@ public class StockRepository {
         }
     }
 
+    public boolean auMoinsUneRecetteDisponible(ArrayList<Recette> recettes){
+        return !recettesDisponibles(recettes).isEmpty();
+    }
+
     public ArrayList<Recette> recettesDisponibles(ArrayList<Recette> recettes) {
         ArrayList<Recette> disponibles = new ArrayList<>();
 

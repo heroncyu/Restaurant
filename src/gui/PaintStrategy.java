@@ -184,4 +184,21 @@ public class PaintStrategy {
         graphics.setFont(new Font("Comis Sans MS", Font.BOLD, 24));
         graphics.drawString("Mode construction actif", 10, 30);
     }
+
+    public void paint(Graphics graphics, int panelWidth) {
+        String message = "Plus d'ingrédients ! Achetez du stock !";
+
+        graphics.setFont(new Font("SansSerif", Font.BOLD, 24));
+        int textWidth = graphics.getFontMetrics().stringWidth(message);
+        int x = (panelWidth - textWidth) / 2;
+        int y = 40;
+
+        // Fond
+        graphics.setColor(new Color(0, 0, 0, 150));
+        graphics.fillRoundRect(x - 15, y - 25, textWidth + 30, 35, 15, 15);
+
+        // Texte
+        graphics.setColor(new Color(255, 50, 50));
+        graphics.drawString(message, x, y);
+    }
 }

@@ -40,25 +40,40 @@ public class ZoneManager {
     public static List<Block> getVoisinsConstructibles(Block block, HashMap<String, Zone> zones, Map map) {
         List<Block> voisinsConstructibles = new ArrayList<Block>();
         Zone zoneDuBlockVoisin;
-        Block blockVoisin = map.getBlock(block.getLine() - 1, block.getColumn()); // Block du Haut
-        zoneDuBlockVoisin = getZone(blockVoisin, zones);
-        if (zoneDuBlockVoisin == null) {
-            voisinsConstructibles.add(blockVoisin);
+        int line = block.getLine();
+        int col = block.getColumn();
+
+        if (line - 1 >= 0) {
+            Block blockVoisin = map.getBlock(block.getLine() - 1, block.getColumn()); // Block du Haut
+            zoneDuBlockVoisin = getZone(blockVoisin, zones);
+
+            if (zoneDuBlockVoisin == null) {
+                voisinsConstructibles.add(blockVoisin);
+            }
         }
-        blockVoisin = map.getBlock(block.getLine() + 1, block.getColumn()); // Block du Bas
-        zoneDuBlockVoisin = getZone(blockVoisin, zones);
-        if (zoneDuBlockVoisin == null) {
-            voisinsConstructibles.add(blockVoisin);
+
+        if (line + 1 < map.getLineCount()) {
+            Block blockVoisin = map.getBlock(block.getLine() + 1, block.getColumn()); // Block du Bas
+            zoneDuBlockVoisin = getZone(blockVoisin, zones);
+            if (zoneDuBlockVoisin == null) {
+                voisinsConstructibles.add(blockVoisin);
+            }
         }
-        blockVoisin = map.getBlock(block.getLine(), block.getColumn() - 1); // Block de Gauche
-        zoneDuBlockVoisin = getZone(blockVoisin, zones);
-        if (zoneDuBlockVoisin == null) {
-            voisinsConstructibles.add(blockVoisin);
+
+        if (col - 1 >= 0) {
+            Block blockVoisin = map.getBlock(block.getLine(), block.getColumn() - 1); // Block de Gauche
+            zoneDuBlockVoisin = getZone(blockVoisin, zones);
+            if (zoneDuBlockVoisin == null) {
+                voisinsConstructibles.add(blockVoisin);
+            }
         }
-        blockVoisin = map.getBlock(block.getLine(), block.getColumn() + 1); // Block de Droite
-        zoneDuBlockVoisin = getZone(blockVoisin, zones);
-        if (zoneDuBlockVoisin == null) {
-            voisinsConstructibles.add(blockVoisin);
+        if (col + 1 < map.getColumnCount()) {
+            Block blockVoisin = map.getBlock(block.getLine(), block.getColumn() + 1); // Block de Droite
+            zoneDuBlockVoisin = getZone(blockVoisin, zones);
+            if (zoneDuBlockVoisin == null) {
+                voisinsConstructibles.add(blockVoisin);
+            }
+
         }
         return voisinsConstructibles;
     }
