@@ -105,12 +105,12 @@ public class Simulation {
             satisfactionUpdate();
             moveClients();
 
-            assignerServeurPrendre();
             moveServeurs();
-
-            assignerCuisinier();
             moveCuisiniers();
             updateCuisson();
+
+            assignerServeurPrendre();
+            assignerCuisinier();
             verifierCommandesPretes();
 
             chronometre.increment();
@@ -388,6 +388,7 @@ public class Simulation {
                 int duree = commande.getPlat().getRecette().getTempsPreparation();
 
                 tempsCuisson.put(cuisinier, duree);
+                commandesCuisson.add(commande);
 
                 manager.changerEtatCuisinier(cuisinier, "CUISINE");
                 manager.donnerDestinationCuisinier(cuisinier, null);
@@ -421,6 +422,7 @@ public class Simulation {
             int qualite = SimulationUtility.calculerQualite(cuisinier);
             commande.getPlat().setQualite(qualite);
 
+            commandesCuisson.remove(commande);
             commandesPretes.add(commande);
             manager.libererCuisinier(cuisinier);
 
@@ -599,18 +601,18 @@ public class Simulation {
     }
 
     public ArrayList<Commande> getCommandesEnAttente() {
-        return commandesEnAttente;
+        return new ArrayList<>(commandesEnAttente);
     }
 
     public ArrayList<Commande> getCommandesACuisiner() {
-        return commandesACuisiner;
+        return new ArrayList<>(commandesACuisiner);
     }
 
     public ArrayList<Commande> getCommandesCuisson() {
-        return commandesCuisson;
+        return new ArrayList<>(commandesCuisson);
     }
 
     public ArrayList<Commande> getCommandesPretes() {
-        return commandesPretes;
+        return new ArrayList<>(commandesPretes);
     }
 }
