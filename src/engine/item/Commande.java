@@ -27,5 +27,8 @@ public void setClient(Client client) {
     this.client = client;
 }
 
+public int getPrixRecette(){
+        return getPlat().getRecette().getPrix();
+    }
 
 }

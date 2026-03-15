@@ -7,43 +7,46 @@ import java.util.List;
 
 import config.GameConfiguration;
 import engine.item.Commande;
+import engine.item.Ingredient;
 import engine.item.Recette;
+import engine.item.Stockage;
 import engine.map.Block;
 import engine.map.Map;
 import engine.map.Zone;
-import engine.mobile.MobileElement;
-import engine.mobile.Client;
-import engine.mobile.Serveur;
-import engine.mobile.Cuisinier;
-import engine.mobile.Meuble;
+import engine.mobile.*;
 import engine.process.chrono.Chronometer;
 
 public class Simulation {
     private Map map;
     private HashMap<String, Zone> zones;
+    private MobileElementManager manager;
 
     private ArrayList<Meuble> meubles;
-    private List<Client> clients = new ArrayList<Client>();
-    private List<Serveur> serveurs;
-    private List<Cuisinier> cuisiniers;
-    private List<Recette> recettes;
 
-    private List<Meuble> tablesVides = new ArrayList<Meuble>();
+    private ArrayList<Recette> recettes;
+    private ArrayList<Ingredient> ingredients;
 
-    private HashMap<Client, Block> clientDestinations = new HashMap<Client, Block>();
-    private HashMap<Serveur, Block> serveurDestinations = new HashMap<Serveur, Block>();
+    private ArrayList<Commande> commandesEnAttente = new ArrayList<Commande>();
+    private ArrayList<Commande> commandesACuisiner = new ArrayList<Commande>();
+    private ArrayList<Commande> commandesCuisson = new ArrayList<Commande>();
+    private ArrayList<Commande> commandesPretes = new ArrayList<Commande>();
 
-    private List<Commande> commandeEnAttente = new ArrayList<Commande>();
-    private HashMap<Serveur, Commande> serveurCommandes = new HashMap<Serveur, Commande>();
+    private HashMap<Cuisinier, Integer> tempsCuisson = new HashMap<>();
+    private HashMap<Client, Integer> tempsManger = new HashMap<>();
+    private HashMap<Client, Commande> clientEnTrainManger = new HashMap<>();
 
-    private HashMap<Client, Meuble> tableOccupee = new HashMap<Client, Meuble>();
+    private HashMap<Client, Serveur> serveurQuiAServi = new HashMap<>();
 
     private Chronometer chronometre;
 
     private ArgentRepository argentRepository = ArgentRepository.getInstance();
+    private static ReputationRepository reputationRepository = ReputationRepository.getInstance();
+    private static StockRepository stockageRepository = StockRepository.getInstance();
 
-    private Block comptoir;
+    private Block comptoirS;
+    private Block comptoirC;
     private Block entree;
+    private Block four;
 
     private boolean stop = false;
     private boolean constructionModeActive = false;
@@ -58,15 +61,27 @@ public class Simulation {
         map = GameBuilder.buildMap();
         zones = GameBuilder.buildZones(map);
         meubles = GameBuilder.buildMeubles(map);
+        ArrayList<Serveur> serveurs = GameBuilder.buildServeurs(map);
+        ArrayList<Cuisinier> cuisiniers = GameBuilder.buildCuisiniers(map);
 
-        serveurs = GameBuilder.buildServeurs(map);
-        cuisiniers = GameBuilder.buildCuisiniers(map);
-        recettes = GameBuilder.buildRecette();
+        manager = new MobileElementManager(map, serveurs,cuisiniers);
+
+
+
+        ingredients = GameBuilder.buildIngredients();
+        Stockage stockage = GameBuilder.buildStockage(ingredients);
+        stockageRepository.setStockage(stockage);
+        recettes = GameBuilder.buildRecette(ingredients);
+
         chronometre = GameBuilder.buildChronometer();
-        comptoir = map.getBlock(7, 6);
-        entree = map.getBlock(6, 10);
 
-        for (Meuble meuble : meubles) {
+        comptoirS = map.getBlock(7,6);
+        comptoirC = map.getBlock(7,5);
+        entree = map.getBlock(6,10);
+        four = map.getBlock(6, 3);
+
+
+        for(Meuble meuble : meubles) {
             ajouterTable(meuble);
         }
 
@@ -74,113 +89,97 @@ public class Simulation {
 
     public void ajouterTable(Meuble meuble) {
         if (meuble.getType().equals("TABLE")) {
-            tablesVides.add(meuble);
+            manager.ajouterTableVide(meuble);
             System.out.println("table libre ajoutée");
         }
     }
 
-    public void add(Client client) {
-        clients.add(client);
-    }
-
-    public void add(Serveur serveur) {
-        serveurs.add(serveur);
-    }
-
-    public void add(Cuisinier cuisinier) {
-        cuisiniers.add(cuisinier);
-    }
 
     public void nextRound() {
         if (!constructionModeActive && !stop) {
             generateClient();
+            satisfactionUpdate();
             moveClients();
+
             assignerServeurPrendre();
             moveServeurs();
-            satisfactionUpdate();
+
+            assignerCuisinier();
+            moveCuisiniers();
+            updateCuisson();
+            verifierCommandesPretes();
+
             chronometre.increment();
         }
 
     }
 
-    public void moveElementLeft(MobileElement element) {
-        Block position = element.getPosition();
-        if (position.getColumn() > 0) {
-            Block newPosition = map.getBlock(position.getLine(), position.getColumn() - 1);
-            element.setPosition(newPosition);
-        }
-    }
-
-    public void moveElementRight(MobileElement element) {
-        Block position = element.getPosition();
-        if (position.getColumn() < map.getColumnCount() - 1) {
-            Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
-            element.setPosition(newPosition);
-        }
-    }
-
-    public void moveElementBottom(MobileElement element) {
-        Block position = element.getPosition();
-        if (position.getLine() < map.getLineCount() - 1) {
-            Block newPosition = map.getBlock(position.getLine() + 1, position.getColumn());
-            element.setPosition(newPosition);
-        }
-
-    }
-
-    public void moveElementTop(MobileElement element) {
-        Block position = element.getPosition();
-        if (position.getLine() > 0) {
-            Block newPosition = map.getBlock(position.getLine() - 1, position.getColumn());
-            element.setPosition(newPosition);
-        }
-    }
-
-    public boolean moveElementUse(MobileElement element, Block pos) {
-        if (pos == null || element == null)
-            return false;
-
-        Block actuel = element.getPosition();
-
-        if (actuel.getLine() == pos.getLine() && actuel.getColumn() == pos.getColumn()) {
-            return true;
-        }
-
-        if (actuel.getLine() < pos.getLine()) {
-            moveElementBottom(element);
-        } else if (actuel.getLine() > pos.getLine()) {
-            moveElementTop(element);
-        } else if (actuel.getColumn() < pos.getColumn()) {
-            moveElementRight(element);
-        } else if (actuel.getColumn() > pos.getColumn()) {
-            moveElementLeft(element);
-        }
-
-        return false;
-    }
-
     private void moveClients() {
-        Iterator<Client> it = clients.iterator();
-
+        Iterator<Client> it = manager.getClients().iterator();
         while (it.hasNext()) {
             Client c = it.next();
-            Block destination = clientDestinations.get(c);
 
-            if (destination != null) {
-                moveElementUse(c, destination);
+            if (tempsManger.containsKey(c)) {
+                int temps = tempsManger.get(c) - 1;
 
-                if (c.getPosition().equals(destination)) {
+                if (temps <= 0) {
+                    tempsManger.remove(c);
 
-                    if (destination.equals(entree)) {
-                        it.remove();
+                    Commande commande = clientEnTrainManger.remove(c);
+                    Serveur serveur = serveurQuiAServi.remove(c);
 
-                        clientDestinations.remove(c);
-                        System.out.println("un client est sorti");
-                    } else {
-                        Commande commande = new Commande(c, recettes.get(0));
-                        commandeEnAttente.add(commande);
-                        clientDestinations.remove(c);
-                        System.out.println("commande créée");
+                    int total = SimulationUtility.calculerTotal(c,commande,serveur,dayStatistics);
+
+                    argentRepository.ajouterMonnaie(total);
+
+                    manager.libererTable(c);
+                    manager.donnerDestinationClient(c,entree);
+
+                    System.out.println("Le client a fini de manger et le total (prix + pourboire) est de  : " + total +"gold");
+                } else {
+                    tempsManger.put(c, temps);
+                }
+            } else {
+                Block destination = manager.getDestinationClient(c);
+                if (destination != null) {
+                    manager.moveElementUse(c, destination);
+
+                    if (c.getPosition().equals(destination)) {
+                        if (destination.equals(entree)) {
+                            Meuble table = manager.getTableClient(c);
+                            if (table != null) {
+                                manager.donnerDestinationClient(c,table.getPosition());
+                                System.out.println("un client entre dans le restaurant");
+                            } else {
+                                manager.retirerClient(c);
+                                System.out.println("un client est sorti");
+                            }
+                        } else {
+                            Recette recette = SimulationUtility.choisirRecetteAlea(recettes);
+
+                            if(recette != null){
+                                stockageRepository.recetteUtilisee(recette);
+
+
+
+                                Commande commande = new Commande(c, recette);
+                                commandesEnAttente.add(commande);
+                                manager.donnerDestinationClient(c,null);
+
+                                dayStatistics.addCommande();
+
+                                System.out.println("commande créée" + recette.getNom());
+
+
+                            }
+                            else{
+                                manager.libererTable(c);
+                                manager.donnerDestinationClient(c,entree);
+                                System.out.println("aucun plat disponible, le client part");
+                            }
+
+
+                        }
                     }
                 }
             }
@@ -188,96 +187,285 @@ public class Simulation {
     }
 
     private void generateClient() {
-        if (!tablesVides.isEmpty()) {
+        if (manager.aDesTablesVides()) {
+
+            int reputation = reputationRepository.getReputation();
+            if (reputation < 25) {
+                int chance = SimulationUtility.getRandomNumber(1, 100);
+                if (chance <= 50) {
+                    return;
+                }
+            }
+
             int middleColumn = map.getColumnCount() / 2;
-            int randomLine = getRandomNumber(0, map.getLineCount() - 1);
+            int randomLine = SimulationUtility.getRandomNumber(0, map.getLineCount() - 1);
             Block position = map.getBlock(randomLine, middleColumn);
-            Client client = new Client(position);
 
-            Meuble tableChoisie = tablesVides.remove(0);
-            Block tablePosition = tableChoisie.getPosition();
+            int tirage = SimulationUtility.getRandomNumber(1, 100);
+            Client client;
+            if (tirage <= 5) {
+                client = ClientFactory.createClient("STAR", position);
+                System.out.println("un client star arrive !!!!");
+            } else if (tirage <= 10) {
+                client = ClientFactory.createClient("CRITIQUE", position);
+                System.out.println("un client critique arrive !!!!");
+            } else {
+                client = ClientFactory.createClient("NORMAL", position);
+            }
 
-            clientDestinations.put(client, tablePosition);
-            tableOccupee.put(client, tableChoisie);
-            clients.add(client);
+            Meuble tableChoisie = manager.getProchaineTableVide();
+            manager.ajouterClient(client,tableChoisie);
         }
     }
 
-    private void satisfactionUpdate() {
-        for (Client client : clients) {
-            if (client.getSatisfaction() > 0) {
-                client.setSatisfaction(client.getSatisfaction() - 2);
+    private void satisfactionUpdate(){
+        ArrayList<Client> part = new ArrayList<>();
+
+        for(Client client : manager.getClients()){
+            if(SimulationUtility.estEnTrainAttendre(client,manager,tempsManger)){
+                if(client.getSatisfaction()>0){
+                    client.setSatisfaction(client.getSatisfaction()-1);
+                }
+            }   if(client.getSatisfaction()<=0){
+                part.add(client);
             }
         }
+
+        for(Client client : part){
+            clientPart0satisfaction(client);
+        }
     }
 
-    private Serveur trouverServeurLibre() {
-        Serveur libre = null;
-        Iterator<Serveur> it = serveurs.iterator();
-        while (it.hasNext() && libre == null) {
-            Serveur s = it.next();
-            if (!serveurDestinations.containsKey(s)) {
-                libre = s;
-            }
-        }
-        return libre;
+    private void clientPart0satisfaction(Client client){
+        manager.nettoyerServeurPourClient(client);
+        manager.nettoyerCuisinierPourClient(client);
+
+        nettoyerCommandesClient(client);
+        tempsCuisson.remove(client);
+        tempsManger.remove(client);
+        clientEnTrainManger.remove(client);
+
+        serveurQuiAServi.remove(client);
+
+        manager.libererTable(client);
+        manager.donnerDestinationClient(client,entree);
+
     }
+
+
 
     private void assignerServeurPrendre() {
-        if (commandeEnAttente.size() > 0) {
-            Serveur libre = trouverServeurLibre();
+        if (commandesEnAttente.size() > 0) {
+            Serveur libre = manager.trouverServeurLibre();
             if (libre != null) {
-                Commande commande = commandeEnAttente.remove(0);
-                serveurCommandes.put(libre, commande);
+                Commande commande = commandesEnAttente.remove(0);
 
-                Block destination = map.getBlock(commande.getClient().getPosition().getLine() - 1,
-                        commande.getClient().getPosition().getColumn());
-                serveurDestinations.put(libre, destination);
-                System.out.println("commande prise");
+                Block tableClient = commande.getClient().getPosition();
+                Block acote = map.getBlock(
+                        tableClient.getLine() - 1,
+                        tableClient.getColumn());
+
+                manager.assignerCommandeServeur(libre, commande);
+                manager.changerEtatServeur(libre, "VA_PRENDRE");
+                System.out.println("serveur va chercher commande en attente");
+                manager.donnerDestinationServeur(libre, acote);
             }
         }
+    }
 
+    private void verifierCommandesPretes() {
+        if (commandesPretes.size() > 0) {
+            Serveur libre = manager.trouverServeurLibre();
+            if (libre != null) {
+                Commande commande = commandesPretes.remove(0);
+
+                manager.assignerCommandeServeur(libre, commande);
+                manager.changerEtatServeur(libre, "VA_CHERCHER");
+                System.out.println("serveur va chercher commande prête");
+                manager.donnerDestinationServeur(libre, comptoirS);
+            }
+        }
     }
 
     private void moveServeurs() {
         ArrayList<Serveur> arrives = new ArrayList<>();
 
-        Iterator<Serveur> it = serveurDestinations.keySet().iterator();
-        while (it.hasNext()) {
-            Serveur serveur = it.next();
-            Block destination = serveurDestinations.get(serveur);
+        for (Serveur serveur : manager.getServeurs()) {
+            Block destination = manager.getDestinationServeur(serveur);
+            if (destination == null) continue;
 
-            if (destination == serveur.getPosition()) {
+            boolean arrive = manager.moveElementUse(serveur, destination);
+            if (arrive) {
                 arrives.add(serveur);
-            } else {
-                moveElementUse(serveur, destination);
             }
-
         }
 
-        Iterator<Serveur> it2 = arrives.iterator();
-        while (it2.hasNext()) {
-            Serveur serveur = it2.next();
-            Block destination = serveurDestinations.get(serveur);
-            if (destination == comptoir) {
-                serveurDestinations.remove(serveur);
-                System.out.println(serveur.getName() + " est libre");
+        Iterator<Serveur> it = arrives.iterator();
+        while (it.hasNext()) {
+            Serveur serveur = it.next();
+            String etat = manager.getEtatServeur(serveur);
 
-                Commande commande = serveurCommandes.remove(serveur);
-                serveurDestinations.remove(serveur);
+            if ("VA_PRENDRE".equals(etat)) {
+                manager.changerEtatServeur(serveur, "VA_DEPOSER");
+                manager.donnerDestinationServeur(serveur, comptoirS);
+                System.out.println(serveur.getName() + " a pris la commande, va au comptoir");
+
+            } else if ("VA_DEPOSER".equals(etat)) {
+                Commande commande = manager.getCommandeServeur(serveur);
+                commandesACuisiner.add(commande);
+                manager.libererServeur(serveur);
+                System.out.println(serveur.getName() + " a déposé la commande au comptoir");
+
+            } else if ("VA_CHERCHER".equals(etat)) {
+                Commande commande = manager.getCommandeServeur(serveur);
+                Block tableClient = commande.getClient().getPosition();
+                Block acote = map.getBlock(tableClient.getLine() - 1, tableClient.getColumn());
+                manager.changerEtatServeur(serveur, "VA_SERVIR");
+                manager.donnerDestinationServeur(serveur, acote);
+                System.out.println(serveur.getName() + " a le plat, va servir le client");
+
+            } else if ("VA_SERVIR".equals(etat)) {
+                Commande commande = manager.getCommandeServeur(serveur);
                 Client client = commande.getClient();
 
-                Meuble table = tableOccupee.get(client);
-                tablesVides.add(table);
-                System.out.println("table libérée");
+                tempsManger.put(client, 10);
+                clientEnTrainManger.put(client,commande);
+                serveurQuiAServi.put(client,serveur);
 
-                argentRepository.ajouterMonnaie(commande.getPlat().getRecette().getPrix());
-                clientDestinations.put(client, entree);
 
-                System.out.println(serveur.getName() + " a fini, client part");
-            } else {
-                serveurDestinations.put(serveur, comptoir);
-                System.out.println(serveur.getName() + " a servi, retourne au comptoir");
+                manager.libererServeur(serveur);
+                System.out.println(serveur.getName() + " a servi, le client mange");
+            }
+        }
+    }
+
+    //Cuisiniers
+
+    private void assignerCuisinier() {
+        if (commandesACuisiner.size() > 0) {
+            Cuisinier libre = manager.trouverCuisinierLibre();
+            if (libre != null) {
+                Commande commande = commandesACuisiner.remove(0);
+
+                manager.assignerCommandeCuisinier(libre, commande);
+                manager.changerEtatCuisinier(libre, "VA_CHERCHER_COMMANDE");
+                manager.donnerDestinationCuisinier(libre, comptoirC);
+            }
+        }
+    }
+
+    private void moveCuisiniers() {
+        ArrayList<Cuisinier> arrives = new ArrayList<>();
+
+        for (Cuisinier cuisinier : manager.getCuisiniers()) {
+            Block destination = manager.getDestinationCuisinier(cuisinier);
+            if (destination == null) continue;
+
+            boolean arrive = manager.moveElementUse(cuisinier, destination);
+            if (arrive) {
+                arrives.add(cuisinier);
+            }
+        }
+
+        Iterator<Cuisinier> it = arrives.iterator();
+        while (it.hasNext()) {
+            Cuisinier cuisinier = it.next();
+            String etat = manager.getEtatCuisinier(cuisinier);
+
+            if ("VA_CHERCHER_COMMANDE".equals(etat)) {
+                manager.changerEtatCuisinier(cuisinier, "VA_CUISINER");
+                manager.donnerDestinationCuisinier(cuisinier, four);
+                System.out.println(cuisinier.getName() + " a récupéré la commande, va cuisiner");
+
+            } else if ("VA_CUISINER".equals(etat)) {
+                Commande commande = manager.getCommandeCuisinier(cuisinier);
+                int duree = commande.getPlat().getRecette().getTempsPreparation();
+
+                tempsCuisson.put(cuisinier, duree);
+
+                manager.changerEtatCuisinier(cuisinier, "CUISINE");
+                manager.donnerDestinationCuisinier(cuisinier, null);
+                System.out.println(cuisinier.getName() + " cuisine pendant " + duree + " tours");
+            }
+        }
+    }
+
+    private void updateCuisson() {
+        ArrayList<Cuisinier> termines = new ArrayList<>();
+
+        for (Cuisinier cuisinier : manager.getCuisiniers()) {
+            if (tempsCuisson.containsKey(cuisinier)) {
+                int restant = tempsCuisson.get(cuisinier) - 1;
+                System.out.println("le plat cuit...");
+
+                if (restant <= 0) {
+                    termines.add(cuisinier);
+                } else {
+                    tempsCuisson.put(cuisinier, restant);
+                }
+            }
+        }
+
+        for (Cuisinier cuisinier : termines) {
+            tempsCuisson.remove(cuisinier);
+
+            Commande commande = manager.getCommandeCuisinier(cuisinier);
+
+            //double qualite = calculerQualite(cuisinier.getNiveauEtoile());
+            int qualite = SimulationUtility.calculerQualite(cuisinier);
+            commande.getPlat().setQualite(qualite);
+
+            commandesPretes.add(commande);
+            manager.libererCuisinier(cuisinier);
+
+            System.out.println("Plat prêt ! Qualité : " + qualite
+                    + " (chef " + cuisinier.getName() + ")");
+        }
+    }
+
+    private void nettoyerCommandesClient(Client client){
+        Iterator<Commande> it1 = commandesEnAttente.iterator();
+        Iterator<Commande> it2 = commandesACuisiner.iterator();
+        Iterator<Commande> it3 = commandesCuisson.iterator();
+        Iterator<Commande> it4 = commandesPretes.iterator();
+
+        while(it1.hasNext()){
+            if(it1.hasNext()){
+                Client c = it1.next().getClient();
+
+                if(c == client){
+                    it1.remove();
+                }
+
+            }
+        }
+        while(it2.hasNext()){
+            if(it2.hasNext()){
+                Client c = it2.next().getClient();
+
+                if(c == client){
+                    it2.remove();
+                }
+
+            }
+        }
+        while(it3.hasNext()){
+            if(it3.hasNext()){
+                Client c = it3.next().getClient();
+
+                if(c == client){
+                    it3.remove();
+                }
+
+            }
+        }
+        while(it4.hasNext()){
+            if(it4.hasNext()){
+                Client c = it4.next().getClient();
+
+                if(c == client){
+                    it4.remove();
+                }
 
             }
         }
@@ -318,22 +506,6 @@ public class Simulation {
             return true;
         }
         return false;
-    }
-
-    public List<Client> getClients() {
-        return clients;
-    }
-
-    public List<Serveur> getServeurs() {
-        return serveurs;
-    }
-
-    public List<Cuisinier> getCuisiniers() {
-        return cuisiniers;
-    }
-
-    public List<Meuble> getTablesVides() {
-        return tablesVides;
     }
 
     private static int getRandomNumber(int min, int max) {
@@ -389,6 +561,10 @@ public class Simulation {
 
     public int getSpeedMultiplier() {
         return speedMultiplier;
+    }
+
+    public MobileElementManager getManager(){
+        return this.manager;
     }
 
 }

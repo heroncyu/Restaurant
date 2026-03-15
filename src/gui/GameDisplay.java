@@ -30,15 +30,15 @@ public class GameDisplay extends JPanel {
             paintStrategy.paint(meuble, g);
         }
 
-        for (Client client : simulation.getClients()) {
+        for (Client client : simulation.getManager().getClients()) {
             paintStrategy.paint(client, g);
         }
 
-        for (Cuisinier cuisinier : simulation.getCuisiniers()) {
+        for (Cuisinier cuisinier : simulation.getManager().getCuisiniers()) {
             paintStrategy.paint(cuisinier, g);
         }
 
-        for (Serveur serveur : simulation.getServeurs()) {
+        for (Serveur serveur : simulation.getManager().getServeurs()) {
             paintStrategy.paint(serveur, g);
         }
 

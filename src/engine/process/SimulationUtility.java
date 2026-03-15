@@ -1,0 +1,130 @@
+package engine.process;
+
+import engine.item.Commande;
+import engine.item.Recette;
+import engine.map.Block;
+import engine.mobile.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public class SimulationUtility {
+
+    private static ReputationRepository reputationRepository = ReputationRepository.getInstance();
+    private static StockRepository stockageRepository = StockRepository.getInstance();
+
+    public static int calculerQualite(Cuisinier cuisinier){
+        int niveauEtoile = cuisinier.getNiveau();
+        if(niveauEtoile <= 1){
+            return 100;
+        }
+        if(niveauEtoile <= 2){
+            return 55;
+        }
+        if(niveauEtoile <= 3){
+            return 70;
+        }
+        if(niveauEtoile <= 4){
+            return 85;
+        }
+        return 100;
+    }
+
+    public static void appliquerBonusQualite(Client client, Commande commande){
+        int qualite = commande.getPlat().getQualite();
+
+        if(qualite >= 85){
+            client.setSatisfaction(client.getSatisfaction()+20);
+        } else if (qualite >= 70) {
+            client.setSatisfaction(client.getSatisfaction()+10);
+        } else if (qualite < 50) {
+            client.setSatisfaction(client.getSatisfaction()-15);
+        }
+
+        if(client.getSatisfaction()>100){
+            client.setSatisfaction(100);
+        }
+        if(client.getSatisfaction()<0){
+            client.setSatisfaction(0);
+        }
+
+    }
+
+    public static boolean estEnTrainAttendre(Client client, MobileElementManager manager, HashMap<Client,Integer> tempsManger){
+        Block destination = manager.getDestinationClient(client);
+
+        boolean assis;
+        if(destination == null){
+            assis = true;
+        }
+        else{
+            assis = false;
+        }
+        boolean mange = tempsManger.containsKey(client);
+        return assis && !mange;
+    }
+
+    public static int calculerPourboire(Client client, Commande commande, Serveur serveur) {
+
+        int prixPlat = commande.getPrixRecette();
+
+        if (client instanceof ClientCritique) {
+            ClientCritique critique = (ClientCritique) client;
+            int satisfaction = client.getSatisfaction();
+            if (satisfaction > 80) {
+                critique.setImpactReputation(20);
+                reputationRepository.ajouterReputation(20);
+            } else if (satisfaction >= 50) {
+                critique.setImpactReputation(0);
+            } else {
+                critique.setImpactReputation(-20);
+                reputationRepository.ajouterReputation(-20);
+            }
+            return 0;
+        }
+        if (client instanceof ClientStar) {
+            reputationRepository.ajouterReputation(10);
+            return 200;
+        }
+
+        double pourcentage;
+        int satisfaction = client.getSatisfaction();
+        if (satisfaction > 80) {
+            pourcentage = 0.20;
+        } else if (satisfaction >= 50) {
+            pourcentage = 0.10;
+        } else {
+            pourcentage = 0.0;
+        }
+
+        double bonusServeur = 1.0 + (serveur.getNiveau()-1)*0.5;
+        return (int)(prixPlat * pourcentage * bonusServeur);
+    }
+
+    public static int calculerTotal(Client client, Commande commande, Serveur serveur,DayStatistics dayStatistics){
+        SimulationUtility.appliquerBonusQualite(client,commande);
+
+        int prixPlat = commande.getPrixRecette();
+        int pourboire = SimulationUtility.calculerPourboire(client,commande,serveur);
+
+        dayStatistics.addRevenusCommandes(prixPlat);
+        dayStatistics.addRevenusPourboire(pourboire);
+
+        return prixPlat + pourboire;
+    }
+
+    public static Recette choisirRecetteAlea(ArrayList<Recette> recettes){
+        ArrayList<Recette> disponibles = stockageRepository.recettesDisponibles(recettes);
+
+        if(disponibles.isEmpty()){
+            return null;
+        }
+
+        int index = (int) (Math.random() * disponibles.size());
+        return disponibles.get(index);
+    }
+
+    public static int getRandomNumber(int min, int max) {
+        return (int) (Math.random() * (max + 1 - min)) + min;
+    }
+}

@@ -25,7 +25,7 @@ public class MonPersonnelMenu extends JPanel{
     }
 
     private void init() {
-        for (Serveur serveur : simulation.getServeurs()) {
+        for (Serveur serveur : simulation.getManager().getServeurs()) {
             addDescription(createDescription(serveur));
         }
 

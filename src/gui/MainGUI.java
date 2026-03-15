@@ -1,7 +1,6 @@
 package gui;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -11,13 +10,17 @@ import config.GameConfiguration;
 import engine.process.ArgentRepository;
 import engine.process.Simulation;
 import gui.info.InfoDisplay;
+import gui.info.OrderDisplay;
 import gui.menu.MenuDisplay;
 
 public class MainGUI extends JFrame implements Runnable {
     private Simulation simulation;
     private GameDisplay dashboard;
     private InfoDisplay infoDisplay;
+    private OrderDisplay orderDisplay;
     private MenuDisplay buttonPanel;
+
+    private final static Dimension preferredSize = new Dimension(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT);
 
     public MainGUI() {
         super("Restaurant");
@@ -29,7 +32,28 @@ public class MainGUI extends JFrame implements Runnable {
         simulation = new Simulation();
         dashboard = new GameDisplay(simulation.getMap(), simulation);
         infoDisplay = new InfoDisplay(simulation);
-        buttonPanel = new MenuDisplay(this, simulation);
+        buttonPanel = new MenuDisplay(this, simulation,simulation.getDayStatistics());
+        orderDisplay = new OrderDisplay(simulation);
+
+        infoDisplay.setPreferredSize(new Dimension(
+                GameConfiguration.WINDOW_WIDTH,
+                GameConfiguration.INFO_PANEL_HEIGHT
+        ));
+
+        orderDisplay.setPreferredSize(new Dimension(
+                GameConfiguration.WINDOW_WIDTH,
+                GameConfiguration.ORDERS_PANEL_HEIGHT
+        ));
+
+        buttonPanel.setPreferredSize(new Dimension(
+                GameConfiguration.MENU_PANEL_WIDTH,
+                GameConfiguration.GAME_HEIGHT
+        ));
+
+        dashboard.setPreferredSize(new Dimension(
+                GameConfiguration.GAME_WIDTH,
+                GameConfiguration.GAME_HEIGHT
+        ));
 
         dashboard.addMouseListener(new CliqueGauche());
 
@@ -37,10 +61,12 @@ public class MainGUI extends JFrame implements Runnable {
         contentPane.setLayout(new BorderLayout());
         contentPane.add(dashboard, BorderLayout.CENTER);
         contentPane.add(infoDisplay, BorderLayout.NORTH);
+        contentPane.add(orderDisplay, BorderLayout.SOUTH);
         contentPane.add(buttonPanel, BorderLayout.EAST);
 
-        setSize(GameConfiguration.WINDOW_WIDTH,
-                GameConfiguration.WINDOW_HEIGHT);
+        pack();
+        setPreferredSize(preferredSize);
+        setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }

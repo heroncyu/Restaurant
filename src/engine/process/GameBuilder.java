@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import config.GameConfiguration;
+import engine.item.Ingredient;
 import engine.item.Recette;
+import engine.item.Stockage;
 import engine.map.Map;
 import engine.map.Zone;
 import engine.mobile.Cuisinier;
@@ -94,13 +96,57 @@ public class GameBuilder {
 
         return serveurs;
     }
-    public static ArrayList<Recette> buildRecette() {
+    public static ArrayList<Recette> buildRecette(ArrayList<Ingredient> ingredients) {
         ArrayList<Recette> recettes = new ArrayList<>();
 
-        Recette recette = new Recette("burger",10,30);
-        recettes.add(recette);
+        Recette burger = new Recette("Burger", 10, 15);
+        burger.ajouterIngredient(ingredients.get(0), 1);
+        burger.ajouterIngredient(ingredients.get(1), 1);
+        burger.ajouterIngredient(ingredients.get(2), 1);
+        burger.ajouterIngredient(ingredients.get(6), 1);
+        recettes.add(burger);
+
+        Recette pizza = new Recette("Pizza", 12, 20);
+        pizza.ajouterIngredient(ingredients.get(3), 1);
+        pizza.ajouterIngredient(ingredients.get(4), 1);
+        pizza.ajouterIngredient(ingredients.get(2), 1);
+        recettes.add(pizza);
+
+        Recette pasta = new Recette("Pasta", 8, 10);
+        pasta.ajouterIngredient(ingredients.get(5), 1);
+        pasta.ajouterIngredient(ingredients.get(4), 1);
+        pasta.ajouterIngredient(ingredients.get(6), 1);
+        recettes.add(pasta);
+
+        Recette jiJia = new Recette("Ji Jia", 13, 15);
+        jiJia.ajouterIngredient(ingredients.get(7), 1);
+        jiJia.ajouterIngredient(ingredients.get(8), 1);
+        jiJia.ajouterIngredient(ingredients.get(4), 1);
+        recettes.add(jiJia);
 
         return recettes;
+    }
+
+    public static Stockage buildStockage(ArrayList<Ingredient> ingredients) {
+        HashMap<Ingredient, Integer> stock = new HashMap<Ingredient, Integer>();
+        for (Ingredient ingredient : ingredients) {
+            stock.put(ingredient, 10);
+        }
+        return new Stockage(stock);
+    }
+
+    public static ArrayList<Ingredient> buildIngredients() {
+        ArrayList<Ingredient> ingredients = new ArrayList<>();
+        ingredients.add(new Ingredient("Tomate", 5));
+        ingredients.add(new Ingredient("Pain", 3));
+        ingredients.add(new Ingredient("Fromage", 10));
+        ingredients.add(new Ingredient("Pate", 4));
+        ingredients.add(new Ingredient("Sauce tomate", 3));
+        ingredients.add(new Ingredient("Spaghetti", 4));
+        ingredients.add(new Ingredient("Viande hachee", 8));
+        ingredients.add(new Ingredient("Poulet", 8));
+        ingredients.add(new Ingredient("Epices", 3));
+        return ingredients;
     }
 
     public static Chronometer buildChronometer() {
