@@ -186,18 +186,13 @@ public class PaintStrategy {
     }
 
     public void paint(Graphics graphics, int panelWidth) {
-        String message = "Plus d'ingrédients ! Achetez du stock !";
+        String message = "Manque d'ingrédients, veuillez en acheter, sinon plus de nouveaux clients...";
 
-        graphics.setFont(new Font("SansSerif", Font.BOLD, 24));
+        graphics.setFont(new Font("Comis Sans MS", Font.BOLD, 24));
         int textWidth = graphics.getFontMetrics().stringWidth(message);
         int x = (panelWidth - textWidth) / 2;
         int y = 40;
 
-        // Fond
-        graphics.setColor(new Color(0, 0, 0, 150));
-        graphics.fillRoundRect(x - 15, y - 25, textWidth + 30, 35, 15, 15);
-
-        // Texte
         graphics.setColor(new Color(255, 50, 50));
         graphics.drawString(message, x, y);
     }
