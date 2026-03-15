@@ -188,7 +188,6 @@ public class PaintStrategy {
     public void paint(Graphics graphics, int panelWidth) {
         String message = "Manque d'ingrédients, veuillez en acheter, sinon plus de nouveaux clients...";
 
-
         graphics.setFont(new Font("Comis Sans MS", Font.BOLD, 24));
         int textWidth = graphics.getFontMetrics().stringWidth(message);
         int x = (panelWidth - textWidth) / 2;
