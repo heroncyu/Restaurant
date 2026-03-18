@@ -479,20 +479,41 @@ public class Simulation {
         }
     }
 
-    public void agrandirZone(int line, int column) {
+    public void agrandirZone(int ligne, int colonne) {
         if (zoneBlockSelec == null) {
-            Block blockSelec = map.getBlock(line, column);
+            Block blockSelec = map.getBlock(ligne, colonne);
             zoneBlockSelec = ZoneManager.getZone(blockSelec, zones);
 
+            
+
             if (zoneBlockSelec != null && !zoneBlockSelec.getNom().equals("CONSTRUCTIBLE")) {
-                List<Block> voisinsConstructibles = ZoneManager.getVoisinsConstructibles(blockSelec, zones, map);
-                ZoneManager.afficherZoneConstructible(voisinsConstructibles, zones);
+                List<Block> blocksColonne = ZoneManager.getBlockColonne(colonne, zoneBlockSelec);
+                List<Block> blocksLigne = ZoneManager.getBlockLigne(ligne, zoneBlockSelec);
+
+                List<Block> voisinsConstructibles;
+
+                voisinsConstructibles = ZoneManager.getVoisinsConstructiblesLigne(blocksLigne, zones, map);
+                voisinsConstructibles.addAll(ZoneManager.getVoisinsConstructiblesColonne(blocksColonne, zones, map));
+                ZoneManager.ajouterZoneConstructible(voisinsConstructibles, zones);
             }
         } else {
-            Block blockCible = map.getBlock(line, column);
+            Block blockCible = map.getBlock(ligne, colonne);
             Zone zoneDuBlockCible = ZoneManager.getZone(blockCible, zones);
-            if (zoneDuBlockCible.getNom().equals("CONSTRUCTIBLE")) {
-                ZoneManager.ajouterBlockDansZone(blockCible, zoneDuBlockCible, zoneBlockSelec);
+            if (zoneDuBlockCible != null && zoneDuBlockCible.getNom().equals("CONSTRUCTIBLE")) {
+
+                List<Block> construBlocksLigne = ZoneManager.getBlockLigne(ligne, zoneDuBlockCible);
+                List<Block> construBlocksColonne = ZoneManager.getBlockColonne(colonne, zoneDuBlockCible);
+
+                List<Block> construListTemp;
+                if (construBlocksLigne.size() > construBlocksColonne.size()) {
+                    construListTemp = new ArrayList<Block>(construBlocksLigne);
+                } else {
+                    construListTemp = new ArrayList<Block>(construBlocksColonne);
+                }
+                
+                for(Block block : construListTemp){
+                    ZoneManager.ajouterBlockDansZone(block, zoneDuBlockCible, zoneBlockSelec);
+                }
 
                 argentRepository.retirerMonnaie(20);
                 dayStatistics.addCoutConstruction(20);

@@ -32,51 +32,86 @@ public class ZoneManager {
         }
     }
 
-    public static void afficherZoneConstructible(List<Block> voisinsConstructibles, HashMap<String, Zone> zones) {
+    public static void ajouterZoneConstructible(List<Block> voisinsConstructibles, HashMap<String, Zone> zones) {
         for (Block blockVoisin : voisinsConstructibles) {
             ajouterBlockDansZone(blockVoisin, null, zones.get("CONSTRUCTIBLE"));
         }
     }
 
-    public static List<Block> getVoisinsConstructibles(Block block, HashMap<String, Zone> zones, Map map) {
+    public static List<Block> getVoisinsConstructiblesLigne(List<Block> blocks, HashMap<String, Zone> zones, Map map) {
         List<Block> voisinsConstructibles = new ArrayList<Block>();
         Zone zoneDuBlockVoisin;
-        int line = block.getLine();
-        int col = block.getColumn();
+        int ligne;
 
-        if (line - 1 >= 0) {
-            Block blockVoisin = map.getBlock(block.getLine() - 1, block.getColumn()); // Block du Haut
-            zoneDuBlockVoisin = getZone(blockVoisin, zones);
+        for(Block block : blocks){
+            ligne = block.getLine();
 
-            if (zoneDuBlockVoisin == null) {
-                voisinsConstructibles.add(blockVoisin);
-            }
-        }
+            if (ligne - 1 >= 0) {
+                Block blockVoisin = map.getBlock(block.getLine() - 1, block.getColumn()); // Block du Haut
+                zoneDuBlockVoisin = getZone(blockVoisin, zones);
 
-        if (line + 1 < map.getLineCount()) {
-            Block blockVoisin = map.getBlock(block.getLine() + 1, block.getColumn()); // Block du Bas
-            zoneDuBlockVoisin = getZone(blockVoisin, zones);
-            if (zoneDuBlockVoisin == null) {
-                voisinsConstructibles.add(blockVoisin);
-            }
-        }
-
-        if (col - 1 >= 0) {
-            Block blockVoisin = map.getBlock(block.getLine(), block.getColumn() - 1); // Block de Gauche
-            zoneDuBlockVoisin = getZone(blockVoisin, zones);
-            if (zoneDuBlockVoisin == null) {
-                voisinsConstructibles.add(blockVoisin);
-            }
-        }
-        if (col + 1 < map.getColumnCount()) {
-            Block blockVoisin = map.getBlock(block.getLine(), block.getColumn() + 1); // Block de Droite
-            zoneDuBlockVoisin = getZone(blockVoisin, zones);
-            if (zoneDuBlockVoisin == null) {
-                voisinsConstructibles.add(blockVoisin);
+                if (zoneDuBlockVoisin == null) {
+                    voisinsConstructibles.add(blockVoisin);
+                }
             }
 
+            if (ligne + 1 < map.getLineCount()) {
+                Block blockVoisin = map.getBlock(block.getLine() + 1, block.getColumn()); // Block du Bas
+                zoneDuBlockVoisin = getZone(blockVoisin, zones);
+                if (zoneDuBlockVoisin == null) {
+                    voisinsConstructibles.add(blockVoisin);
+                }
+            }
         }
         return voisinsConstructibles;
+    }
+
+    public static List<Block> getVoisinsConstructiblesColonne(List<Block> blocks, HashMap<String, Zone> zones, Map map) {
+        List<Block> voisinsConstructibles = new ArrayList<Block>();
+        Zone zoneDuBlockVoisin;
+        int colonne;
+
+        for(Block block : blocks){
+            colonne = block.getColumn();
+
+            if (colonne - 1 >= 0) {
+                Block blockVoisin = map.getBlock(block.getLine(), block.getColumn() - 1); // Block de Gauche
+                zoneDuBlockVoisin = getZone(blockVoisin, zones);
+                if (zoneDuBlockVoisin == null) {
+                    voisinsConstructibles.add(blockVoisin);
+                }
+            }
+            if (colonne + 1 < map.getColumnCount()) {
+                Block blockVoisin = map.getBlock(block.getLine(), block.getColumn() + 1); // Block de Droite
+                zoneDuBlockVoisin = getZone(blockVoisin, zones);
+                if (zoneDuBlockVoisin == null) {
+                    voisinsConstructibles.add(blockVoisin);
+                }
+
+            }
+        }
+        return voisinsConstructibles;
+    }
+    
+
+    public static List<Block> getBlockLigne(int ligne, Zone zone){
+        List<Block> blocks = new ArrayList<Block>();
+        for(Block block : zone.getBlocks()){
+            if(block.getLine() == ligne){
+                blocks.add(block);
+            }
+        }
+        return blocks;
+    }
+
+    public static List<Block> getBlockColonne(int colonne, Zone zone){
+        List<Block> blocks = new ArrayList<Block>();
+        for(Block block : zone.getBlocks()){
+            if(block.getColumn() == colonne){
+                blocks.add(block);
+            }
+        }
+        return blocks;
     }
 
     public static int calculerLoyer(HashMap<String,Zone> zones){
