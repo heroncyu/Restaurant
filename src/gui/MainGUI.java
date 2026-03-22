@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 
 import config.GameConfiguration;
+import engine.map.Block;
+import engine.mobile.Meuble;
 import engine.process.ArgentRepository;
 import engine.process.Simulation;
 import gui.info.InfoDisplay;
@@ -80,8 +82,12 @@ public class MainGUI extends JFrame implements Runnable {
                 int ligne = y / GameConfiguration.BLOCK_SIZE;
                 int colonne = x / GameConfiguration.BLOCK_SIZE;
 
-                if (simulation.isConstructionModeActive()) {
+                if (simulation.getConstructionMode() == 1) {
                     simulation.agrandirZone(ligne, colonne);
+                } else if (simulation.getConstructionMode() == 2) {
+
+                    simulation.ajouterMeuble(ligne, colonne);
+                    simulation.setConstructionMode(0);
                 }
 
             }

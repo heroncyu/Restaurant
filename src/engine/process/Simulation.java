@@ -49,11 +49,11 @@ public class Simulation {
     private Block four;
 
     private boolean stop = false;
-    private boolean constructionModeActive = false;
+    private int constructionMode = 0; // 0 = désactivé, 1 = agrandissement de zone, 2 = ajout de meuble
     private boolean alerteStock = false;
 
-
     private Zone zoneBlockSelec = null;
+    private String meubleACreer = "";
 
     private int speedMultiplier = 1;
 
@@ -96,9 +96,21 @@ public class Simulation {
         }
     }
 
+    public void ajouterMeuble(int ligne, int colonne) {
+        Zone zoneMeuble = ZoneManager.getZone(map.getBlock(ligne, colonne), zones);
+        if (zoneMeuble != null) {
+            Meuble meuble = new Meuble(map.getBlock(ligne, colonne), 10, meubleACreer);
+            meubles.add(meuble);
+            if(meuble.getType().equals("TABLE") && zoneMeuble.getNom().equals("SALLE")){
+                manager.ajouterTableVide(meuble);
+            }
+            System.out.println("meuble ajouté");
+        }
+    }
+
 
     public void nextRound() {
-        if (!constructionModeActive && !stop) {
+        if (constructionMode == 0 && !stop) {
             alerteStock = !stockageRepository.auMoinsUneRecetteDisponible(recettes);
 
             generateClient();
@@ -582,19 +594,29 @@ public class Simulation {
         return dayStatistics;
     }
 
-    public boolean isConstructionModeActive() {
-        return constructionModeActive;
+    public int getConstructionMode() {
+        return constructionMode;
     }
 
-    public void setConstructionModeActive(boolean constructionModeActive) {
-        this.constructionModeActive = constructionModeActive;
+    public void setConstructionMode(int constructionMode) {
+        this.constructionMode = constructionMode;
         zoneBlockSelec = null;
         zones.get("CONSTRUCTIBLE").getBlocks().clear();
-        if (constructionModeActive) {
-            System.out.println("mode construction activé");
+        if (constructionMode == 1) {
+            System.out.println("mode construction = aggrandissement de zone activé");
+        } else if (constructionMode == 2) {
+            System.out.println("mode construction = ajout de meuble activé");
         } else {
             System.out.println("mode construction désactivé");
         }
+    }
+
+    public String getMeubleACreer() {
+        return meubleACreer;
+    }
+
+    public void setMeubleACreer(String meubleACreer) {
+        this.meubleACreer = meubleACreer;
     }
 
     public boolean isAlerteStock() {

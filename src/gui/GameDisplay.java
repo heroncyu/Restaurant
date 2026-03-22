@@ -42,7 +42,7 @@ public class GameDisplay extends JPanel {
             paintStrategy.paint(serveur, g);
         }
 
-        if (simulation.isConstructionModeActive()) {
+        if (simulation.getConstructionMode() != 0) {
             paintStrategy.paint(g);
         }
 

@@ -31,6 +31,7 @@ public class MenuDisplay extends JPanel {
 		personnelButton.addActionListener(new PersonnelButtonAction());
 		buildButton.addActionListener(new BuildButtonAction());
 		ingredientButton.addActionListener(new IngredientButtonAction());
+		meubleButton.addActionListener(new MeubleButtonAction());
 
 		add(buildButton);
 		add(personnelButton);
@@ -50,13 +51,24 @@ public class MenuDisplay extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			simulation.setConstructionModeActive(!simulation.isConstructionModeActive());
+			if (simulation.getConstructionMode() == 0) {
+				simulation.setConstructionMode(1);
+			} else {
+				simulation.setConstructionMode(0);
+			}
 		}
 	}
 	private class IngredientButtonAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			new IngredientMenu(owner,dayStatistics);
+		}
+	}
+
+	private class MeubleButtonAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new MeubleMenu(owner,simulation);
 		}
 	}
 }
