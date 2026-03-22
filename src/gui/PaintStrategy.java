@@ -9,6 +9,7 @@ import engine.mobile.Meuble;
 import engine.mobile.Serveur;
 import gui.info.JourLabel;
 import gui.info.MonnaieLabel;
+import gui.info.PropreteLabel;
 import gui.info.ReputationLabel;
 import gui.info.TempsLabel;
 
@@ -52,11 +53,9 @@ public class PaintStrategy {
 
                 graphics.fillRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
 
-                // Grille
                 graphics.setColor(Color.BLACK);
                 graphics.drawRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
             }
-
         }
     }
 
@@ -74,7 +73,6 @@ public class PaintStrategy {
             graphics.fillRect(x + 4, y + 4, blockSize - 10, blockSize - 10);
             graphics.setColor(new Color(105, 100, 99));
             graphics.drawRect(x + 4, y + 4, blockSize - 10, blockSize - 10);
-
             graphics.setColor(new Color(23, 20, 20));
             graphics.fillRect(x + 11, y + 11, blockSize - 24, blockSize - 24);
 
@@ -107,7 +105,6 @@ public class PaintStrategy {
 
         graphics.setFont(new Font("Dialog", Font.PLAIN, 18));
         graphics.drawString((String.valueOf(client.getSatisfaction())), x + 5, y + 5);
-
     }
 
     public void paint(Cuisinier cuisinier, Graphics graphics) {
@@ -143,50 +140,45 @@ public class PaintStrategy {
         int height = label.getHeight();
 
         if (label instanceof MonnaieLabel) {
-
             Graphics2D g2d = (Graphics2D) graphics;
-            g2d.setColor(new Color(101, 67, 33)); // Dark Brown
+            g2d.setColor(new Color(101, 67, 33));
             g2d.fillRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
-
             g2d.setColor(Color.BLACK);
             g2d.drawRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
-
             g2d.setColor(new Color(255, 215, 0));
             g2d.fillOval(5, height / 2 - 8, 16, 16);
-
             g2d.setColor(new Color(184, 134, 11));
             g2d.setStroke(new BasicStroke(1.5f));
             g2d.drawOval(5, height / 2 - 8, 16, 16);
 
         } else if (label instanceof JourLabel) {
-
             Graphics2D g2d = (Graphics2D) graphics;
-
             g2d.setColor(Color.darkGray);
             g2d.fillRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
-
             g2d.setColor(Color.WHITE);
             g2d.drawRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
 
         } else if (label instanceof TempsLabel) {
             Graphics2D g2d = (Graphics2D) graphics;
-
             g2d.setColor(Color.darkGray);
             g2d.fillRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
-
             g2d.setColor(Color.WHITE);
             g2d.drawRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
-            
+
         } else if (label instanceof ReputationLabel) {
             Graphics2D g2d = (Graphics2D) graphics;
-
             g2d.setColor(Color.CYAN);
             g2d.fillRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
+            g2d.setColor(Color.BLACK);
+            g2d.drawRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
 
+        } else if (label instanceof PropreteLabel) {
+            Graphics2D g2d = (Graphics2D) graphics;
+            g2d.setColor(Color.GREEN);
+            g2d.fillRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
             g2d.setColor(Color.BLACK);
             g2d.drawRoundRect(0, height / 2 - 12, weight - 1, 24, 20, 20);
         }
-
     }
 
     public void paint(Graphics graphics) {
@@ -197,7 +189,6 @@ public class PaintStrategy {
 
     public void paint(Graphics graphics, int panelWidth) {
         String message = "Manque d'ingrédients, veuillez en acheter, sinon plus de nouveaux clients...";
-
 
         graphics.setFont(new Font("Comis Sans MS", Font.BOLD, 24));
         int textWidth = graphics.getFontMetrics().stringWidth(message);

@@ -5,6 +5,7 @@ import config.GameConfiguration;
 public class DayStatistics {
     private int nbJour;
     private int nbCommandesDuJour;
+    private int nbCommandesTotal;
     private int argentJourPrecedent;
     private int reputationJourPrecedent;
 
@@ -22,6 +23,7 @@ public class DayStatistics {
     public DayStatistics() {
         this.nbJour = 0;
         this.nbCommandesDuJour = 0;
+        this.nbCommandesTotal = 0;
         this.argentJourPrecedent = GameConfiguration.INITIAL_MONEY;
         this.reputationJourPrecedent = 0;
         this.depensesDuJour = 0;
@@ -60,7 +62,7 @@ public class DayStatistics {
         this.revenusDuJour = this.revenusCommandesDuJour + this.revenusPourboireDuJour;
         return this.revenusDuJour;
     }
-    
+
     public int calculDepenses() {
         this.depensesDuJour = this.coutLoyerDuJour + this.coutSalairesDuJour + this.coutConstructionDuJour + this.achatDujour;
         return this.depensesDuJour;
@@ -71,7 +73,7 @@ public class DayStatistics {
     }
 
     public void addRevenusCommandes(int coutCommandes) {
-        this.revenusCommandesDuJour += coutCommandes; 
+        this.revenusCommandesDuJour += coutCommandes;
     }
 
     public void addCoutSalaires(int coutSalaires) {
@@ -84,6 +86,7 @@ public class DayStatistics {
 
     public void addCommande() {
         this.nbCommandesDuJour++;
+        this.nbCommandesTotal++;
     }
 
     public void addRevenusPourboire(int pourboire) {
@@ -94,44 +97,46 @@ public class DayStatistics {
         this.achatDujour += achat;
     }
 
-
-    
     public int getNbJour() {
         return nbJour;
     }
-    
+
     public int getNbCommandesDuJour() {
         return nbCommandesDuJour;
     }
-    
+
+    public int getNbCommandesTotal() {
+        return nbCommandesTotal;
+    }
+
     public int getArgentJourPrecedent() {
         return argentJourPrecedent;
     }
-    
+
     public int getReputationJourPrecedent() {
         return reputationJourPrecedent;
     }
-    
+
     public int getDepensesDuJour() {
         return depensesDuJour;
     }
-    
+
     public int getBeneficesDuJour() {
         return beneficesDuJour;
     }
-    
+
     public int getCoutLoyerDuJour() {
         return coutLoyerDuJour;
     }
-    
+
     public int getCoutSalairesDuJour() {
         return coutSalairesDuJour;
     }
-    
+
     public int getRevenusCommandesDuJour() {
         return revenusCommandesDuJour;
     }
-    
+
     public int getCoutConstructionDuJour() {
         return coutConstructionDuJour;
     }
@@ -151,35 +156,35 @@ public class DayStatistics {
     public void setNbCommandesDuJour(int nbCommandesDuJour) {
         this.nbCommandesDuJour = nbCommandesDuJour;
     }
-    
+
     public void setArgentJourPrecedent(int argentJourPrecedent) {
         this.argentJourPrecedent = argentJourPrecedent;
     }
-    
+
     public void setReputationJourPrecedent(int reputationJourPrecedent) {
         this.reputationJourPrecedent = reputationJourPrecedent;
     }
-    
+
     public void setDepensesDuJour(int depensesDuJour) {
         this.depensesDuJour = depensesDuJour;
     }
-    
+
     public void setBeneficesDuJour(int beneficesDuJour) {
         this.beneficesDuJour = beneficesDuJour;
     }
-    
+
     public void setCoutLoyerDuJour(int coutLoyerDuJour) {
         this.coutLoyerDuJour = coutLoyerDuJour;
     }
-    
+
     public void setCoutSalairesDuJour(int coutSalairesDuJour) {
         this.coutSalairesDuJour = coutSalairesDuJour;
     }
-    
+
     public void setRevenusCommandesDuJour(int coutCommandesDuJour) {
         this.revenusCommandesDuJour = coutCommandesDuJour;
     }
-    
+
     public void setCoutConstructionDuJour(int coutConstructionDuJour) {
         this.coutConstructionDuJour = coutConstructionDuJour;
     }

@@ -12,6 +12,7 @@ import engine.map.Zone;
 import engine.mobile.Cuisinier;
 import engine.mobile.Meuble;
 import engine.mobile.Serveur;
+import engine.prestige.Succes;
 import engine.process.chrono.Chronometer;
 
 public class GameBuilder {
@@ -23,32 +24,32 @@ public class GameBuilder {
         );
     }
 
-    public static HashMap<String,Zone> buildZones(Map map) {
-        HashMap<String,Zone> zones = new HashMap<>();
+    public static HashMap<String, Zone> buildZones(Map map) {
+        HashMap<String, Zone> zones = new HashMap<>();
 
         Zone cuisine = new Zone("CUISINE");
-        for(int line = 14; line <= 23; line++){
-            for(int col = 4; col <= 9; col++){
-                cuisine.ajouterBlock(map.getBlock(line,col));
+        for (int line = 14; line <= 23; line++) {
+            for (int col = 4; col <= 9; col++) {
+                cuisine.ajouterBlock(map.getBlock(line, col));
             }
         }
-        zones.put("CUISINE",cuisine);
+        zones.put("CUISINE", cuisine);
 
         Zone salle = new Zone("SALLE");
-        for(int line = 14; line <= 23; line++){
-            for(int col = 10; col <= 19; col++){
-                salle.ajouterBlock(map.getBlock(line,col));
+        for (int line = 14; line <= 23; line++) {
+            for (int col = 10; col <= 19; col++) {
+                salle.ajouterBlock(map.getBlock(line, col));
             }
         }
-        zones.put("SALLE",salle);
+        zones.put("SALLE", salle);
 
         Zone reserve = new Zone("RESERVE");
-        for(int line = 14; line <= 23; line++){
-            for(int col = 0; col <= 3; col++){
-                reserve.ajouterBlock(map.getBlock(line,col));
+        for (int line = 14; line <= 23; line++) {
+            for (int col = 0; col <= 3; col++) {
+                reserve.ajouterBlock(map.getBlock(line, col));
             }
         }
-        zones.put("RESERVE",reserve);
+        zones.put("RESERVE", reserve);
 
         Zone constructible = new Zone("CONSTRUCTIBLE");
         zones.put("CONSTRUCTIBLE", constructible);
@@ -59,8 +60,7 @@ public class GameBuilder {
     public static ArrayList<Meuble> buildMeubles(Map map) {
         ArrayList<Meuble> meubles = new ArrayList<>();
 
-
-        meubles.add(new Meuble(map.getBlock(17, 6), 200,"FOUR"));
+        meubles.add(new Meuble(map.getBlock(17, 6), 200, "FOUR"));
 
         meubles.add(new Meuble(map.getBlock(15, 12), 200, "TABLE"));
         meubles.add(new Meuble(map.getBlock(15, 15), 200, "TABLE"));
@@ -69,25 +69,21 @@ public class GameBuilder {
         meubles.add(new Meuble(map.getBlock(23, 19), 200, "PLANTE"));
         meubles.add(new Meuble(map.getBlock(14, 19), 200, "PLANTE"));
 
-
         return meubles;
     }
 
-    public static ArrayList<Cuisinier> buildCuisiniers(Map map){
+    public static ArrayList<Cuisinier> buildCuisiniers(Map map) {
         ArrayList<Cuisinier> cuisiniers = new ArrayList<>();
-
-        cuisiniers.add(new Cuisinier(map.getBlock(22,5),1,100,"Jean"));
-
+        cuisiniers.add(new Cuisinier(map.getBlock(22, 5), 1, 100, "Jean"));
         return cuisiniers;
     }
 
     public static ArrayList<Serveur> buildServeurs(Map map) {
         ArrayList<Serveur> serveurs = new ArrayList<>();
-
-        serveurs.add(new Serveur(map.getBlock(22,10),1,50,"Marie"));
-
+        serveurs.add(new Serveur(map.getBlock(22, 10), 1, 50, "Marie"));
         return serveurs;
     }
+
     public static ArrayList<Recette> buildRecette(ArrayList<Ingredient> ingredients) {
         ArrayList<Recette> recettes = new ArrayList<>();
 
@@ -145,5 +141,15 @@ public class GameBuilder {
         Chronometer chronometre = new Chronometer();
         chronometre.init();
         return chronometre;
+    }
+
+    public static ArrayList<Succes> buildSucces() {
+        ArrayList<Succes> succes = new ArrayList<>();
+        succes.add(new Succes("Bon debut", "Servir 10 commandes", 150));
+        succes.add(new Succes("Restaurant populaire", "Servir 50 commandes", 500));
+        succes.add(new Succes("Riche marchand", "Avoir 2000 gold", 200));
+        succes.add(new Succes("Bonne reputation", "Atteindre 75 de reputation", 300));
+        succes.add(new Succes("Semaine chargee", "Jouer 7 jours", 400));
+        return succes;
     }
 }

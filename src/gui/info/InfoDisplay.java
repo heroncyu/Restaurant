@@ -5,8 +5,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import engine.process.ArgentRepository;
+import engine.process.PropreteRepository;
 import engine.process.Simulation;
+import gui.menu.SuccesMenu;
 
 public class InfoDisplay extends JPanel {
   private Simulation simulation;
@@ -16,10 +20,13 @@ public class InfoDisplay extends JPanel {
   private MonnaieLabel goldLabel = new MonnaieLabel(font);
   private JourLabel jourLabel = new JourLabel(font);
   private ReputationLabel reputationLabel = new ReputationLabel();
+  private PropreteLabel propreteLabel = new PropreteLabel();
   private TempsLabel chrono;
 
   private InfoBouton pauseButton = new InfoBouton("Pause");
   private InfoBouton accelererButton = new InfoBouton(">> x1");
+  private InfoBouton nettoyerButton = new InfoBouton("Nettoyer");
+  private SuccesButton succesButton = new SuccesButton();
 
   public InfoDisplay(Simulation simulation) {
     this.simulation = simulation;
@@ -32,6 +39,11 @@ public class InfoDisplay extends JPanel {
     panelGauche.setOpaque(false);
     panelGauche.add(goldLabel);
     panelGauche.add(reputationLabel);
+    panelGauche.add(propreteLabel);
+
+    nettoyerButton.setFont(font);
+    nettoyerButton.addActionListener(new NettoyerAction());
+    panelGauche.add(nettoyerButton);
 
     JPanel panelDroit = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     panelDroit.setOpaque(false);
@@ -42,6 +54,10 @@ public class InfoDisplay extends JPanel {
     accelererButton.setFont(font);
     accelererButton.addActionListener(new AccelererAction());
 
+    succesButton.setFont(font);
+    succesButton.addActionListener(new SuccesAction());
+
+    panelDroit.add(succesButton);
     panelDroit.add(accelererButton);
     panelDroit.add(pauseButton);
     panelDroit.add(chrono);
@@ -49,7 +65,6 @@ public class InfoDisplay extends JPanel {
 
     add(panelGauche, BorderLayout.WEST);
     add(panelDroit, BorderLayout.EAST);
-
   }
 
   private class PauseAction implements ActionListener {
@@ -74,6 +89,26 @@ public class InfoDisplay extends JPanel {
         simulation.setSpeedMultiplier(1);
         accelererButton.setText(">> x1");
       }
+    }
+  }
+
+  private class NettoyerAction implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      PropreteRepository propreteRepository = PropreteRepository.getInstance();
+      ArgentRepository argentRepository = ArgentRepository.getInstance();
+
+      if (propreteRepository.getProprete() < 100 && argentRepository.getMonnaie() >= 10) {
+        argentRepository.retirerMonnaie(10);
+        propreteRepository.ajouterProprete(10);
+      }
+    }
+  }
+
+  private class SuccesAction implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      new SuccesMenu((javax.swing.JFrame) SwingUtilities.getWindowAncestor(InfoDisplay.this));
     }
   }
 }

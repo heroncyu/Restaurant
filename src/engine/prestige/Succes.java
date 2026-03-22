@@ -5,12 +5,14 @@ public class Succes {
     private String description;
     private int recompense;
     private boolean estDebloque;
+    private boolean estReclame;
 
-    public Succes(String nom,String description,int recompense){
+    public Succes(String nom, String description, int recompense) {
         this.nom = nom;
         this.description = description;
         this.recompense = recompense;
-        estDebloque = false;
+        this.estDebloque = false;
+        this.estReclame = false;
     }
 
     public String getNom() {
@@ -43,5 +45,13 @@ public class Succes {
 
     public void setEstDebloque(boolean estDebloque) {
         this.estDebloque = estDebloque;
+    }
+
+    public boolean isEstReclame() {
+        return estReclame;
+    }
+
+    public void setEstReclame(boolean estReclame) {
+        this.estReclame = estReclame;
     }
 }
