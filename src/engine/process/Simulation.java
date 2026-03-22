@@ -42,6 +42,7 @@ public class Simulation {
     private ArgentRepository argentRepository = ArgentRepository.getInstance();
     private static ReputationRepository reputationRepository = ReputationRepository.getInstance();
     private static StockRepository stockageRepository = StockRepository.getInstance();
+    private static PropreteRepository propreteRepository = PropreteRepository.getInstance();
 
     private Block comptoirS;
     private Block comptoirC;
@@ -49,7 +50,7 @@ public class Simulation {
     private Block four;
 
     private boolean stop = false;
-    private int constructionMode = 0; // 0 = désactivé, 1 = agrandissement de zone, 2 = ajout de meuble
+    private int constructionMode = 0;
     private boolean alerteStock = false;
 
     private Zone zoneBlockSelec = null;
@@ -66,9 +67,7 @@ public class Simulation {
         ArrayList<Serveur> serveurs = GameBuilder.buildServeurs(map);
         ArrayList<Cuisinier> cuisiniers = GameBuilder.buildCuisiniers(map);
 
-        manager = new MobileElementManager(map, serveurs,cuisiniers);
-
-
+        manager = new MobileElementManager(map, serveurs, cuisiniers);
 
         ingredients = GameBuilder.buildIngredients();
         Stockage stockage = GameBuilder.buildStockage(ingredients);
@@ -77,16 +76,16 @@ public class Simulation {
 
         chronometre = GameBuilder.buildChronometer();
 
-        comptoirS = map.getBlock(22,10);
-        comptoirC = map.getBlock(22,9);
-        entree = map.getBlock(19,20);
+        SuccesRepository.getInstance().setSucces(GameBuilder.buildSucces());
+
+        comptoirS = map.getBlock(22, 10);
+        comptoirC = map.getBlock(22, 9);
+        entree = map.getBlock(19, 20);
         four = map.getBlock(17, 6);
 
-
-        for(Meuble meuble : meubles) {
+        for (Meuble meuble : meubles) {
             ajouterTable(meuble);
         }
-
     }
 
     public void ajouterTable(Meuble meuble) {
@@ -101,13 +100,12 @@ public class Simulation {
         if (zoneMeuble != null) {
             Meuble meuble = new Meuble(map.getBlock(ligne, colonne), 10, meubleACreer);
             meubles.add(meuble);
-            if(meuble.getType().equals("TABLE") && zoneMeuble.getNom().equals("SALLE")){
+            if (meuble.getType().equals("TABLE") && zoneMeuble.getNom().equals("SALLE")) {
                 manager.ajouterTableVide(meuble);
             }
             System.out.println("meuble ajouté");
         }
     }
-
 
     public void nextRound() {
         if (constructionMode == 0 && !stop) {
@@ -126,8 +124,13 @@ public class Simulation {
             verifierCommandesPretes();
 
             chronometre.increment();
-        }
 
+            if (chronometre.getMinute().getValue() == 0) {
+                propreteRepository.ajouterProprete(-3);
+            }
+
+            SuccesRepository.getInstance().verifierSucces(dayStatistics);
+        }
     }
 
     private void moveClients() {
@@ -144,14 +147,14 @@ public class Simulation {
                     Commande commande = clientEnTrainManger.remove(c);
                     Serveur serveur = serveurQuiAServi.remove(c);
 
-                    int total = SimulationUtility.calculerTotal(c,commande,serveur,dayStatistics);
+                    int total = SimulationUtility.calculerTotal(c, commande, serveur, dayStatistics);
 
                     argentRepository.ajouterMonnaie(total);
 
                     manager.libererTable(c);
-                    manager.donnerDestinationClient(c,entree);
+                    manager.donnerDestinationClient(c, entree);
 
-                    System.out.println("Le client a fini de manger et le total (prix + pourboire) est de  : " + total +"gold");
+                    System.out.println("Le client a fini de manger et le total (prix + pourboire) est de  : " + total + "gold");
                 } else {
                     tempsManger.put(c, temps);
                 }
@@ -164,7 +167,7 @@ public class Simulation {
                         if (destination.equals(entree)) {
                             Meuble table = manager.getTableClient(c);
                             if (table != null) {
-                                manager.donnerDestinationClient(c,table.getPosition());
+                                manager.donnerDestinationClient(c, table.getPosition());
                                 System.out.println("un client entre dans le restaurant");
                             } else {
                                 manager.retirerClient(c);
@@ -173,28 +176,21 @@ public class Simulation {
                         } else {
                             Recette recette = SimulationUtility.choisirRecetteAlea(recettes);
 
-                            if(recette != null){
+                            if (recette != null) {
                                 stockageRepository.recetteUtilisee(recette);
-
-
 
                                 Commande commande = new Commande(c, recette);
                                 commandesEnAttente.add(commande);
-                                manager.donnerDestinationClient(c,null);
+                                manager.donnerDestinationClient(c, null);
 
                                 dayStatistics.addCommande();
 
                                 System.out.println("commande créée" + recette.getNom());
-
-
-                            }
-                            else{
+                            } else {
                                 manager.libererTable(c);
-                                manager.donnerDestinationClient(c,entree);
+                                manager.donnerDestinationClient(c, entree);
                                 System.out.println("aucun plat disponible, le client part");
                             }
-
-
                         }
                     }
                 }
@@ -232,29 +228,30 @@ public class Simulation {
             }
 
             Meuble tableChoisie = manager.getProchaineTableVide();
-            manager.ajouterClient(client,tableChoisie);
+            manager.ajouterClient(client, tableChoisie);
         }
     }
 
-    private void satisfactionUpdate(){
+    private void satisfactionUpdate() {
         ArrayList<Client> part = new ArrayList<>();
 
-        for(Client client : manager.getClients()){
-            if(SimulationUtility.estEnTrainAttendre(client,manager,tempsManger)){
-                if(client.getSatisfaction()>0){
-                    client.setSatisfaction(client.getSatisfaction()-1);
+        for (Client client : manager.getClients()) {
+            if (SimulationUtility.estEnTrainAttendre(client, manager, tempsManger)) {
+                if (client.getSatisfaction() > 0) {
+                    client.setSatisfaction(client.getSatisfaction() - 1);
                 }
-            }   if(client.getSatisfaction()<=0){
+            }
+            if (client.getSatisfaction() <= 0) {
                 part.add(client);
             }
         }
 
-        for(Client client : part){
+        for (Client client : part) {
             clientPart0satisfaction(client);
         }
     }
 
-    private void clientPart0satisfaction(Client client){
+    private void clientPart0satisfaction(Client client) {
         manager.nettoyerServeurPourClient(client);
         manager.nettoyerCuisinierPourClient(client);
 
@@ -266,11 +263,8 @@ public class Simulation {
         serveurQuiAServi.remove(client);
 
         manager.libererTable(client);
-        manager.donnerDestinationClient(client,entree);
-
+        manager.donnerDestinationClient(client, entree);
     }
-
-
 
     private void assignerServeurPrendre() {
         if (commandesEnAttente.size() > 0) {
@@ -347,17 +341,14 @@ public class Simulation {
                 Client client = commande.getClient();
 
                 tempsManger.put(client, 10);
-                clientEnTrainManger.put(client,commande);
-                serveurQuiAServi.put(client,serveur);
-
+                clientEnTrainManger.put(client, commande);
+                serveurQuiAServi.put(client, serveur);
 
                 manager.libererServeur(serveur);
                 System.out.println(serveur.getName() + " a servi, le client mange");
             }
         }
     }
-
-    //Cuisiniers
 
     private void assignerCuisinier() {
         if (commandesACuisiner.size() > 0) {
@@ -430,7 +421,6 @@ public class Simulation {
 
             Commande commande = manager.getCommandeCuisinier(cuisinier);
 
-            //double qualite = calculerQualite(cuisinier.getNiveauEtoile());
             int qualite = SimulationUtility.calculerQualite(cuisinier);
             commande.getPlat().setQualite(qualite);
 
@@ -443,50 +433,42 @@ public class Simulation {
         }
     }
 
-    private void nettoyerCommandesClient(Client client){
+    private void nettoyerCommandesClient(Client client) {
         Iterator<Commande> it1 = commandesEnAttente.iterator();
         Iterator<Commande> it2 = commandesACuisiner.iterator();
         Iterator<Commande> it3 = commandesCuisson.iterator();
         Iterator<Commande> it4 = commandesPretes.iterator();
 
-        while(it1.hasNext()){
-            if(it1.hasNext()){
+        while (it1.hasNext()) {
+            if (it1.hasNext()) {
                 Client c = it1.next().getClient();
-
-                if(c == client){
+                if (c == client) {
                     it1.remove();
                 }
-
             }
         }
-        while(it2.hasNext()){
-            if(it2.hasNext()){
+        while (it2.hasNext()) {
+            if (it2.hasNext()) {
                 Client c = it2.next().getClient();
-
-                if(c == client){
+                if (c == client) {
                     it2.remove();
                 }
-
             }
         }
-        while(it3.hasNext()){
-            if(it3.hasNext()){
+        while (it3.hasNext()) {
+            if (it3.hasNext()) {
                 Client c = it3.next().getClient();
-
-                if(c == client){
+                if (c == client) {
                     it3.remove();
                 }
-
             }
         }
-        while(it4.hasNext()){
-            if(it4.hasNext()){
+        while (it4.hasNext()) {
+            if (it4.hasNext()) {
                 Client c = it4.next().getClient();
-
-                if(c == client){
+                if (c == client) {
                     it4.remove();
                 }
-
             }
         }
     }
@@ -496,14 +478,11 @@ public class Simulation {
             Block blockSelec = map.getBlock(ligne, colonne);
             zoneBlockSelec = ZoneManager.getZone(blockSelec, zones);
 
-            
-
             if (zoneBlockSelec != null && !zoneBlockSelec.getNom().equals("CONSTRUCTIBLE")) {
                 List<Block> blocksColonne = ZoneManager.getBlockColonne(colonne, zoneBlockSelec);
                 List<Block> blocksLigne = ZoneManager.getBlockLigne(ligne, zoneBlockSelec);
 
                 List<Block> voisinsConstructibles;
-
                 voisinsConstructibles = ZoneManager.getVoisinsConstructiblesLigne(blocksLigne, zones, map);
                 voisinsConstructibles.addAll(ZoneManager.getVoisinsConstructiblesColonne(blocksColonne, zones, map));
                 ZoneManager.ajouterZoneConstructible(voisinsConstructibles, zones);
@@ -522,8 +501,8 @@ public class Simulation {
                 } else {
                     construListTemp = new ArrayList<Block>(construBlocksColonne);
                 }
-                
-                for(Block block : construListTemp){
+
+                for (Block block : construListTemp) {
                     ZoneManager.ajouterBlockDansZone(block, zoneDuBlockCible, zoneBlockSelec);
                 }
 
@@ -537,7 +516,6 @@ public class Simulation {
                 zones.get("CONSTRUCTIBLE").getBlocks().clear();
             }
         }
-
     }
 
     public boolean checkFinJournee() {
@@ -549,13 +527,13 @@ public class Simulation {
             argentRepository.retirerMonnaie(loyer);
             dayStatistics.addCoutLoyer(loyer);
 
-            for(Serveur serveur : manager.getServeurs()){
+            for (Serveur serveur : manager.getServeurs()) {
                 int salaire = serveur.getSalaireBase();
                 argentRepository.retirerMonnaie(salaire);
                 dayStatistics.addCoutSalaires(salaire);
             }
 
-            for(Cuisinier cuisinier : manager.getCuisiniers()){
+            for (Cuisinier cuisinier : manager.getCuisiniers()) {
                 int salaire = cuisinier.getSalaireBase();
                 argentRepository.retirerMonnaie(salaire);
                 dayStatistics.addCoutSalaires(salaire);
@@ -639,7 +617,7 @@ public class Simulation {
         return speedMultiplier;
     }
 
-    public MobileElementManager getManager(){
+    public MobileElementManager getManager() {
         return this.manager;
     }
 
