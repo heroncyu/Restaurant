@@ -28,8 +28,4 @@ public class GameConfiguration {
     public static final int SALAIRE_SERVEUR_BASE = 50;
     public static final int SALAIRE_CUISINIER_BASE = 100;
     public static final int PRIX_AMELIORATION = 50;
-
-    public static final int PRIX_TABLE = 100;
-    public static final int PRIX_FOUR = 200;
-    public static final int PRIX_PLANTE = 50;
 }

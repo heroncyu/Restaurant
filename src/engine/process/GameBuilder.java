@@ -60,14 +60,14 @@ public class GameBuilder {
     public static ArrayList<Meuble> buildMeubles(Map map) {
         ArrayList<Meuble> meubles = new ArrayList<>();
 
-        meubles.add(new Meuble(map.getBlock(17, 6), 200, "FOUR"));
+        meubles.add(new Meuble(map.getBlock(17, 6), "FOUR"));
 
-        meubles.add(new Meuble(map.getBlock(15, 12), 200, "TABLE"));
-        meubles.add(new Meuble(map.getBlock(15, 15), 200, "TABLE"));
+        meubles.add(new Meuble(map.getBlock(15, 12), "TABLE"));
+        meubles.add(new Meuble(map.getBlock(15, 15), "TABLE"));
 
-        meubles.add(new Meuble(map.getBlock(23, 10), 200, "PLANTE"));
-        meubles.add(new Meuble(map.getBlock(23, 19), 200, "PLANTE"));
-        meubles.add(new Meuble(map.getBlock(14, 19), 200, "PLANTE"));
+        meubles.add(new Meuble(map.getBlock(23, 10), "PLANTE"));
+        meubles.add(new Meuble(map.getBlock(23, 19), "PLANTE"));
+        meubles.add(new Meuble(map.getBlock(14, 19), "PLANTE"));
 
         return meubles;
     }

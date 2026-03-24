@@ -10,10 +10,16 @@ public class Meuble extends MobileElement{
         super(position);
     }
 
-    public Meuble(Block position, int prix, String type){
+    public Meuble(Block position, String type){
         this(position);
-        this.prix = prix;
-        this.Type = type;
+        this.type = type;
+        if (type.equals("TABLE")) {
+            this.prix = 100;
+        } else if (type.equals("FOUR")) {
+            this.prix = 200;
+        } else if (type.equals("PLANTE")) {
+            this.prix = 50;
+        }
     }
 
     public int getPrix() {
