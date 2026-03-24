@@ -9,10 +9,11 @@ public class Meuble extends MobileElement{
     public Meuble(Block position) {
         super(position);
     }
-    public Meuble(Block position, int prix,String name){
+
+    public Meuble(Block position, int prix, String type){
         this(position);
         this.prix = prix;
-        this.Type = name;
+        this.Type = type;
     }
 
     public int getPrix() {

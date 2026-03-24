@@ -98,7 +98,7 @@ public class Simulation {
     public void ajouterMeuble(int ligne, int colonne) {
         Zone zoneMeuble = ZoneManager.getZone(map.getBlock(ligne, colonne), zones);
         if (zoneMeuble != null) {
-            Meuble meuble = new Meuble(map.getBlock(ligne, colonne), 10, meubleACreer);
+            Meuble meuble = new Meuble(map.getBlock(ligne, colonne), GameConfiguration.PRIX_TABLE, meubleACreer);
             meubles.add(meuble);
             if (meuble.getType().equals("TABLE") && zoneMeuble.getNom().equals("SALLE")) {
                 manager.ajouterTableVide(meuble);

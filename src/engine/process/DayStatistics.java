@@ -41,7 +41,7 @@ public class DayStatistics {
         this.nbJour++;
         this.nbCommandesDuJour = 0;
         this.argentJourPrecedent = ArgentRepository.getInstance().getMonnaie();
-        //this.reputationJourPrecedent = PrestigeRepository.getInstance().getReputation();
+        this.reputationJourPrecedent = ReputationRepository.getInstance().getReputation();
         this.depensesDuJour = 0;
         this.revenusDuJour = 0;
         this.beneficesDuJour = 0;
