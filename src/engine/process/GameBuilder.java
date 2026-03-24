@@ -87,26 +87,26 @@ public class GameBuilder {
     public static ArrayList<Recette> buildRecette(ArrayList<Ingredient> ingredients) {
         ArrayList<Recette> recettes = new ArrayList<>();
 
-        Recette burger = new Recette("Burger", 10, 15);
+        Recette burger = new Recette("Burger", 10, 15,1);
         burger.ajouterIngredient(ingredients.get(0), 1);
         burger.ajouterIngredient(ingredients.get(1), 1);
         burger.ajouterIngredient(ingredients.get(2), 1);
         burger.ajouterIngredient(ingredients.get(6), 1);
         recettes.add(burger);
 
-        Recette pizza = new Recette("Pizza", 12, 20);
+        Recette pizza = new Recette("Pizza", 12, 20,1);
         pizza.ajouterIngredient(ingredients.get(3), 1);
         pizza.ajouterIngredient(ingredients.get(4), 1);
         pizza.ajouterIngredient(ingredients.get(2), 1);
         recettes.add(pizza);
 
-        Recette pasta = new Recette("Pasta", 8, 10);
+        Recette pasta = new Recette("Pasta", 8, 10,2);
         pasta.ajouterIngredient(ingredients.get(5), 1);
         pasta.ajouterIngredient(ingredients.get(4), 1);
         pasta.ajouterIngredient(ingredients.get(6), 1);
         recettes.add(pasta);
 
-        Recette jiJia = new Recette("Poulet frit", 13, 15);
+        Recette jiJia = new Recette("Poulet frit", 13, 15,3);
         jiJia.ajouterIngredient(ingredients.get(7), 1);
         jiJia.ajouterIngredient(ingredients.get(8), 1);
         jiJia.ajouterIngredient(ingredients.get(4), 1);

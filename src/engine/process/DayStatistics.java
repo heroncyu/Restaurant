@@ -2,6 +2,8 @@ package engine.process;
 
 import config.GameConfiguration;
 
+import java.util.HashMap;
+
 public class DayStatistics {
     private int nbJour;
     private int nbCommandesDuJour;
@@ -19,6 +21,8 @@ public class DayStatistics {
     private int coutConstructionDuJour;
     private int revenusPourboireDuJour;
     private int achatDujour;
+
+    private HashMap<String,Integer> ventesParRecette = new HashMap<>();
 
     public DayStatistics() {
         this.nbJour = 0;
@@ -97,6 +101,11 @@ public class DayStatistics {
         this.achatDujour += achat;
     }
 
+    public void addVenteRecette(String nomRecette){
+        int actuel = ventesParRecette.getOrDefault(nomRecette,0);
+        ventesParRecette.put(nomRecette,actuel+1);
+    }
+
     public int getNbJour() {
         return nbJour;
     }
@@ -151,6 +160,14 @@ public class DayStatistics {
 
     public int getAchatDujour() {
         return achatDujour;
+    }
+
+    public int getVentesRecette(String nomRecette){
+        return ventesParRecette.getOrDefault(nomRecette,0);
+    }
+
+    public HashMap<String,Integer> getVentesParRecette(){
+        return ventesParRecette;
     }
 
     public void setNbCommandesDuJour(int nbCommandesDuJour) {

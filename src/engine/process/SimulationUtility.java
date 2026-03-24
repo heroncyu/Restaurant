@@ -113,15 +113,53 @@ public class SimulationUtility {
         return prixPlat + pourboire;
     }
 
-    public static Recette choisirRecetteAlea(ArrayList<Recette> recettes){
+    public static Recette choisirRecetteAlea(ArrayList<Recette> recettes, int niveauMaxCuisinier){
         ArrayList<Recette> disponibles = stockageRepository.recettesDisponibles(recettes);
 
-        if(disponibles.isEmpty()){
+        ArrayList<Recette> bonNiveau = new ArrayList<>();
+        for(Recette recette : disponibles){
+            if(recette.estDebloquee(niveauMaxCuisinier)){
+                bonNiveau.add(recette);
+            }
+        }
+
+        if(bonNiveau.isEmpty()){
             return null;
         }
 
         int index = (int) (Math.random() * disponibles.size());
         return disponibles.get(index);
+    }
+
+    public static int getNombreFours(ArrayList<Meuble> meubles){
+        int cpt = 0;
+        for(Meuble meuble : meubles){
+            if(meuble.getType().equals("FOUR")){
+                cpt++;
+            }
+        }
+        return cpt;
+    }
+
+    public static int getNombreTables(ArrayList<Meuble> meubles){
+        int cpt = 0;
+        for(Meuble meuble : meubles){
+            if(meuble.getType().equals("TABLE")){
+                cpt++;
+            }
+        }
+        return cpt;
+    }
+
+    public static boolean peutAcheterCuisinier(ArrayList<Meuble> meubles, int nbCuisiniers){
+        int nbFours = getNombreFours(meubles);
+        return nbCuisiniers < nbFours;
+    }
+
+    public static boolean peutAcheterServeur(ArrayList<Meuble> meubles, int nbServeurs){
+        int nbTable = getNombreTables(meubles);
+        int maxServeurs = nbTable/2;
+        return nbServeurs < maxServeurs;
     }
 
     public static int getRandomNumber(int min, int max) {

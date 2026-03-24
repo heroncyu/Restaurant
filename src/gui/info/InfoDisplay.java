@@ -4,15 +4,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import engine.process.ArgentRepository;
 import engine.process.PropreteRepository;
 import engine.process.Simulation;
+import gui.menu.RecettesMenu;
 import gui.menu.SuccesMenu;
 
 public class InfoDisplay extends JPanel {
+  private JFrame owner;
+
   private Simulation simulation;
 
   private static Font font = new Font("Comis Sans MS", Font.BOLD, 24);
@@ -27,8 +29,9 @@ public class InfoDisplay extends JPanel {
   private InfoBouton accelererButton = new InfoBouton(">> x1");
   private InfoBouton nettoyerButton = new InfoBouton("Nettoyer");
   private SuccesButton succesButton = new SuccesButton();
+  private RecettesButton recettesButton = new RecettesButton();
 
-  public InfoDisplay(Simulation simulation) {
+  public InfoDisplay(JFrame owner,Simulation simulation) {
     this.simulation = simulation;
     this.chrono = new TempsLabel(simulation.getChronometre(), font);
 
@@ -57,6 +60,10 @@ public class InfoDisplay extends JPanel {
     succesButton.setFont(font);
     succesButton.addActionListener(new SuccesAction());
 
+    recettesButton.setFont(font);
+    recettesButton.addActionListener(new RecettesAction());
+
+    panelDroit.add(recettesButton);
     panelDroit.add(succesButton);
     panelDroit.add(accelererButton);
     panelDroit.add(pauseButton);
@@ -108,7 +115,13 @@ public class InfoDisplay extends JPanel {
   private class SuccesAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-      new SuccesMenu((javax.swing.JFrame) SwingUtilities.getWindowAncestor(InfoDisplay.this));
+      new SuccesMenu(owner);
+    }
+  }
+  private class RecettesAction implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      new RecettesMenu(owner,simulation);
     }
   }
 }

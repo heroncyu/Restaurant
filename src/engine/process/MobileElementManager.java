@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import engine.item.Commande;
+import engine.item.Recette;
 import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.*;
@@ -178,15 +179,23 @@ public class MobileElementManager {
             }
         }
     }
+    public void ajouterServeur(Serveur serveur) {
+        serveurs.add(serveur);
+        serveurEtats.put(serveur, "LIBRE");
+    }
 
     // Cuisinier
 
-    public Cuisinier trouverCuisinierLibre() {
+    public Cuisinier trouverCuisinierLibre(Recette recette) {
         Cuisinier libre = null;
         Iterator<Cuisinier> it = cuisiniers.iterator();
         while (it.hasNext() && libre == null) {
             Cuisinier c = it.next();
-            if ("LIBRE".equals(cuisinierEtats.get(c))) {
+            System.out.println("Cuisinier " + c.getName()
+                    + " etat=" + cuisinierEtats.get(c)
+                    + " niveau=" + c.getNiveau()
+                    + " requis=" + recette.getNiveauRequis());
+            if ("LIBRE".equals(cuisinierEtats.get(c)) && c.getNiveau()>= recette.getNiveauRequis()) {
                 libre = c;
             }
         }
@@ -221,6 +230,23 @@ public class MobileElementManager {
             }
         }
     }
+
+    public int getNiveauMaxCuisinier(){
+        int max = 0;
+        for(Cuisinier cuisinier : cuisiniers){
+            if(cuisinier.getNiveau() > max){
+                max = cuisinier.getNiveau();
+            }
+        }
+        return max;
+    }
+
+    public void ajouterCuisinier(Cuisinier cuisinier) {
+        cuisiniers.add(cuisinier);
+        cuisinierEtats.put(cuisinier, "LIBRE");
+    }
+
+
 
 
 

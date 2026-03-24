@@ -32,7 +32,7 @@ public class MainGUI extends JFrame implements Runnable {
 
         simulation = new Simulation();
         dashboard = new GameDisplay(simulation.getMap(), simulation);
-        infoDisplay = new InfoDisplay(simulation);
+        infoDisplay = new InfoDisplay(this,simulation);
         buttonPanel = new MenuDisplay(this, simulation,simulation.getDayStatistics());
         orderDisplay = new OrderDisplay(simulation);
 

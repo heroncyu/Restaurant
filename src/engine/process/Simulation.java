@@ -39,7 +39,7 @@ public class Simulation {
 
     private Chronometer chronometre;
 
-    private ArgentRepository argentRepository = ArgentRepository.getInstance();
+    private static ArgentRepository argentRepository = ArgentRepository.getInstance();
     private static ReputationRepository reputationRepository = ReputationRepository.getInstance();
     private static StockRepository stockageRepository = StockRepository.getInstance();
     private static PropreteRepository propreteRepository = PropreteRepository.getInstance();
@@ -147,6 +147,8 @@ public class Simulation {
                     Commande commande = clientEnTrainManger.remove(c);
                     Serveur serveur = serveurQuiAServi.remove(c);
 
+                    dayStatistics.addVenteRecette(commande.getNomRecette());
+
                     int total = SimulationUtility.calculerTotal(c, commande, serveur, dayStatistics);
 
                     argentRepository.ajouterMonnaie(total);
@@ -174,7 +176,7 @@ public class Simulation {
                                 System.out.println("un client est sorti");
                             }
                         } else {
-                            Recette recette = SimulationUtility.choisirRecetteAlea(recettes);
+                            Recette recette = SimulationUtility.choisirRecetteAlea(recettes, manager.getNiveauMaxCuisinier());
 
                             if (recette != null) {
                                 stockageRepository.recetteUtilisee(recette);
@@ -199,9 +201,7 @@ public class Simulation {
     }
 
     private void generateClient() {
-        ArrayList<Recette> disponibles = stockageRepository.recettesDisponibles(recettes);
-
-        if (manager.aDesTablesVides() && !disponibles.isEmpty()) {
+        if (manager.aDesTablesVides()) {
 
             int reputation = reputationRepository.getReputation();
             if (reputation < 25) {
@@ -351,16 +351,22 @@ public class Simulation {
     }
 
     private void assignerCuisinier() {
-        if (commandesACuisiner.size() > 0) {
-            Cuisinier libre = manager.trouverCuisinierLibre();
+        ArrayList<Commande> aRetirer = new ArrayList<>();
+
+        for(Commande commande : commandesACuisiner){
+            Recette recette = commande.getPlat().getRecette();
+
+            Cuisinier libre = manager.trouverCuisinierLibre(recette);
+
             if (libre != null) {
-                Commande commande = commandesACuisiner.remove(0);
+                aRetirer.add(commande);
 
                 manager.assignerCommandeCuisinier(libre, commande);
                 manager.changerEtatCuisinier(libre, "VA_CHERCHER_COMMANDE");
                 manager.donnerDestinationCuisinier(libre, comptoirC);
             }
         }
+        commandesACuisiner.removeAll(aRetirer);
     }
 
     private void moveCuisiniers() {
@@ -548,6 +554,78 @@ public class Simulation {
         return false;
     }
 
+    public boolean acheterServeur() {
+        int prix = GameConfiguration.PRIX_SERVEUR;
+        int nbServeurs = manager.getServeurs().size();
+
+        if (!SimulationUtility.peutAcheterServeur(meubles, nbServeurs)) {
+            System.out.println("Pas assez de tables pour un nouveau serveur");
+            return false;
+        }
+        if (argentRepository.getMonnaie() < prix) {
+            System.out.println("Pas assez d'argent");
+            return false;
+        }
+
+        argentRepository.retirerMonnaie(prix);
+        dayStatistics.addCoutConstruction(prix);
+
+        String nom = "Serveur " + (nbServeurs + 1);
+        Serveur serveur = new Serveur(comptoirS, 1, GameConfiguration.SALAIRE_SERVEUR_BASE, nom);
+        manager.ajouterServeur(serveur);
+
+        System.out.println("Nouveau serveur : " + nom);
+        return true;
+    }
+
+    public boolean acheterCuisinier() {
+        int prix = GameConfiguration.PRIX_CUISINIER;
+        int nbCuisiniers = manager.getCuisiniers().size();
+
+        if (!SimulationUtility.peutAcheterCuisinier(meubles, nbCuisiniers)) {
+            System.out.println("Pas assez de fours pour un nouveau cuisinier");
+            return false;
+        }
+        if (argentRepository.getMonnaie() < prix) {
+            System.out.println("Pas assez d'argent");
+            return false;
+        }
+
+        argentRepository.retirerMonnaie(prix);
+        dayStatistics.addCoutConstruction(prix);
+
+        String nom = "Chef " + (nbCuisiniers + 1);
+        Cuisinier cuisinier = new Cuisinier(comptoirC, 1, GameConfiguration.SALAIRE_CUISINIER_BASE, nom);
+        manager.ajouterCuisinier(cuisinier);
+
+        System.out.println("Nouveau cuisinier : " + nom);
+        return true;
+    }
+
+    public boolean ameliorerServeur(Serveur serveur) {
+        int prix = GameConfiguration.PRIX_AMELIORATION;
+
+        if (serveur.getNiveau() >= 5) return false;
+        if (argentRepository.getMonnaie() < prix) return false;
+
+        argentRepository.retirerMonnaie(prix);
+        serveur.setNiveau(serveur.getNiveau() + 1);
+        serveur.setSalaireBase(serveur.getSalaireBase() + 20);
+        return true;
+    }
+
+    public boolean ameliorerCuisinier(Cuisinier cuisinier) {
+        int prix = GameConfiguration.PRIX_AMELIORATION;
+
+        if (cuisinier.getNiveau() >= 5) return false;
+        if (argentRepository.getMonnaie() < prix) return false;
+
+        argentRepository.retirerMonnaie(prix);
+        cuisinier.setNiveau(cuisinier.getNiveau() + 1);
+        cuisinier.setSalaireBase(cuisinier.getSalaireBase() + 30);
+        return true;
+    }
+
     private static int getRandomNumber(int min, int max) {
         return (int) (Math.random() * (max + 1 - min)) + min;
     }
@@ -591,6 +669,10 @@ public class Simulation {
 
     public String getMeubleACreer() {
         return meubleACreer;
+    }
+
+    public ArrayList<Recette> getRecettes() {
+        return recettes;
     }
 
     public void setMeubleACreer(String meubleACreer) {
