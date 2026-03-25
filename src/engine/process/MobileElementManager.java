@@ -5,13 +5,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import engine.item.Commande;
 import engine.item.Recette;
 import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.*;
+import log.LoggerUtility;
 
 public class MobileElementManager {
+    private static Logger logger = LoggerUtility.getLogger(MobileElementManager.class, "html");
+
     private Map map;
 
     private ArrayList<Client> clients = new ArrayList<>();
@@ -191,7 +196,7 @@ public class MobileElementManager {
         Iterator<Cuisinier> it = cuisiniers.iterator();
         while (it.hasNext() && libre == null) {
             Cuisinier c = it.next();
-            System.out.println("Cuisinier " + c.getName()
+            logger.info("Cuisinier " + c.getName()
                     + " etat=" + cuisinierEtats.get(c)
                     + " niveau=" + c.getNiveau()
                     + " requis=" + recette.getNiveauRequis());

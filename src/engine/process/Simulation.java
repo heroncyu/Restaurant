@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import config.GameConfiguration;
 import engine.item.Commande;
 import engine.item.Ingredient;
@@ -15,8 +17,11 @@ import engine.map.Map;
 import engine.map.Zone;
 import engine.mobile.*;
 import engine.process.chrono.Chronometer;
+import log.LoggerUtility;
 
 public class Simulation {
+    private static Logger logger = LoggerUtility.getLogger(Simulation.class, "html");
+
     private Map map;
     private HashMap<String, Zone> zones;
     private MobileElementManager manager;
@@ -91,7 +96,7 @@ public class Simulation {
     public void ajouterTable(Meuble meuble) {
         if (meuble.getType().equals("TABLE")) {
             manager.ajouterTableVide(meuble);
-            System.out.println("table libre ajoutée");
+            logger.info("table libre ajoutée");
         }
     }
 
@@ -103,7 +108,7 @@ public class Simulation {
             if (meuble.getType().equals("TABLE") && zoneMeuble.getNom().equals("SALLE")) {
                 manager.ajouterTableVide(meuble);
             }
-            System.out.println("meuble ajouté");
+            logger.info("meuble ajouté");
         }
     }
 
@@ -156,7 +161,7 @@ public class Simulation {
                     manager.libererTable(c);
                     manager.donnerDestinationClient(c, entree);
 
-                    System.out.println("Le client a fini de manger et le total (prix + pourboire) est de  : " + total + "gold");
+                    logger.info("Le client a fini de manger et le total (prix + pourboire) est de  : " + total + "gold");
                 } else {
                     tempsManger.put(c, temps);
                 }
@@ -170,10 +175,10 @@ public class Simulation {
                             Meuble table = manager.getTableClient(c);
                             if (table != null) {
                                 manager.donnerDestinationClient(c, table.getPosition());
-                                System.out.println("un client entre dans le restaurant");
+                                logger.info("un client entre dans le restaurant");
                             } else {
                                 manager.retirerClient(c);
-                                System.out.println("un client est sorti");
+                                logger.info("un client est sorti");
                             }
                         } else {
                             Recette recette = SimulationUtility.choisirRecetteAlea(recettes, manager.getNiveauMaxCuisinier());
@@ -187,11 +192,11 @@ public class Simulation {
 
                                 dayStatistics.addCommande();
 
-                                System.out.println("commande créée" + recette.getNom());
+                                logger.info("commande créée" + recette.getNom());
                             } else {
                                 manager.libererTable(c);
                                 manager.donnerDestinationClient(c, entree);
-                                System.out.println("aucun plat disponible, le client part");
+                                logger.info("aucun plat disponible, le client part");
                             }
                         }
                     }
@@ -219,10 +224,10 @@ public class Simulation {
             Client client;
             if (tirage <= 5) {
                 client = ClientFactory.createClient("STAR", position);
-                System.out.println("un client star arrive !!!!");
+                logger.info("un client star arrive !!!!");
             } else if (tirage <= 10) {
                 client = ClientFactory.createClient("CRITIQUE", position);
-                System.out.println("un client critique arrive !!!!");
+                logger.info("un client critique arrive !!!!");
             } else {
                 client = ClientFactory.createClient("NORMAL", position);
             }
@@ -279,7 +284,7 @@ public class Simulation {
 
                 manager.assignerCommandeServeur(libre, commande);
                 manager.changerEtatServeur(libre, "VA_PRENDRE");
-                System.out.println("serveur va chercher commande en attente");
+                logger.info("serveur va chercher commande en attente");
                 manager.donnerDestinationServeur(libre, acote);
             }
         }
@@ -293,7 +298,7 @@ public class Simulation {
 
                 manager.assignerCommandeServeur(libre, commande);
                 manager.changerEtatServeur(libre, "VA_CHERCHER");
-                System.out.println("serveur va chercher commande prête");
+                logger.info("serveur va chercher commande prête");
                 manager.donnerDestinationServeur(libre, comptoirS);
             }
         }
@@ -320,13 +325,13 @@ public class Simulation {
             if ("VA_PRENDRE".equals(etat)) {
                 manager.changerEtatServeur(serveur, "VA_DEPOSER");
                 manager.donnerDestinationServeur(serveur, comptoirS);
-                System.out.println(serveur.getName() + " a pris la commande, va au comptoir");
+                logger.info(serveur.getName() + " a pris la commande, va au comptoir");
 
             } else if ("VA_DEPOSER".equals(etat)) {
                 Commande commande = manager.getCommandeServeur(serveur);
                 commandesACuisiner.add(commande);
                 manager.libererServeur(serveur);
-                System.out.println(serveur.getName() + " a déposé la commande au comptoir");
+                logger.info(serveur.getName() + " a déposé la commande au comptoir");
 
             } else if ("VA_CHERCHER".equals(etat)) {
                 Commande commande = manager.getCommandeServeur(serveur);
@@ -334,7 +339,7 @@ public class Simulation {
                 Block acote = map.getBlock(tableClient.getLine() - 1, tableClient.getColumn());
                 manager.changerEtatServeur(serveur, "VA_SERVIR");
                 manager.donnerDestinationServeur(serveur, acote);
-                System.out.println(serveur.getName() + " a le plat, va servir le client");
+                logger.info(serveur.getName() + " a le plat, va servir le client");
 
             } else if ("VA_SERVIR".equals(etat)) {
                 Commande commande = manager.getCommandeServeur(serveur);
@@ -345,7 +350,7 @@ public class Simulation {
                 serveurQuiAServi.put(client, serveur);
 
                 manager.libererServeur(serveur);
-                System.out.println(serveur.getName() + " a servi, le client mange");
+                logger.info(serveur.getName() + " a servi, le client mange");
             }
         }
     }
@@ -390,7 +395,7 @@ public class Simulation {
             if ("VA_CHERCHER_COMMANDE".equals(etat)) {
                 manager.changerEtatCuisinier(cuisinier, "VA_CUISINER");
                 manager.donnerDestinationCuisinier(cuisinier, four);
-                System.out.println(cuisinier.getName() + " a récupéré la commande, va cuisiner");
+                logger.info(cuisinier.getName() + " a récupéré la commande, va cuisiner");
 
             } else if ("VA_CUISINER".equals(etat)) {
                 Commande commande = manager.getCommandeCuisinier(cuisinier);
@@ -401,7 +406,7 @@ public class Simulation {
 
                 manager.changerEtatCuisinier(cuisinier, "CUISINE");
                 manager.donnerDestinationCuisinier(cuisinier, null);
-                System.out.println(cuisinier.getName() + " cuisine pendant " + duree + " tours");
+                logger.info(cuisinier.getName() + " cuisine pendant " + duree + " tours");
             }
         }
     }
@@ -412,7 +417,7 @@ public class Simulation {
         for (Cuisinier cuisinier : manager.getCuisiniers()) {
             if (tempsCuisson.containsKey(cuisinier)) {
                 int restant = tempsCuisson.get(cuisinier) - 1;
-                System.out.println("le plat cuit...");
+                logger.info("le plat cuit...");
 
                 if (restant <= 0) {
                     termines.add(cuisinier);
@@ -434,7 +439,7 @@ public class Simulation {
             commandesPretes.add(commande);
             manager.libererCuisinier(cuisinier);
 
-            System.out.println("Plat prêt ! Qualité : " + qualite
+            logger.info("Plat prêt ! Qualité : " + qualite
                     + " (chef " + cuisinier.getName() + ")");
         }
     }
@@ -510,7 +515,7 @@ public class Simulation {
 
                 argentRepository.retirerMonnaie(calculerPrixConstruction());
                 dayStatistics.addCoutConstruction(calculerPrixConstruction());
-                
+
                 for (Block block : construListTemp) {
                     ZoneManager.ajouterBlockDansZone(block, zoneDuBlockCible, zoneBlockSelec);
                 }
@@ -568,11 +573,11 @@ public class Simulation {
         int nbServeurs = manager.getServeurs().size();
 
         if (!SimulationUtility.peutAcheterServeur(meubles, nbServeurs)) {
-            System.out.println("Pas assez de tables pour un nouveau serveur");
+            logger.info("Pas assez de tables pour un nouveau serveur");
             return false;
         }
         if (argentRepository.getMonnaie() < prix) {
-            System.out.println("Pas assez d'argent");
+            logger.info("Pas assez d'argent");
             return false;
         }
 
@@ -583,7 +588,7 @@ public class Simulation {
         Serveur serveur = new Serveur(comptoirS, 1, GameConfiguration.SALAIRE_SERVEUR_BASE, nom);
         manager.ajouterServeur(serveur);
 
-        System.out.println("Nouveau serveur : " + nom);
+        logger.info("Nouveau serveur : " + nom);
         return true;
     }
 
@@ -592,11 +597,11 @@ public class Simulation {
         int nbCuisiniers = manager.getCuisiniers().size();
 
         if (!SimulationUtility.peutAcheterCuisinier(meubles, nbCuisiniers)) {
-            System.out.println("Pas assez de fours pour un nouveau cuisinier");
+            logger.info("Pas assez de fours pour un nouveau cuisinier");
             return false;
         }
         if (argentRepository.getMonnaie() < prix) {
-            System.out.println("Pas assez d'argent");
+            logger.info("Pas assez d'argent");
             return false;
         }
 
@@ -607,7 +612,7 @@ public class Simulation {
         Cuisinier cuisinier = new Cuisinier(comptoirC, 1, GameConfiguration.SALAIRE_CUISINIER_BASE, nom);
         manager.ajouterCuisinier(cuisinier);
 
-        System.out.println("Nouveau cuisinier : " + nom);
+        logger.info("Nouveau cuisinier : " + nom);
         return true;
     }
 
@@ -668,11 +673,11 @@ public class Simulation {
         zoneBlockSelec = null;
         zones.get("CONSTRUCTIBLE").getBlocks().clear();
         if (constructionMode == 1) {
-            System.out.println("mode construction = aggrandissement de zone activé");
+            logger.info("mode construction = aggrandissement de zone activé");
         } else if (constructionMode == 2) {
-            System.out.println("mode construction = ajout de meuble activé");
+            logger.info("mode construction = ajout de meuble activé");
         } else {
-            System.out.println("mode construction désactivé");
+            logger.info("mode construction désactivé");
         }
     }
 

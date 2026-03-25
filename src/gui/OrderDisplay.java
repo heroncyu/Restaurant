@@ -2,13 +2,17 @@ package gui;
 
 import engine.item.Commande;
 import engine.process.Simulation;
+import log.LoggerUtility;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import org.apache.log4j.Logger;
 
 
 public class OrderDisplay extends JPanel {
+    private static Logger logger = LoggerUtility.getLogger(OrderDisplay.class, "html");
+    
     private static Font labelTitreFont = new Font("Comis Sans MS", Font.BOLD, 24);
     private static Font labelCommandeFont = new Font("Comis Sans MS", Font.PLAIN, 16);
 
@@ -74,7 +78,7 @@ public class OrderDisplay extends JPanel {
 
     public void updateCommandesEnAttente() {
         ArrayList<Commande> commandesEnAttente = simulation.getCommandesEnAttente();
-        System.out.println("Commandes en attente : " + commandesEnAttente.size());
+        //logger.debug("Commandes en attente : " + commandesEnAttente.size());
         panelCommandesEnAttente.removeAll();
         panelCommandesEnAttente.add(labelEnAttente, BorderLayout.CENTER);
         for (Commande commande : commandesEnAttente) {

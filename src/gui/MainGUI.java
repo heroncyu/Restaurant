@@ -6,6 +6,8 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 
+import org.apache.log4j.Logger;
+
 import config.GameConfiguration;
 import engine.map.Block;
 import engine.mobile.Meuble;
@@ -13,8 +15,11 @@ import engine.process.ArgentRepository;
 import engine.process.Simulation;
 import gui.info.InfoDisplay;
 import gui.menu.MenuDisplay;
+import log.LoggerUtility;
 
 public class MainGUI extends JFrame implements Runnable {
+    private static Logger logger = LoggerUtility.getLogger(MainGUI.class, "html");
+    
     private Simulation simulation;
     private GameDisplay dashboard;
     private InfoDisplay infoDisplay;
@@ -99,7 +104,7 @@ public class MainGUI extends JFrame implements Runnable {
             try {
                 Thread.sleep(GameConfiguration.GAME_SPEED / simulation.getSpeedMultiplier());
             } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
+                logger.error(e.getMessage());
             }
             simulation.nextRound();
             if (simulation.checkFinJournee()) {
