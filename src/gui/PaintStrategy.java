@@ -181,10 +181,10 @@ public class PaintStrategy {
         }
     }
 
-    public void paint(Graphics graphics) {
+    public void paint(Graphics graphics, String message, int prix) {
         graphics.setColor(Color.RED);
         graphics.setFont(new Font("Comis Sans MS", Font.BOLD, 24));
-        graphics.drawString("Mode construction actif", 10, 30);
+        graphics.drawString(message + " ( " + prix + " G )", 10, 30);
     }
 
     public void paint(Graphics graphics, int panelWidth) {

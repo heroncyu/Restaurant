@@ -508,12 +508,12 @@ public class Simulation {
                     construListTemp = new ArrayList<Block>(construBlocksColonne);
                 }
 
+                argentRepository.retirerMonnaie(calculerPrixConstruction());
+                dayStatistics.addCoutConstruction(calculerPrixConstruction());
+                
                 for (Block block : construListTemp) {
                     ZoneManager.ajouterBlockDansZone(block, zoneDuBlockCible, zoneBlockSelec);
                 }
-
-                argentRepository.retirerMonnaie(20);
-                dayStatistics.addCoutConstruction(20);
 
                 zoneBlockSelec = null;
                 zones.get("CONSTRUCTIBLE").getBlocks().clear();
@@ -522,6 +522,15 @@ public class Simulation {
                 zones.get("CONSTRUCTIBLE").getBlocks().clear();
             }
         }
+    }
+
+    public int calculerPrixConstruction() {
+        Zone zoneConstructible = zones.get("CONSTRUCTIBLE");
+        int prix = 0;
+        for (Block block : zoneConstructible.getBlocks()) {
+            prix += 20;
+        }
+        return prix;
     }
 
     public boolean checkFinJournee() {

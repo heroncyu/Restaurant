@@ -42,8 +42,12 @@ public class GameDisplay extends JPanel {
             paintStrategy.paint(serveur, g);
         }
 
-        if (simulation.getConstructionMode() != 0) {
-            paintStrategy.paint(g);
+        if (simulation.getConstructionMode() == 1) {
+            paintStrategy.paint(g, "Mode construction : Agrandissement du terrain", simulation.calculerPrixConstruction());
+        } 
+        
+        if (simulation.getConstructionMode() == 2) {
+            paintStrategy.paint(g, "Mode construction : Placez votre nouveau meuble", 0);
         }
 
         if(simulation.isAlerteStock()){
