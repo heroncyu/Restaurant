@@ -4,7 +4,7 @@ import engine.map.Block;
 
 public class Meuble extends MobileElement{
     private int prix;
-    private String Type;
+    private String type;
 
     public Meuble(Block position) {
         super(position);
@@ -31,10 +31,10 @@ public class Meuble extends MobileElement{
     }
 
     public String getType() {
-        return Type;
+        return type;
     }
 
     public void setType(String type) {
-        this.Type = type;
+        this.type = type;
     }
 }
