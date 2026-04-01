@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 public class OrderDisplay extends JPanel {
     private static Logger logger = LoggerUtility.getLogger(OrderDisplay.class, "html");
     
-    private static Font labelTitreFont = new Font("Comis Sans MS", Font.BOLD, 24);
+    private static Font labelTitreFont = new Font("Comis Sans MS", Font.BOLD, 18);
     private static Font labelCommandeFont = new Font("Comis Sans MS", Font.PLAIN, 16);
 
     private JLabel labelEnAttente;
@@ -69,10 +69,20 @@ public class OrderDisplay extends JPanel {
         labelCuisson.setAlignmentX(CENTER_ALIGNMENT);
         labelPretes.setAlignmentX(CENTER_ALIGNMENT);
 
-        add(panelCommandesEnAttente);
-        add(panelCommandesACuisiner);
-        add(panelCommandesCuisson);
-        add(panelCommandesPretes);
+        JScrollPane scrollPaneEnAttente = new JScrollPane(panelCommandesEnAttente);
+        JScrollPane scrollPaneACuisiner = new JScrollPane(panelCommandesACuisiner);
+        JScrollPane scrollPaneCuisson = new JScrollPane(panelCommandesCuisson);
+        JScrollPane scrollPanePretes = new JScrollPane(panelCommandesPretes);
+
+        scrollPaneEnAttente.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        scrollPaneACuisiner.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        scrollPaneCuisson.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        scrollPanePretes.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+
+        add(scrollPaneEnAttente);
+        add(scrollPaneACuisiner);
+        add(scrollPaneCuisson);
+        add(scrollPanePretes);
     
     }
 
