@@ -1,5 +1,6 @@
 package engine.process;
 
+import config.GameConfiguration;
 import engine.item.Ingredient;
 import engine.item.Recette;
 import engine.item.Stockage;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 public class StockRepository {
     private Stockage stockage;
     private static StockRepository instance = new StockRepository();
+    private int nbCases;
 
     private StockRepository() {}
 
@@ -33,6 +35,9 @@ public class StockRepository {
     }
 
     public void approvisionner(Ingredient ingredient, int quantite) {
+        if (!peutApprovisionner(quantite)) {
+            return;
+        }
         int stockActuel = stockage.getIngredients().getOrDefault(ingredient, 0);
         stockage.ajouterIngredient(ingredient, stockActuel + quantite);
     }
@@ -67,5 +72,21 @@ public class StockRepository {
             }
         }
         return disponibles;
+    }
+
+    public void setNbCases(int nbCases) {
+        this.nbCases = nbCases;
+    }
+
+    public int getNbCases() {
+        return nbCases;
+    }
+
+    public int getCapaciteMax() {
+        return nbCases * GameConfiguration.CAPACITE_PAR_CASE;
+    }
+
+    public boolean peutApprovisionner(int quantite) {
+        return stockage.quantiteTotale() + quantite <= getCapaciteMax();
     }
 }

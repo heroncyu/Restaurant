@@ -77,6 +77,7 @@ public class Simulation {
         ingredients = GameBuilder.buildIngredients();
         Stockage stockage = GameBuilder.buildStockage(ingredients);
         stockageRepository.setStockage(stockage);
+        stockageRepository.setNbCases(ingredients.size());
         recettes = GameBuilder.buildRecette(ingredients);
 
         chronometre = GameBuilder.buildChronometer();

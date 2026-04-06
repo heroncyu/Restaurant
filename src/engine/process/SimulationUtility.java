@@ -4,7 +4,10 @@ import engine.item.Commande;
 import engine.item.Recette;
 import engine.map.Block;
 import engine.mobile.*;
-
+import java.awt.Image;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -164,5 +167,14 @@ public class SimulationUtility {
 
     public static int getRandomNumber(int min, int max) {
         return (int) (Math.random() * (max + 1 - min)) + min;
+    }
+
+    public static Image lireImage(String chemin) {
+        try {
+            return ImageIO.read(new File(chemin));
+        } catch (IOException e) {
+            System.err.println("-- Impossible de lire le fichier image !--");
+            return null;
+        }
     }
 }
