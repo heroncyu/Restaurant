@@ -18,7 +18,7 @@ public class MenuDisplay extends JPanel {
 	private MenuButton buildButton = new MenuButton("Construire", 300, 200);
 	private MenuButton personnelButton = new MenuButton("Personnel", 300, 200);
 	private MenuButton meubleButton = new MenuButton("Meuble", 300, 200);
-	private MenuButton ingredientButton = new MenuButton("Ingrédients", 300, 200);
+	private MenuButton ingredientButton = new MenuButton("Stock", 300, 200);
 
 	public MenuDisplay(JFrame owner, Simulation simulation, DayStatistics dayStatistics) {
 		this.owner = owner;

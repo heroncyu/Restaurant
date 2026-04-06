@@ -15,7 +15,7 @@ public class GameConfiguration {
     public static final int LINE_COUNT = GAME_HEIGHT / BLOCK_SIZE;
     public static final int COLUMN_COUNT = GAME_WIDTH / BLOCK_SIZE;
 
-    public static final int GAME_SPEED = 25;
+    public static final int GAME_SPEED = 250;
 
     public static final int INITIAL_MONEY = 1000;
 
@@ -28,4 +28,9 @@ public class GameConfiguration {
     public static final int SALAIRE_SERVEUR_BASE = 50;
     public static final int SALAIRE_CUISINIER_BASE = 100;
     public static final int PRIX_AMELIORATION = 50;
+
+    public static final int PRIX_TABLE = 100;
+    public static final int PRIX_FOUR = 200;
+    public static final int PRIX_PLANTE = 50;
+    public static final int CAPACITE_PAR_CASE = 15;
 }

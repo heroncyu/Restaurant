@@ -35,15 +35,15 @@ public class SuccesRepository {
     public void verifierSucces(DayStatistics dayStatistics) {
         for (Succes s : succes) {
             if (!s.isEstDebloque()) {
-                if (s.getNom().equals("Bon début") && dayStatistics.getNbCommandesTotal() >= 10) {
+                if (s.getNom().equals("Bon debut") && dayStatistics.getNbCommandesTotal() >= 10) {
                     s.setEstDebloque(true);
                 } else if (s.getNom().equals("Restaurant populaire") && dayStatistics.getNbCommandesTotal() >= 50) {
                     s.setEstDebloque(true);
                 } else if (s.getNom().equals("Riche marchand") && ArgentRepository.getInstance().getMonnaie() >= 2000) {
                     s.setEstDebloque(true);
-                } else if (s.getNom().equals("Bonne réputation") && ReputationRepository.getInstance().getReputation() >= 75) {
+                } else if (s.getNom().equals("Bonne reputation") && ReputationRepository.getInstance().getReputation() >= 75) {
                     s.setEstDebloque(true);
-                } else if (s.getNom().equals("Semaine chargée") && dayStatistics.getNbJour() >= 7) {
+                } else if (s.getNom().equals("Semaine chargee") && dayStatistics.getNbJour() >= 7) {
                     s.setEstDebloque(true);
                 }
             }

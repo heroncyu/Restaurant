@@ -9,6 +9,7 @@ import javax.swing.*;
 import engine.process.ArgentRepository;
 import engine.process.PropreteRepository;
 import engine.process.Simulation;
+import engine.process.SimulationUtility;
 import gui.menu.RecettesMenu;
 import gui.menu.SuccesMenu;
 
@@ -25,13 +26,14 @@ public class InfoDisplay extends JPanel {
   private PropreteLabel propreteLabel = new PropreteLabel();
   private TempsLabel chrono;
 
-  private InfoBouton pauseButton = new InfoBouton("Pause");
+  private InfoBouton pauseButton = new InfoBouton("");
   private InfoBouton accelererButton = new InfoBouton(">> x1");
-  private InfoBouton nettoyerButton = new InfoBouton("Nettoyer");
+  private InfoBouton nettoyerButton = new InfoBouton("");
   private SuccesButton succesButton = new SuccesButton();
   private RecettesButton recettesButton = new RecettesButton();
 
-  public InfoDisplay(JFrame owner,Simulation simulation) {
+  public InfoDisplay(JFrame owner, Simulation simulation) {
+    this.owner = owner;
     this.simulation = simulation;
     this.chrono = new TempsLabel(simulation.getChronometre(), font);
 
@@ -44,23 +46,26 @@ public class InfoDisplay extends JPanel {
     panelGauche.add(reputationLabel);
     panelGauche.add(propreteLabel);
 
-    nettoyerButton.setFont(font);
+    Image imgProprete = SimulationUtility.lireImage("src/resources/proprete.png");
+    if (imgProprete != null) {
+      nettoyerButton.setIcon(new ImageIcon(imgProprete.getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+    }
     nettoyerButton.addActionListener(new NettoyerAction());
     panelGauche.add(nettoyerButton);
-
-    JPanel panelDroit = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-    panelDroit.setOpaque(false);
-
-    pauseButton.setFont(font);
-    pauseButton.addActionListener(new PauseAction());
 
     accelererButton.setFont(font);
     accelererButton.addActionListener(new AccelererAction());
 
-    succesButton.setFont(font);
-    succesButton.addActionListener(new SuccesAction());
+    JPanel panelDroit = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    panelDroit.setOpaque(false);
 
-    recettesButton.setFont(font);
+    Image imgPause = SimulationUtility.lireImage("src/resources/pause.png");
+    if (imgPause != null) {
+      pauseButton.setIcon(new ImageIcon(imgPause.getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
+    }
+    pauseButton.addActionListener(new PauseAction());
+
+    succesButton.addActionListener(new SuccesAction());
     recettesButton.addActionListener(new RecettesAction());
 
     panelDroit.add(recettesButton);
@@ -79,9 +84,9 @@ public class InfoDisplay extends JPanel {
     public void actionPerformed(ActionEvent e) {
       simulation.setStop(!simulation.isStop());
       if (simulation.isStop()) {
-        pauseButton.setText("Go");
+        pauseButton.setIcon(new ImageIcon(SimulationUtility.lireImage("src/resources/go.png").getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
       } else {
-        pauseButton.setText("Pause");
+        pauseButton.setIcon(new ImageIcon(SimulationUtility.lireImage("src/resources/pause.png").getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
       }
     }
   }
@@ -118,10 +123,11 @@ public class InfoDisplay extends JPanel {
       new SuccesMenu(owner);
     }
   }
+
   private class RecettesAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
-      new RecettesMenu(owner,simulation);
+      new RecettesMenu(owner, simulation);
     }
   }
 }

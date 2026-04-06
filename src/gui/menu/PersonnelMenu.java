@@ -1,6 +1,7 @@
 package gui.menu;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,15 +14,18 @@ import engine.process.SimulationUtility;
 public class PersonnelMenu extends JDialog {
     private Simulation simulation;
     private JPanel contenu;
+    private Font font = new Font("comic sans ms", Font.BOLD, 20);
 
     public PersonnelMenu(JFrame owner, Simulation simulation) {
         super(owner, "Personnel", true);
         this.simulation = simulation;
-        setSize(600, 500);
+        setSize(820, 520);
         setLocationRelativeTo(owner);
 
         contenu = new JPanel();
-        contenu.setLayout(new BoxLayout(contenu, BoxLayout.Y_AXIS));
+        contenu.setLayout(new GridLayout(0, 1, 0, 10));
+        contenu.setBackground(Color.gray);
+        contenu.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         init();
 
@@ -31,9 +35,9 @@ public class PersonnelMenu extends JDialog {
     }
 
     private void init() {
-
-        JLabel titreServeurs = new JLabel("-- Serveurs --");
-        titreServeurs.setFont(new Font("SansSerif", Font.BOLD, 18));
+        JLabel titreServeurs = new JLabel("Serveurs");
+        titreServeurs.setFont(font);
+        titreServeurs.setHorizontalAlignment(JLabel.CENTER);
         contenu.add(titreServeurs);
 
         for (Serveur serveur : simulation.getManager().getServeurs()) {
@@ -42,8 +46,9 @@ public class PersonnelMenu extends JDialog {
 
         contenu.add(creerBoutonAchatServeur());
 
-        JLabel titreCuisiniers = new JLabel("-- Cuisiniers --");
-        titreCuisiniers.setFont(new Font("SansSerif", Font.BOLD, 18));
+        JLabel titreCuisiniers = new JLabel("Cuisiniers");
+        titreCuisiniers.setFont(font);
+        titreCuisiniers.setHorizontalAlignment(JLabel.CENTER);
         contenu.add(titreCuisiniers);
 
         for (Cuisinier cuisinier : simulation.getManager().getCuisiniers()) {
@@ -54,10 +59,9 @@ public class PersonnelMenu extends JDialog {
 
         int nbFours = SimulationUtility.getNombreFours(simulation.getMeubles());
         int nbTables = SimulationUtility.getNombreTables(simulation.getMeubles());
-        JLabel infoLabel = new JLabel("Fours: " + nbFours
-                + " | Tables: " + nbTables
-                + " | 1 cuisinier par four, 1 serveur pour 2 tables");
-        infoLabel.setFont(new Font("SansSerif", Font.ITALIC, 12));
+        JLabel infoLabel = new JLabel("Fours: " + nbFours + " | Tables: " + nbTables + " | 1 cuisinier/four, 1 serveur/2 tables");
+        infoLabel.setFont(new Font("comic sans ms", Font.ITALIC, 14));
+        infoLabel.setHorizontalAlignment(JLabel.CENTER);
         contenu.add(infoLabel);
 
         contenu.revalidate();
@@ -65,22 +69,15 @@ public class PersonnelMenu extends JDialog {
     }
 
     private JPanel creerLigneServeur(Serveur serveur) {
-        JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
+        ligne.setBorder(BorderFactory.createLineBorder(Color.black));
 
         String effet = "Pourboire x" + (1.0 + (serveur.getNiveau() - 1) * 0.5);
-        JLabel info = new JLabel(serveur.getName()
-                + " | Niv: " + serveur.getNiveau() + "/5"
-                + " | Salaire: " + serveur.getSalaireBase() + "G"
-                + " | " + effet);
-        info.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        JLabel info = new JLabel(serveur.getName() + " | Niv: " + serveur.getNiveau() + "/5 | Salaire: " + serveur.getSalaireBase() + "G | " + effet);
+        info.setFont(font);
 
-        JButton ameliorer = new JButton("Ameliorer (50G)");
-
-        if (serveur.getNiveau() >= 5) {
-            ameliorer.setEnabled(false);
-            ameliorer.setText("MAX");
-        }
-
+        JButton ameliorer = creerBoutonStyle(serveur.getNiveau() >= 5 ? "MAX" : "Ameliorer (50G)");
+        ameliorer.setEnabled(serveur.getNiveau() < 5);
         ameliorer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (simulation.ameliorerServeur(serveur)) {
@@ -95,22 +92,15 @@ public class PersonnelMenu extends JDialog {
     }
 
     private JPanel creerLigneCuisinier(Cuisinier cuisinier) {
-        JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
+        ligne.setBorder(BorderFactory.createLineBorder(Color.black));
 
         String effet = "Qualite: " + SimulationUtility.calculerQualite(cuisinier) + "%";
-        JLabel info = new JLabel(cuisinier.getName()
-                + " | Niv: " + cuisinier.getNiveau() + "/5"
-                + " | Salaire: " + cuisinier.getSalaireBase() + "G"
-                + " | " + effet);
-        info.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        JLabel info = new JLabel(cuisinier.getName() + " | Niv: " + cuisinier.getNiveau() + "/5 | Salaire: " + cuisinier.getSalaireBase() + "G | " + effet);
+        info.setFont(font);
 
-        JButton ameliorer = new JButton("Ameliorer (50G)");
-
-        if (cuisinier.getNiveau() >= 5) {
-            ameliorer.setEnabled(false);
-            ameliorer.setText("MAX");
-        }
-
+        JButton ameliorer = creerBoutonStyle(cuisinier.getNiveau() >= 5 ? "MAX" : "Ameliorer (50G)");
+        ameliorer.setEnabled(cuisinier.getNiveau() < 5);
         ameliorer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (simulation.ameliorerCuisinier(cuisinier)) {
@@ -125,20 +115,15 @@ public class PersonnelMenu extends JDialog {
     }
 
     private JPanel creerBoutonAchatServeur() {
-        JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel ligne = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        ligne.setBorder(BorderFactory.createLineBorder(Color.black));
 
         boolean peut = SimulationUtility.peutAcheterServeur(
                 simulation.getMeubles(),
                 simulation.getManager().getServeurs().size());
 
-        JButton acheter = new JButton("Recruter un serveur (200G)");
-        acheter.setFont(new Font("SansSerif", Font.BOLD, 14));
-
-        if (!peut) {
-            acheter.setEnabled(false);
-            acheter.setText("Recruter serveur (pas assez de tables)");
-        }
-
+        JButton acheter = creerBoutonStyle(peut ? "Recruter un serveur (200G)" : "Recruter serveur (pas assez de tables)");
+        acheter.setEnabled(peut);
         acheter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (simulation.acheterServeur()) {
@@ -152,20 +137,15 @@ public class PersonnelMenu extends JDialog {
     }
 
     private JPanel creerBoutonAchatCuisinier() {
-        JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel ligne = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        ligne.setBorder(BorderFactory.createLineBorder(Color.black));
 
         boolean peut = SimulationUtility.peutAcheterCuisinier(
                 simulation.getMeubles(),
                 simulation.getManager().getCuisiniers().size());
 
-        JButton acheter = new JButton("Recruter un cuisinier (300G)");
-        acheter.setFont(new Font("SansSerif", Font.BOLD, 14));
-
-        if (!peut) {
-            acheter.setEnabled(false);
-            acheter.setText("Recruter cuisinier (pas assez de fours)");
-        }
-
+        JButton acheter = creerBoutonStyle(peut ? "Recruter un cuisinier (300G)" : "Recruter cuisinier (pas assez de fours)");
+        acheter.setEnabled(peut);
         acheter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (simulation.acheterCuisinier()) {
@@ -176,5 +156,15 @@ public class PersonnelMenu extends JDialog {
 
         ligne.add(acheter);
         return ligne;
+    }
+
+    private JButton creerBoutonStyle(String texte) {
+        JButton bouton = new JButton(texte);
+        bouton.setFont(font);
+        bouton.setBackground(Color.green);
+        bouton.setFocusPainted(false);
+        bouton.setContentAreaFilled(false);
+        bouton.setOpaque(true);
+        return bouton;
     }
 }
