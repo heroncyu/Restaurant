@@ -14,6 +14,7 @@ import gui.info.ReputationLabel;
 import gui.info.TempsLabel;
 
 import java.awt.*;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -56,6 +57,14 @@ public class PaintStrategy {
                 graphics.setColor(Color.BLACK);
                 graphics.drawRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
             }
+        }
+    }
+
+    public void paint(List<Block> blocksOccupees, Graphics graphics) {
+        int blockSize = BLOCK_SIZE;
+        for (Block block : blocksOccupees) {
+            graphics.setColor(new Color(255, 0, 0, 32));
+            graphics.fillRect(block.getColumn() * blockSize, block.getLine() * blockSize, blockSize, blockSize);
         }
     }
 

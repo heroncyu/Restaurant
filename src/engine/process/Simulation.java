@@ -60,6 +60,7 @@ public class Simulation {
 
     private Zone zoneBlockSelec = null;
     private String meubleACreer = "";
+    private List<Block> blocksOccupees = new ArrayList<>();
 
     private int speedMultiplier = 1;
 
@@ -96,17 +97,27 @@ public class Simulation {
     public void ajouterTable(Meuble meuble) {
         if (meuble.getType().equals("TABLE")) {
             manager.ajouterTableVide(meuble);
+            blocksOccupees.add(meuble.getPosition());
+            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() + 1, meuble.getPosition().getColumn())); // Block du bas
+            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() - 1, meuble.getPosition().getColumn())); // Block du haut
+            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine(), meuble.getPosition().getColumn() + 1)); // Block de droite
+            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine(), meuble.getPosition().getColumn() - 1)); // Block de gauche
+            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() + 1, meuble.getPosition().getColumn() + 1)); // Block du bas droite
+            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() + 1, meuble.getPosition().getColumn() - 1)); // Block du bas gauche
+            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() - 1, meuble.getPosition().getColumn() + 1)); // Block du haut droite
+            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() - 1, meuble.getPosition().getColumn() - 1)); // Block du haut gauche
             logger.trace("table libre ajoutée");
         }
     }
 
     public void ajouterMeuble(int ligne, int colonne) {
-        Zone zoneMeuble = ZoneManager.getZone(map.getBlock(ligne, colonne), zones);
-        if (zoneMeuble != null) {
-            Meuble meuble = new Meuble(map.getBlock(ligne, colonne), meubleACreer);
+        Block block = map.getBlock(ligne, colonne);
+        Zone zoneMeuble = ZoneManager.getZone(block, zones);
+        if (zoneMeuble != null && !blocksOccupees.contains(block)) {
+            Meuble meuble = new Meuble(block, meubleACreer);
             meubles.add(meuble);
-            if (meuble.getType().equals("TABLE") && zoneMeuble.getNom().equals("SALLE")) {
-                manager.ajouterTableVide(meuble);
+            if (meuble.getType().equals("TABLE")) {
+                ajouterTable(meuble);
             }
             logger.trace("meuble ajouté");
         }
@@ -745,5 +756,9 @@ public class Simulation {
 
     public ArrayList<Commande> getCommandesPretes() {
         return new ArrayList<>(commandesPretes);
+    }
+
+    public List<Block> getBlocksOccupees() {
+        return blocksOccupees;
     }
 }

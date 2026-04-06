@@ -48,6 +48,7 @@ public class GameDisplay extends JPanel {
         
         if (simulation.getConstructionMode() == 2) {
             paintStrategy.paint(g, "Mode construction : Placez votre nouveau meuble", 0);
+            paintStrategy.paint(simulation.getBlocksOccupees(), g);
         }
 
         if(simulation.isAlerteStock()){
