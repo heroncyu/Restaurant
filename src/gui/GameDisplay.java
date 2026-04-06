@@ -5,6 +5,7 @@ import engine.mobile.Client;
 import engine.mobile.Cuisinier;
 import engine.mobile.Meuble;
 import engine.mobile.Serveur;
+import engine.process.RestaurantManager;
 import engine.process.Simulation;
 
 import javax.swing.*;
@@ -26,6 +27,8 @@ public class GameDisplay extends JPanel {
 
         paintStrategy.paint(map, simulation.getZones(), g);
 
+        RestaurantManager restaurantManager = simulation.getRestaurantManager();
+
         for (Meuble meuble : simulation.getMeubles()) {
             paintStrategy.paint(meuble, g);
         }
@@ -42,11 +45,11 @@ public class GameDisplay extends JPanel {
             paintStrategy.paint(serveur, g);
         }
 
-        if (simulation.getConstructionMode() == 1) {
-            paintStrategy.paint(g, "Mode construction : Agrandissement du terrain", simulation.calculerPrixConstruction());
+        if (restaurantManager.getConstructionMode() == 1) {
+            paintStrategy.paint(g, "Mode construction : Agrandissement du terrain", restaurantManager.calculerPrixConstruction());
         } 
         
-        if (simulation.getConstructionMode() == 2) {
+        if (restaurantManager.getConstructionMode() == 2) {
             paintStrategy.paint(g, "Mode construction : Placez votre nouveau meuble", 0);
             paintStrategy.paint(simulation.getBlocksOccupees(), g);
         }

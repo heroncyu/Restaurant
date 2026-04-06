@@ -15,6 +15,7 @@ public class SimulationUtility {
 
     private static ReputationRepository reputationRepository = ReputationRepository.getInstance();
     private static StockRepository stockageRepository = StockRepository.getInstance();
+    private static PropreteRepository propreteRepository = PropreteRepository.getInstance();
 
     public static int calculerQualite(Cuisinier cuisinier){
         int niveauEtoile = cuisinier.getNiveau();
@@ -93,11 +94,11 @@ public class SimulationUtility {
         double pourcentage;
         int satisfaction = client.getSatisfaction();
         if (satisfaction > 80) {
-            pourcentage = 0.20;
+            pourcentage = 0.40;
         } else if (satisfaction >= 50) {
-            pourcentage = 0.10;
+            pourcentage = 0.25;
         } else {
-            pourcentage = 0.0;
+            pourcentage = 0.1;
         }
 
         double bonusServeur = 1.0 + (serveur.getNiveau()-1)*0.5;
@@ -130,7 +131,7 @@ public class SimulationUtility {
             return null;
         }
 
-        int index = (int) (Math.random() * disponibles.size());
+        int index = (int) (Math.random() * bonNiveau.size());
         return disponibles.get(index);
     }
 

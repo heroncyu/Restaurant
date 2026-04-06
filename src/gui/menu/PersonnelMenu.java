@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import engine.mobile.Serveur;
 import engine.mobile.Cuisinier;
+import engine.process.RestaurantManager;
 import engine.process.Simulation;
 import engine.process.SimulationUtility;
 
@@ -15,10 +16,13 @@ public class PersonnelMenu extends JDialog {
     private Simulation simulation;
     private JPanel contenu;
     private Font font = new Font("comic sans ms", Font.BOLD, 20);
+    private RestaurantManager restaurantManager;
 
     public PersonnelMenu(JFrame owner, Simulation simulation) {
         super(owner, "Personnel", true);
         this.simulation = simulation;
+        this.restaurantManager = simulation.getRestaurantManager();
+
         setSize(820, 520);
         setLocationRelativeTo(owner);
 
@@ -80,7 +84,7 @@ public class PersonnelMenu extends JDialog {
         ameliorer.setEnabled(serveur.getNiveau() < 5);
         ameliorer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (simulation.ameliorerServeur(serveur)) {
+                if (restaurantManager.ameliorerServeur(serveur)) {
                     repaint();
                 }
             }
@@ -103,7 +107,7 @@ public class PersonnelMenu extends JDialog {
         ameliorer.setEnabled(cuisinier.getNiveau() < 5);
         ameliorer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (simulation.ameliorerCuisinier(cuisinier)) {
+                if (restaurantManager.ameliorerCuisinier(cuisinier)) {
                     repaint();
                 }
             }
@@ -126,7 +130,7 @@ public class PersonnelMenu extends JDialog {
         acheter.setEnabled(peut);
         acheter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (simulation.acheterServeur()) {
+                if (restaurantManager.acheterServeur()) {
                     repaint();
                 }
             }
@@ -148,7 +152,7 @@ public class PersonnelMenu extends JDialog {
         acheter.setEnabled(peut);
         acheter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (simulation.acheterCuisinier()) {
+                if (restaurantManager.acheterCuisinier()) {
                     repaint();
                 }
             }

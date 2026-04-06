@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 
 import engine.process.ArgentRepository;
 import engine.process.DayStatistics;
+import engine.process.RestaurantManager;
 import engine.process.Simulation;
 
 import java.awt.BorderLayout;
@@ -25,6 +26,7 @@ public class MeubleMenu extends JDialog {
     private Simulation simulation;
     private ArgentRepository argentRepository = ArgentRepository.getInstance();
     private DayStatistics dayStatistics;
+    private RestaurantManager restaurantManager;
 
     private JPanel tablePanel = new JPanel();
     private JPanel fourPanel = new JPanel();
@@ -46,10 +48,13 @@ public class MeubleMenu extends JDialog {
     private JLabel four = new JLabel("Four");
     private JLabel plante = new JLabel("Plante");
 
+
+
     public MeubleMenu(JFrame owner, Simulation simulation) {
         super(owner, "Menu Meuble", true);
         this.simulation = simulation;
         this.dayStatistics = simulation.getDayStatistics();
+        this.restaurantManager = simulation.getRestaurantManager();
 
         setLayout(new GridLayout(3, 1, 0, 10));
         getContentPane().setBackground(Color.gray);
@@ -159,8 +164,8 @@ public class MeubleMenu extends JDialog {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            simulation.setMeubleACreer("TABLE");
-            simulation.setConstructionMode(2);
+            restaurantManager.setMeubleACreer("TABLE");
+            restaurantManager.setConstructionMode(2);
             argentRepository.retirerMonnaie(100);
             dayStatistics.addAchat(100);
             dispose();
@@ -172,8 +177,8 @@ public class MeubleMenu extends JDialog {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            simulation.setMeubleACreer("FOUR");
-            simulation.setConstructionMode(2);
+            restaurantManager.setMeubleACreer("FOUR");
+            restaurantManager.setConstructionMode(2);
             argentRepository.retirerMonnaie(200);
             dayStatistics.addAchat(200);
             dispose();
@@ -184,8 +189,8 @@ public class MeubleMenu extends JDialog {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            simulation.setMeubleACreer("PLANTE");
-            simulation.setConstructionMode(2);
+            restaurantManager.setMeubleACreer("PLANTE");
+            restaurantManager.setConstructionMode(2);
             argentRepository.retirerMonnaie(50);
             dayStatistics.addAchat(50);
             dispose();

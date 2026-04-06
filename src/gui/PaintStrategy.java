@@ -7,6 +7,7 @@ import engine.mobile.Client;
 import engine.mobile.Cuisinier;
 import engine.mobile.Meuble;
 import engine.mobile.Serveur;
+import engine.process.SimulationUtility;
 import gui.info.JourLabel;
 import gui.info.MonnaieLabel;
 import gui.info.PropreteLabel;
@@ -23,13 +24,19 @@ import javax.swing.JLabel;
 import static config.GameConfiguration.BLOCK_SIZE;
 
 public class PaintStrategy {
+    private Image solHerbe = SimulationUtility.lireImage("src/resources/herbe.png");
+
     public void paint(Map map, HashMap<String, Zone> zones, Graphics graphics) {
         int blockSize = BLOCK_SIZE;
         Block[][] blocks = map.getBlocks();
 
+
         for (int ligne = 0; ligne < map.getLineCount(); ligne++) {
             for (int colonne = 0; colonne < map.getColumnCount(); colonne++) {
                 Block block = blocks[ligne][colonne];
+
+                int x = colonne * blockSize;
+                int y = ligne * blockSize;
 
                 String nomZone = null;
                 Iterator<Zone> it = zones.values().iterator();
@@ -41,21 +48,30 @@ public class PaintStrategy {
                 }
 
                 if (nomZone == null) {
-                    graphics.setColor(new Color(34, 139, 34));
+                    if (solHerbe != null){
+                        graphics.drawImage(solHerbe, x, y, blockSize, blockSize, null);
+                    }
+                    else{
+                        graphics.setColor(new Color(34, 139, 34));
+                        graphics.fillRect(x, y, blockSize, blockSize);
+                    }
                 } else if (nomZone.equals("CUISINE")) {
                     graphics.setColor(new Color(200, 200, 200));
+                    graphics.fillRect(x, y, blockSize, blockSize);
                 } else if (nomZone.equals("SALLE")) {
                     graphics.setColor(new Color(222, 184, 135));
+                    graphics.fillRect(x, y, blockSize, blockSize);
                 } else if (nomZone.equals("RESERVE")) {
                     graphics.setColor(new Color(100, 100, 100));
+                    graphics.fillRect(x, y, blockSize, blockSize);
                 } else if (nomZone.equals("CONSTRUCTIBLE")) {
                     graphics.setColor(Color.cyan);
+                    graphics.fillRect(x, y, blockSize, blockSize);
                 }
 
-                graphics.fillRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
 
-                graphics.setColor(Color.BLACK);
-                graphics.drawRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
+                //graphics.setColor(Color.BLACK);
+                //graphics.drawRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
             }
         }
     }
