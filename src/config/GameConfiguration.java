@@ -33,4 +33,15 @@ public class GameConfiguration {
     public static final int PRIX_FOUR = 200;
     public static final int PRIX_PLANTE = 50;
     public static final int CAPACITE_PAR_CASE = 15;
+
+    public static final String ETAT_LIBRE = "LIBRE";
+
+    public static final String ETAT_VA_PRENDRE = "VA_PRENDRE";
+    public static final String ETAT_VA_DEPOSER = "VA_DEPOSER";
+    public static final String ETAT_VA_CHERCHER = "VA_CHERCHER";
+    public static final String ETAT_VA_SERVIR = "VA_SERVIR";
+
+    public static final String ETAT_VA_CHERCHER_COMMANDE = "VA_CHERCHER_COMMANDE";
+    public static final String ETAT_VA_CUISINER = "VA_CUISINER";
+    public static final String ETAT_CUISINE = "CUISINE";
 }

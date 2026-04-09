@@ -1,6 +1,7 @@
 package gui.menu;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -10,7 +11,9 @@ import javax.swing.border.EmptyBorder;
 
 import engine.process.ArgentRepository;
 import engine.process.DayStatistics;
+import engine.process.RestaurantManager;
 import engine.process.Simulation;
+import engine.process.SimulationUtility;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -18,6 +21,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -25,6 +29,7 @@ public class MeubleMenu extends JDialog {
     private Simulation simulation;
     private ArgentRepository argentRepository = ArgentRepository.getInstance();
     private DayStatistics dayStatistics;
+    private RestaurantManager restaurantManager;
 
     private JPanel tablePanel = new JPanel();
     private JPanel fourPanel = new JPanel();
@@ -42,14 +47,17 @@ public class MeubleMenu extends JDialog {
     private JLabel prixFour = new JLabel("Prix : 200 G");
     private JLabel prixPlante = new JLabel("Prix : 50 G");
 
-    private JLabel table = new JLabel("Table");
-    private JLabel four = new JLabel("Four");
-    private JLabel plante = new JLabel("Plante");
+    private JLabel table = new JLabel();
+    private JLabel four = new JLabel();
+    private JLabel plante = new JLabel();
+
+
 
     public MeubleMenu(JFrame owner, Simulation simulation) {
         super(owner, "Menu Meuble", true);
         this.simulation = simulation;
         this.dayStatistics = simulation.getDayStatistics();
+        this.restaurantManager = simulation.getRestaurantManager();
 
         setLayout(new GridLayout(3, 1, 0, 10));
         getContentPane().setBackground(Color.gray);
@@ -120,6 +128,27 @@ public class MeubleMenu extends JDialog {
         acheterTable.setFont(font);
         acheterFour.setFont(font);
         acheterPlante.setFont(font);
+
+        Image imgTable = SimulationUtility.lireImage("src/resources/table.png");
+        if (imgTable != null) {
+            table.setIcon(new ImageIcon(imgTable.getScaledInstance(175, 175, Image.SCALE_SMOOTH)));
+        } else {
+            table.setText("Table");
+        }
+
+        Image imgFour = SimulationUtility.lireImage("src/resources/four.png");
+        if (imgFour != null) {
+            four.setIcon(new ImageIcon(imgFour.getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
+        } else {
+            four.setText("Four");
+        }
+
+        Image imgPlante = SimulationUtility.lireImage("src/resources/plante.png");
+        if (imgPlante != null) {
+            plante.setIcon(new ImageIcon(imgPlante.getScaledInstance(175, 175, Image.SCALE_SMOOTH)));
+        } else {
+            plante.setText("Plante");
+        }
         
         table.setHorizontalAlignment(JLabel.CENTER);
         four.setHorizontalAlignment(JLabel.CENTER);
@@ -159,8 +188,8 @@ public class MeubleMenu extends JDialog {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            simulation.setMeubleACreer("TABLE");
-            simulation.setConstructionMode(2);
+            restaurantManager.setMeubleACreer("TABLE");
+            restaurantManager.setConstructionMode(2);
             argentRepository.retirerMonnaie(100);
             dayStatistics.addAchat(100);
             dispose();
@@ -172,8 +201,8 @@ public class MeubleMenu extends JDialog {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            simulation.setMeubleACreer("FOUR");
-            simulation.setConstructionMode(2);
+            restaurantManager.setMeubleACreer("FOUR");
+            restaurantManager.setConstructionMode(2);
             argentRepository.retirerMonnaie(200);
             dayStatistics.addAchat(200);
             dispose();
@@ -184,8 +213,8 @@ public class MeubleMenu extends JDialog {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            simulation.setMeubleACreer("PLANTE");
-            simulation.setConstructionMode(2);
+            restaurantManager.setMeubleACreer("PLANTE");
+            restaurantManager.setConstructionMode(2);
             argentRepository.retirerMonnaie(50);
             dayStatistics.addAchat(50);
             dispose();

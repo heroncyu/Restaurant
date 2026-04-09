@@ -7,6 +7,7 @@ import engine.mobile.Client;
 import engine.mobile.Cuisinier;
 import engine.mobile.Meuble;
 import engine.mobile.Serveur;
+import engine.process.SimulationUtility;
 import gui.info.JourLabel;
 import gui.info.MonnaieLabel;
 import gui.info.PropreteLabel;
@@ -23,13 +24,22 @@ import javax.swing.JLabel;
 import static config.GameConfiguration.BLOCK_SIZE;
 
 public class PaintStrategy {
+    private Image solHerbe = SimulationUtility.lireImage("src/resources/herbe.png");
+    private Image table = SimulationUtility.lireImage("src/resources/table.png");
+    private Image four = SimulationUtility.lireImage("src/resources/four.png");
+    private Image plante = SimulationUtility.lireImage("src/resources/plante.png");
+
     public void paint(Map map, HashMap<String, Zone> zones, Graphics graphics) {
         int blockSize = BLOCK_SIZE;
         Block[][] blocks = map.getBlocks();
 
+
         for (int ligne = 0; ligne < map.getLineCount(); ligne++) {
             for (int colonne = 0; colonne < map.getColumnCount(); colonne++) {
                 Block block = blocks[ligne][colonne];
+
+                int x = colonne * blockSize;
+                int y = ligne * blockSize;
 
                 String nomZone = null;
                 Iterator<Zone> it = zones.values().iterator();
@@ -41,21 +51,30 @@ public class PaintStrategy {
                 }
 
                 if (nomZone == null) {
-                    graphics.setColor(new Color(34, 139, 34));
+                    if (solHerbe != null){
+                        graphics.drawImage(solHerbe, x, y, blockSize, blockSize, null);
+                    }
+                    else{
+                        graphics.setColor(new Color(34, 139, 34));
+                        graphics.fillRect(x, y, blockSize, blockSize);
+                    }
                 } else if (nomZone.equals("CUISINE")) {
                     graphics.setColor(new Color(200, 200, 200));
+                    graphics.fillRect(x, y, blockSize, blockSize);
                 } else if (nomZone.equals("SALLE")) {
                     graphics.setColor(new Color(222, 184, 135));
+                    graphics.fillRect(x, y, blockSize, blockSize);
                 } else if (nomZone.equals("RESERVE")) {
                     graphics.setColor(new Color(100, 100, 100));
+                    graphics.fillRect(x, y, blockSize, blockSize);
                 } else if (nomZone.equals("CONSTRUCTIBLE")) {
                     graphics.setColor(Color.cyan);
+                    graphics.fillRect(x, y, blockSize, blockSize);
                 }
 
-                graphics.fillRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
 
-                graphics.setColor(Color.BLACK);
-                graphics.drawRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
+                //graphics.setColor(Color.BLACK);
+                //graphics.drawRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
             }
         }
     }
@@ -78,27 +97,38 @@ public class PaintStrategy {
         String type = meuble.getType();
 
         if (type.equals("FOUR")) {
-            graphics.setColor(new Color(240, 231, 230));
-            graphics.fillRect(x + 4, y + 4, blockSize - 10, blockSize - 10);
-            graphics.setColor(new Color(105, 100, 99));
-            graphics.drawRect(x + 4, y + 4, blockSize - 10, blockSize - 10);
-            graphics.setColor(new Color(23, 20, 20));
-            graphics.fillRect(x + 11, y + 11, blockSize - 24, blockSize - 24);
-
+            if (four != null) {
+                graphics.drawImage(four, x - 10, y - 10, blockSize + 20, blockSize + 20, null);
+            } else {
+                graphics.setColor(new Color(240, 231, 230));
+                graphics.fillRect(x + 4, y + 4, blockSize - 10, blockSize - 10);
+                graphics.setColor(new Color(105, 100, 99));
+                graphics.drawRect(x + 4, y + 4, blockSize - 10, blockSize - 10);
+                graphics.setColor(new Color(23, 20, 20));
+                graphics.fillRect(x + 11, y + 11, blockSize - 24, blockSize - 24);
+            }
         } else if (type.equals("TABLE")) {
-            graphics.setColor(new Color(139, 69, 19));
-            graphics.fillOval(x + 6, y + 6, blockSize - 12, blockSize - 12);
-            graphics.setColor(new Color(100, 50, 10));
-            graphics.drawOval(x + 6, y + 6, blockSize - 12, blockSize - 12);
+            if (table != null) {
+                graphics.drawImage(table, x - 30, y - 30, blockSize + 60, blockSize + 60, null);
+            } else {
+                graphics.setColor(new Color(139, 69, 19));
+                graphics.fillOval(x + 6, y + 6, blockSize - 12, blockSize - 12);
+                graphics.setColor(new Color(100, 50, 10));
+                graphics.drawOval(x + 6, y + 6, blockSize - 12, blockSize - 12);
+            }
 
         } else if (type.equals("PLANTE")) {
-            graphics.setColor(new Color(139, 90, 43));
-            graphics.fillOval(x + 10, y + 10, blockSize - 20, blockSize - 20);
-            graphics.setColor(new Color(0, 160, 0));
-            graphics.fillOval(x + 15, y + 15, blockSize - 30, blockSize - 30);
-            graphics.setColor(new Color(177, 110, 186));
-            graphics.fillOval(x + 30, y + 25, blockSize - 70, blockSize - 70);
-            graphics.fillOval(x + 50, y + 35, blockSize - 70, blockSize - 70);
+            if (plante != null) {
+                graphics.drawImage(plante, x - 10, y - 15, blockSize + 20, blockSize + 20, null);
+            } else {
+                graphics.setColor(new Color(139, 90, 43));
+                graphics.fillOval(x + 10, y + 10, blockSize - 20, blockSize - 20);
+                graphics.setColor(new Color(0, 160, 0));
+                graphics.fillOval(x + 15, y + 15, blockSize - 30, blockSize - 30);
+                graphics.setColor(new Color(177, 110, 186));
+                graphics.fillOval(x + 30, y + 25, blockSize - 70, blockSize - 70);
+                graphics.fillOval(x + 50, y + 35, blockSize - 70, blockSize - 70);
+            }
         }
     }
 

@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import engine.process.DayStatistics;
+import engine.process.RestaurantManager;
 import engine.process.Simulation;
 
 public class MenuDisplay extends JPanel {
@@ -14,6 +15,7 @@ public class MenuDisplay extends JPanel {
 
 	private Simulation simulation;
 	private DayStatistics dayStatistics;
+	private RestaurantManager restaurantManager;
 
 	private MenuButton buildButton = new MenuButton("Construire", 300, 200);
 	private MenuButton personnelButton = new MenuButton("Personnel", 300, 200);
@@ -24,6 +26,7 @@ public class MenuDisplay extends JPanel {
 		this.owner = owner;
 		this.simulation = simulation;
 		this.dayStatistics = dayStatistics;
+		this.restaurantManager = simulation.getRestaurantManager();
 		setLayout(new GridLayout(0, 1, 0, 100));
 
 		setBackground(Color.GRAY);
@@ -51,10 +54,10 @@ public class MenuDisplay extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (simulation.getConstructionMode() == 0) {
-				simulation.setConstructionMode(1);
+			if (restaurantManager.getConstructionMode() == 0) {
+				restaurantManager.setConstructionMode(1);
 			} else {
-				simulation.setConstructionMode(0);
+				restaurantManager.setConstructionMode(0);
 			}
 		}
 	}

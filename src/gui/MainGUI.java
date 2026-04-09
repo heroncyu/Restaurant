@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 
+import engine.process.RestaurantManager;
 import org.apache.log4j.Logger;
 
 import config.GameConfiguration;
@@ -87,12 +88,12 @@ public class MainGUI extends JFrame implements Runnable {
                 int ligne = y / GameConfiguration.BLOCK_SIZE;
                 int colonne = x / GameConfiguration.BLOCK_SIZE;
 
-                if (simulation.getConstructionMode() == 1) {
-                    simulation.agrandirZone(ligne, colonne);
-                } else if (simulation.getConstructionMode() == 2) {
-
-                    simulation.ajouterMeuble(ligne, colonne);
-                    simulation.setConstructionMode(0);
+                RestaurantManager restaurantManager = simulation.getRestaurantManager();
+                if (restaurantManager.getConstructionMode() == 1) {
+                    restaurantManager.agrandirZone(ligne, colonne);
+                } else if (restaurantManager.getConstructionMode() == 2) {
+                    restaurantManager.ajouterMeuble(ligne, colonne);
+                    restaurantManager.setConstructionMode(0);
                 }
 
             }

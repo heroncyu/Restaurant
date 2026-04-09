@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import config.GameConfiguration;
 import org.apache.log4j.Logger;
 
 import engine.item.Commande;
@@ -37,16 +38,19 @@ public class MobileElementManager {
     private HashMap<Client, Meuble> tableOccupee = new HashMap<>();
     private List<Meuble> tablesVides = new ArrayList<>();
 
+    private List<Meuble> foursVides = new ArrayList<>();
+    private HashMap<Cuisinier, Meuble> fourOccupe = new HashMap<>();
+
     public MobileElementManager(Map map, ArrayList<Serveur> serveurs,ArrayList<Cuisinier> cuisiniers) {
         this.map = map;
         this.serveurs = serveurs;
         this.cuisiniers = cuisiniers;
 
         for (Serveur s : serveurs) {
-            serveurEtats.put(s, "LIBRE");
+            serveurEtats.put(s, GameConfiguration.ETAT_LIBRE);
         }
         for (Cuisinier s : cuisiniers) {
-            cuisinierEtats.put(s, "LIBRE");
+            cuisinierEtats.put(s, GameConfiguration.ETAT_LIBRE);
         }
     }
 
@@ -159,7 +163,7 @@ public class MobileElementManager {
     }
 
     public void libererServeur(Serveur serveur) {
-        serveurEtats.put(serveur, "LIBRE");
+        serveurEtats.put(serveur, GameConfiguration.ETAT_LIBRE);
         serveurDestinations.remove(serveur);
         serveurCommandes.remove(serveur);
     }
@@ -169,7 +173,7 @@ public class MobileElementManager {
         Iterator<Serveur> it = serveurs.iterator();
         while (it.hasNext() && libre == null) {
             Serveur s = it.next();
-            if ("LIBRE".equals(serveurEtats.get(s))) {
+            if (GameConfiguration.ETAT_LIBRE.equals(serveurEtats.get(s))) {
                 libre = s;
             }
         }
@@ -186,7 +190,7 @@ public class MobileElementManager {
     }
     public void ajouterServeur(Serveur serveur) {
         serveurs.add(serveur);
-        serveurEtats.put(serveur, "LIBRE");
+        serveurEtats.put(serveur, GameConfiguration.ETAT_LIBRE);
     }
 
     // Cuisinier
@@ -200,7 +204,7 @@ public class MobileElementManager {
                     + " etat=" + cuisinierEtats.get(c)
                     + " niveau=" + c.getNiveau()
                     + " requis=" + recette.getNiveauRequis());
-            if ("LIBRE".equals(cuisinierEtats.get(c)) && c.getNiveau()>= recette.getNiveauRequis()) {
+            if (GameConfiguration.ETAT_LIBRE.equals(cuisinierEtats.get(c)) && c.getNiveau()>= recette.getNiveauRequis()) {
                 libre = c;
             }
         }
@@ -222,16 +226,17 @@ public class MobileElementManager {
     }
 
     public void libererCuisinier(Cuisinier cuisinier) {
-        cuisinierEtats.put(cuisinier, "LIBRE");
+        cuisinierEtats.put(cuisinier, GameConfiguration.ETAT_LIBRE);
         cuisinierDestinations.remove(cuisinier);
         cuisinierCommandes.remove(cuisinier);
     }
 
     public void nettoyerCuisinierPourClient(Client client){
         for(Cuisinier cuisinier: cuisiniers){
-            Commande cmd = serveurCommandes.get(cuisinier);
+            Commande cmd = cuisinierCommandes.get(cuisinier);
             if(cmd != null && cmd.getClient() == client){
                 libererCuisinier(cuisinier);
+                libererFour(cuisinier);
             }
         }
     }
@@ -248,10 +253,28 @@ public class MobileElementManager {
 
     public void ajouterCuisinier(Cuisinier cuisinier) {
         cuisiniers.add(cuisinier);
-        cuisinierEtats.put(cuisinier, "LIBRE");
+        cuisinierEtats.put(cuisinier, GameConfiguration.ETAT_LIBRE);
     }
 
+    //Four
 
+    public void ajouterFourVide(Meuble four) {
+        foursVides.add(four);
+    }
+
+    public Meuble occuperProchainFour(Cuisinier cuisinier) {
+        if (foursVides.isEmpty()) return null;
+        Meuble four = foursVides.remove(0);
+        fourOccupe.put(cuisinier, four);
+        return four;
+    }
+
+    public void libererFour(Cuisinier cuisinier) {
+        Meuble four = fourOccupe.remove(cuisinier);
+        if (four != null) {
+            foursVides.add(four);
+        }
+    }
 
 
 
