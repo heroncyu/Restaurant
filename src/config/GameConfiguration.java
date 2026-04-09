@@ -17,7 +17,7 @@ public class GameConfiguration {
 
     public static final int GAME_SPEED = 250;
 
-    public static final int INITIAL_MONEY = 1000;
+    public static final int INITIAL_MONEY = 1550; //argent de départ - 550 des premiers meubles
 
     public static final int END_OF_DAY_HOUR = 22;
     public static final int INITIAL_REPUTATION = 50;
@@ -32,6 +32,7 @@ public class GameConfiguration {
     public static final int PRIX_TABLE = 100;
     public static final int PRIX_FOUR = 200;
     public static final int PRIX_PLANTE = 50;
+    public static final int PRIX_PORTE_MANTEAU = 75;
     public static final int CAPACITE_PAR_CASE = 15;
 
     public static final String ETAT_LIBRE = "LIBRE";

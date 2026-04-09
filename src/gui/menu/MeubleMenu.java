@@ -7,8 +7,10 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import config.GameConfiguration;
 import engine.process.ArgentRepository;
 import engine.process.DayStatistics;
 import engine.process.RestaurantManager;
@@ -34,22 +36,29 @@ public class MeubleMenu extends JDialog {
     private JPanel tablePanel = new JPanel();
     private JPanel fourPanel = new JPanel();
     private JPanel plantePanel = new JPanel();
+    private JPanel porteManteauPanel = new JPanel();
 
     private JPanel acheterTablePanel = new JPanel();
     private JPanel acheterFourPanel = new JPanel();
     private JPanel acheterPlantePanel = new JPanel();
+    private JPanel acheterPorteManteauPanel = new JPanel();
 
     private JButton acheterTable = new JButton("Acheter");
     private JButton acheterFour = new JButton("Acheter");
     private JButton acheterPlante = new JButton("Acheter");
+    private JButton acheterPorteManteau = new JButton("Acheter");
 
-    private JLabel prixTable = new JLabel("Prix : 100 G");
-    private JLabel prixFour = new JLabel("Prix : 200 G");
-    private JLabel prixPlante = new JLabel("Prix : 50 G");
+    private JLabel prixTable = new JLabel("Prix : " + GameConfiguration.PRIX_TABLE + " G");
+    private JLabel prixFour = new JLabel("Prix : " + GameConfiguration.PRIX_FOUR + " G");
+    private JLabel prixPlante = new JLabel("Prix : " + GameConfiguration.PRIX_PLANTE + " G");
+    private JLabel prixPorteManteau = new JLabel("Prix : " + GameConfiguration.PRIX_PORTE_MANTEAU + " G");
 
     private JLabel table = new JLabel();
     private JLabel four = new JLabel();
     private JLabel plante = new JLabel();
+    private JLabel porteManteau = new JLabel();
+
+    private JScrollPane scrollPane;
 
 
 
@@ -59,7 +68,7 @@ public class MeubleMenu extends JDialog {
         this.dayStatistics = simulation.getDayStatistics();
         this.restaurantManager = simulation.getRestaurantManager();
 
-        setLayout(new GridLayout(3, 1, 0, 10));
+        setLayout(new GridLayout(4, 1, 0, 10));
         getContentPane().setBackground(Color.gray);
         ((JPanel)getContentPane()).setBorder(new EmptyBorder(20, 20, 20, 20));
 
@@ -68,6 +77,11 @@ public class MeubleMenu extends JDialog {
         initTablePanel();
         initFourPanel();
         initPlantePanel();
+        initPorteManteauPanel();
+
+        scrollPane = new JScrollPane(getContentPane());
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        setContentPane(scrollPane);
         
         setSize(820, 520);
         setLocationRelativeTo(owner);
@@ -116,18 +130,35 @@ public class MeubleMenu extends JDialog {
         add(plantePanel);
     }
 
+    private void initPorteManteauPanel() {
+        porteManteauPanel.setLayout(new GridLayout(1, 3));
+        porteManteauPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+
+        acheterPorteManteauPanel.setLayout(new GridBagLayout());
+        acheterPorteManteauPanel.add(acheterPorteManteau);
+
+        porteManteauPanel.add(porteManteau);
+        porteManteauPanel.add(prixPorteManteau);
+        porteManteauPanel.add(acheterPorteManteauPanel);
+
+        add(porteManteauPanel);
+    }
+
     private void initLabels() {
         Font font = new Font("comic sans ms", Font.BOLD, 20);
 
         table.setFont(font);
         four.setFont(font);
         plante.setFont(font);
+        porteManteau.setFont(font);
         prixTable.setFont(font);
         prixFour.setFont(font);
         prixPlante.setFont(font);
+        prixPorteManteau.setFont(font);
         acheterTable.setFont(font);
         acheterFour.setFont(font);
         acheterPlante.setFont(font);
+        acheterPorteManteau.setFont(font);
 
         Image imgTable = SimulationUtility.lireImage("src/resources/table.png");
         if (imgTable != null) {
@@ -149,39 +180,54 @@ public class MeubleMenu extends JDialog {
         } else {
             plante.setText("Plante");
         }
+
+        Image imgPorteManteau = SimulationUtility.lireImage("src/resources/porte_manteau.png");
+        if (imgPorteManteau != null) {
+            porteManteau.setIcon(new ImageIcon(imgPorteManteau.getScaledInstance(175, 175, Image.SCALE_SMOOTH)));
+        } else {
+            porteManteau.setText("Porte Manteau");
+        }
         
         table.setHorizontalAlignment(JLabel.CENTER);
         four.setHorizontalAlignment(JLabel.CENTER);
         plante.setHorizontalAlignment(JLabel.CENTER);
+        porteManteau.setHorizontalAlignment(JLabel.CENTER);
         prixTable.setHorizontalAlignment(JLabel.CENTER);
         prixFour.setHorizontalAlignment(JLabel.CENTER);
         prixPlante.setHorizontalAlignment(JLabel.CENTER);
+        prixPorteManteau.setHorizontalAlignment(JLabel.CENTER);
     }
 
     private void initButtons() {
         acheterTable.addActionListener(new AcheterTableAction());
         acheterFour.addActionListener(new AcheterFourAction());
         acheterPlante.addActionListener(new AcheterPlanteAction());
+        acheterPorteManteau.addActionListener(new AcheterPorteManteauAction());
 
-        acheterTable.setEnabled(argentRepository.getMonnaie() >= 100);
-        acheterFour.setEnabled(argentRepository.getMonnaie() >= 200);
-        acheterPlante.setEnabled(argentRepository.getMonnaie() >= 50);
+        acheterTable.setEnabled(argentRepository.getMonnaie() >= GameConfiguration.PRIX_TABLE);
+        acheterFour.setEnabled(argentRepository.getMonnaie() >= GameConfiguration.PRIX_FOUR);
+        acheterPlante.setEnabled(argentRepository.getMonnaie() >= GameConfiguration.PRIX_PLANTE);
+        acheterPorteManteau.setEnabled(argentRepository.getMonnaie() >= GameConfiguration.PRIX_PORTE_MANTEAU);
 
         acheterTable.setBackground(Color.green);
         acheterFour.setBackground(Color.green);
         acheterPlante.setBackground(Color.green);
+        acheterPorteManteau.setBackground(Color.green);
 
         acheterTable.setFocusPainted(false);
         acheterFour.setFocusPainted(false);
         acheterPlante.setFocusPainted(false);
+        acheterPorteManteau.setFocusPainted(false);
 
         acheterTable.setContentAreaFilled(false);
         acheterFour.setContentAreaFilled(false);
         acheterPlante.setContentAreaFilled(false);
+        acheterPorteManteau.setContentAreaFilled(false);
 
         acheterTable.setOpaque(true);
         acheterFour.setOpaque(true);
         acheterPlante.setOpaque(true);
+        acheterPorteManteau.setOpaque(true);
     }
 
     private class AcheterTableAction implements ActionListener {
@@ -190,8 +236,6 @@ public class MeubleMenu extends JDialog {
         public void actionPerformed(ActionEvent e) {
             restaurantManager.setMeubleACreer("TABLE");
             restaurantManager.setConstructionMode(2);
-            argentRepository.retirerMonnaie(100);
-            dayStatistics.addAchat(100);
             dispose();
             
         }
@@ -203,8 +247,6 @@ public class MeubleMenu extends JDialog {
         public void actionPerformed(ActionEvent e) {
             restaurantManager.setMeubleACreer("FOUR");
             restaurantManager.setConstructionMode(2);
-            argentRepository.retirerMonnaie(200);
-            dayStatistics.addAchat(200);
             dispose();
         }
     }
@@ -215,8 +257,16 @@ public class MeubleMenu extends JDialog {
         public void actionPerformed(ActionEvent e) {
             restaurantManager.setMeubleACreer("PLANTE");
             restaurantManager.setConstructionMode(2);
-            argentRepository.retirerMonnaie(50);
-            dayStatistics.addAchat(50);
+            dispose();
+        }
+    }
+
+    private class AcheterPorteManteauAction implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            restaurantManager.setMeubleACreer("PORTE_MANTEAU");
+            restaurantManager.setConstructionMode(2);
             dispose();
         }
     }

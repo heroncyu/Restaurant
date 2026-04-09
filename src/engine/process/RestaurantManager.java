@@ -28,27 +28,56 @@ public class RestaurantManager {
         this.simulation = simulation;
     }
 
-    public void enregistrerMeuble(Meuble meuble) {
+    public void enregistrerMeuble(Meuble meuble, Zone zoneMeuble) {
         MobileElementManager manager = simulation.getManager();
         Map map = simulation.getMap();
         ArrayList<Block> blocksOccupees = simulation.getBlocksOccupees();
         
         if (meuble.getType().equals("TABLE")) {
-            manager.ajouterTableVide(meuble);
-            blocksOccupees.add(meuble.getPosition());
-            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() + 1, meuble.getPosition().getColumn())); // Block du bas
-            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() - 1, meuble.getPosition().getColumn())); // Block du haut
-            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine(), meuble.getPosition().getColumn() + 1)); // Block de droite
-            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine(), meuble.getPosition().getColumn() - 1)); // Block de gauche
-            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() + 1, meuble.getPosition().getColumn() + 1)); // Block du bas droite
-            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() + 1, meuble.getPosition().getColumn() - 1)); // Block du bas gauche
-            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() - 1, meuble.getPosition().getColumn() + 1)); // Block du haut droite
-            blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() - 1, meuble.getPosition().getColumn() - 1)); // Block du haut gauche
-            logger.trace("Table libre ajoutée");
+            if (zoneMeuble.getNom().equals("SALLE")) {
+                simulation.getMeubles().add(meuble);
+                manager.ajouterTableVide(meuble);
+                blocksOccupees.add(meuble.getPosition());
+                blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() + 1, meuble.getPosition().getColumn())); // Block du bas
+                blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() - 1, meuble.getPosition().getColumn())); // Block du haut
+                blocksOccupees.add(map.getBlock(meuble.getPosition().getLine(), meuble.getPosition().getColumn() + 1)); // Block de droite
+                blocksOccupees.add(map.getBlock(meuble.getPosition().getLine(), meuble.getPosition().getColumn() - 1)); // Block de gauche
+                blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() + 1, meuble.getPosition().getColumn() + 1)); // Block du bas droite
+                blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() + 1, meuble.getPosition().getColumn() - 1)); // Block du bas gauche
+                blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() - 1, meuble.getPosition().getColumn() + 1)); // Block du haut droite
+                blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() - 1, meuble.getPosition().getColumn() - 1)); // Block du haut gauche
+                argentRepository.retirerMonnaie(GameConfiguration.PRIX_TABLE);
+                simulation.getDayStatistics().addAchat(GameConfiguration.PRIX_TABLE);
+                logger.trace("Table libre ajoutée");
+            } else {
+                logger.trace("Veuillez placer la table dans la salle");
+            }
+            
         } else if (meuble.getType().equals("FOUR")) {
-            manager.ajouterFourVide(meuble);
+            if (zoneMeuble.getNom().equals("CUISINE")) {
+                simulation.getMeubles().add(meuble);
+                manager.ajouterFourVide(meuble);
+                blocksOccupees.add(meuble.getPosition());
+                argentRepository.retirerMonnaie(GameConfiguration.PRIX_FOUR);
+                simulation.getDayStatistics().addAchat(GameConfiguration.PRIX_FOUR);
+                logger.trace("Four libre ajouté");
+            } else {
+                logger.trace("Veuillez placer le four dans la cuisine");
+            }
+
+        } else if (meuble.getType().equals("PLANTE")) { // Meuble de décoration
+            simulation.getMeubles().add(meuble);
             blocksOccupees.add(meuble.getPosition());
-            logger.trace("Four libre ajouté");
+            argentRepository.retirerMonnaie(GameConfiguration.PRIX_PLANTE);
+            simulation.getDayStatistics().addAchat(GameConfiguration.PRIX_PLANTE);
+            logger.trace("Meuble de décoration " + meubleACreer + " ajouté");
+        
+        } else if (meuble.getType().equals("PORTE_MANTEAU")) { // Meuble de décoration
+            simulation.getMeubles().add(meuble);
+            blocksOccupees.add(meuble.getPosition());
+            argentRepository.retirerMonnaie(GameConfiguration.PRIX_PORTE_MANTEAU);
+            simulation.getDayStatistics().addAchat(GameConfiguration.PRIX_PORTE_MANTEAU);
+            logger.trace("Meuble de décoration " + meubleACreer + " ajouté");
         }
     }
 
@@ -57,9 +86,9 @@ public class RestaurantManager {
         
         if (zoneMeuble != null) {
             Meuble meuble = new Meuble(simulation.getMap().getBlock(ligne, colonne), meubleACreer);
-            simulation.getMeubles().add(meuble);
-            enregistrerMeuble(meuble);
-            logger.trace("meuble ajouté");
+            enregistrerMeuble(meuble, zoneMeuble);
+        } else {
+            logger.trace("Veuillez placer le meuble dans une zone valide");
         }
     }
 

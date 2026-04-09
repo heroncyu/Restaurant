@@ -28,6 +28,7 @@ public class PaintStrategy {
     private Image table = SimulationUtility.lireImage("src/resources/table.png");
     private Image four = SimulationUtility.lireImage("src/resources/four.png");
     private Image plante = SimulationUtility.lireImage("src/resources/plante.png");
+    private Image porteManteau = SimulationUtility.lireImage("src/resources/porte_manteau.png");
 
     public void paint(Map map, HashMap<String, Zone> zones, Graphics graphics) {
         int blockSize = BLOCK_SIZE;
@@ -129,6 +130,12 @@ public class PaintStrategy {
                 graphics.fillOval(x + 30, y + 25, blockSize - 70, blockSize - 70);
                 graphics.fillOval(x + 50, y + 35, blockSize - 70, blockSize - 70);
             }
+        } else if (type.equals("PORTE_MANTEAU")) {
+            if (porteManteau != null) {
+                graphics.drawImage(porteManteau, x - 10, y - 18, blockSize + 20, blockSize + 20, null);
+            } else {
+                graphics.drawString("P.Manteau", x, y);
+            }
         }
     }
 
@@ -223,7 +230,11 @@ public class PaintStrategy {
     public void paint(Graphics graphics, String message, int prix) {
         graphics.setColor(Color.RED);
         graphics.setFont(new Font("Comis Sans MS", Font.BOLD, 24));
-        graphics.drawString(message + " ( " + prix + " G )", 10, 30);
+        if (prix > 0) {
+            graphics.drawString(message + " ( " + prix + " G )", 10, 30);
+        } else {
+            graphics.drawString(message, 10, 30);
+        }
     }
 
     public void paint(Graphics graphics, int panelWidth) {

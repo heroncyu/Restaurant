@@ -87,8 +87,9 @@ public class Simulation {
         comptoirC = map.getBlock(22, 9);
         entree = map.getBlock(19, 20);
 
-        for (Meuble meuble : meubles) {
-            restaurantManager.enregistrerMeuble(meuble);
+        for (Meuble meuble : new ArrayList<>(meubles)) {
+            Zone zoneMeuble = ZoneManager.getZone(meuble.getPosition(), zones);
+            restaurantManager.enregistrerMeuble(meuble, zoneMeuble);
         }
     }
 
