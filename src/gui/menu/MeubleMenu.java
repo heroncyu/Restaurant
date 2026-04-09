@@ -12,14 +12,11 @@ import javax.swing.border.EmptyBorder;
 
 import config.GameConfiguration;
 import engine.process.ArgentRepository;
-import engine.process.DayStatistics;
 import engine.process.RestaurantManager;
 import engine.process.Simulation;
 import engine.process.SimulationUtility;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -28,9 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MeubleMenu extends JDialog {
-    private Simulation simulation;
     private ArgentRepository argentRepository = ArgentRepository.getInstance();
-    private DayStatistics dayStatistics;
     private RestaurantManager restaurantManager;
 
     private JPanel tablePanel = new JPanel();
@@ -64,8 +59,6 @@ public class MeubleMenu extends JDialog {
 
     public MeubleMenu(JFrame owner, Simulation simulation) {
         super(owner, "Menu Meuble", true);
-        this.simulation = simulation;
-        this.dayStatistics = simulation.getDayStatistics();
         this.restaurantManager = simulation.getRestaurantManager();
 
         setLayout(new GridLayout(4, 1, 0, 10));
