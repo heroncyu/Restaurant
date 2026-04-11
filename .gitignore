@@ -8,7 +8,7 @@ Restaurant.iml
 README.md
 .vscode
 bin/
-
+src/log/restaurant-log.html
 
 ### Eclipse ###
 .apt_generated
@@ -21,6 +21,7 @@ bin/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
+src/log/restaurant-log.html
 
 ### NetBeans ###
 /nbproject/private/
@@ -28,10 +29,12 @@ bin/
 /dist/
 /nbdist/
 /.nb-gradle/
+src/log/restaurant-log.html
 
 ### VS Code ###
 .vscode/
 bin/
+src/log/restaurant-log.html
 
 ### Mac OS ###
 .DS_Store
