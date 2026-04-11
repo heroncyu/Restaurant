@@ -24,7 +24,9 @@ import javax.swing.JLabel;
 import static config.GameConfiguration.BLOCK_SIZE;
 
 public class PaintStrategy {
-    private Image solHerbe = SimulationUtility.lireImage("src/resources/herbe.png");
+    private Image solHerbe = SimulationUtility.lireImage("src/resources/herbe.jpg");
+    private Image solSalle = SimulationUtility.lireImage("src/resources/salle.jpg");
+    private Image solCuisine = SimulationUtility.lireImage("src/resources/cuisine.jpg");
     private Image table = SimulationUtility.lireImage("src/resources/table.png");
     private Image four = SimulationUtility.lireImage("src/resources/four.png");
     private Image plante = SimulationUtility.lireImage("src/resources/plante.png");
@@ -60,11 +62,24 @@ public class PaintStrategy {
                         graphics.fillRect(x, y, blockSize, blockSize);
                     }
                 } else if (nomZone.equals("CUISINE")) {
-                    graphics.setColor(new Color(200, 200, 200));
-                    graphics.fillRect(x, y, blockSize, blockSize);
+                    if(solSalle != null){
+                        graphics.drawImage(solCuisine, x, y, blockSize, blockSize, null);
+                    }
+                    else{
+                        graphics.setColor(new Color(200, 200, 200));
+                        graphics.fillRect(x, y, blockSize, blockSize);
+                    }
+
+
                 } else if (nomZone.equals("SALLE")) {
-                    graphics.setColor(new Color(222, 184, 135));
-                    graphics.fillRect(x, y, blockSize, blockSize);
+                    if(solSalle != null){
+                        graphics.drawImage(solSalle, x, y, blockSize, blockSize, null);
+                    }
+                    else{
+                        graphics.setColor(new Color(222, 184, 135));
+                        graphics.fillRect(x, y, blockSize, blockSize);
+                    }
+
                 } else if (nomZone.equals("RESERVE")) {
                     graphics.setColor(new Color(100, 100, 100));
                     graphics.fillRect(x, y, blockSize, blockSize);
