@@ -87,30 +87,47 @@ public class GameBuilder {
     public static ArrayList<Recette> buildRecette(ArrayList<Ingredient> ingredients) {
         ArrayList<Recette> recettes = new ArrayList<>();
 
-        Recette burger = new Recette("Burger", 10, 15,1);
+        Recette burger = new Recette("Burger", 16, 15,1);
         burger.ajouterIngredient(ingredients.get(0), 1);
         burger.ajouterIngredient(ingredients.get(1), 1);
         burger.ajouterIngredient(ingredients.get(2), 1);
         burger.ajouterIngredient(ingredients.get(6), 1);
         recettes.add(burger);
 
-        Recette pizza = new Recette("Pizza", 12, 20,1);
+        Recette pizza = new Recette("Pizza", 25, 20,2);
         pizza.ajouterIngredient(ingredients.get(3), 1);
         pizza.ajouterIngredient(ingredients.get(4), 1);
         pizza.ajouterIngredient(ingredients.get(2), 1);
         recettes.add(pizza);
 
-        Recette pasta = new Recette("Pasta", 8, 10,2);
+        Recette pasta = new Recette("Pasta", 18, 10,1);
         pasta.ajouterIngredient(ingredients.get(5), 1);
         pasta.ajouterIngredient(ingredients.get(4), 1);
         pasta.ajouterIngredient(ingredients.get(6), 1);
         recettes.add(pasta);
 
-        Recette jiJia = new Recette("Poulet frit", 13, 15,3);
+        Recette jiJia = new Recette("Poulet frit", 30, 15,3);
         jiJia.ajouterIngredient(ingredients.get(7), 1);
         jiJia.ajouterIngredient(ingredients.get(8), 1);
         jiJia.ajouterIngredient(ingredients.get(4), 1);
         recettes.add(jiJia);
+
+        Recette omelette = new Recette("Omelette", 20, 10, 2);
+        omelette.ajouterIngredient(ingredients.get(9), 2);
+        omelette.ajouterIngredient(ingredients.get(2), 1);
+        omelette.ajouterIngredient(ingredients.get(11), 1);
+
+        Recette tajine = new Recette("Tajine", 45, 20, 3);
+        tajine.ajouterIngredient(ingredients.get(7), 1);
+        tajine.ajouterIngredient(ingredients.get(8), 1);
+        tajine.ajouterIngredient(ingredients.get(13), 1);
+        tajine.ajouterIngredient(ingredients.get(0), 1);
+
+        Recette saumon = new Recette("Saumon grille", 60, 25, 4);
+        saumon.ajouterIngredient(ingredients.get(12), 1);
+        saumon.ajouterIngredient(ingredients.get(13), 1);
+        saumon.ajouterIngredient(ingredients.get(10), 1);
+        saumon.ajouterIngredient(ingredients.get(8), 1);
 
         return recettes;
     }
@@ -125,15 +142,20 @@ public class GameBuilder {
 
     public static ArrayList<Ingredient> buildIngredients() {
         ArrayList<Ingredient> ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient("Tomate", 5));
+        ingredients.add(new Ingredient("Tomate", 2));
         ingredients.add(new Ingredient("Pain", 3));
-        ingredients.add(new Ingredient("Fromage", 10));
-        ingredients.add(new Ingredient("Pate", 4));
-        ingredients.add(new Ingredient("Sauce tomate", 3));
-        ingredients.add(new Ingredient("Spaghetti", 4));
-        ingredients.add(new Ingredient("Viande hachee", 8));
-        ingredients.add(new Ingredient("Poulet", 8));
-        ingredients.add(new Ingredient("Epices", 3));
+        ingredients.add(new Ingredient("Fromage", 3));
+        ingredients.add(new Ingredient("Pate", 3));
+        ingredients.add(new Ingredient("Sauce tomate", 1));
+        ingredients.add(new Ingredient("Spaghetti", 3));
+        ingredients.add(new Ingredient("Viande hachee", 5));
+        ingredients.add(new Ingredient("Poulet", 4));
+        ingredients.add(new Ingredient("Epices", 1));
+        ingredients.add(new Ingredient("Oeuf", 2));
+        ingredients.add(new Ingredient("Creme", 3));
+        ingredients.add(new Ingredient("Champignon", 2));
+        ingredients.add(new Ingredient("Saumon", 6));
+        ingredients.add(new Ingredient("Citron", 2));
         return ingredients;
     }
 
