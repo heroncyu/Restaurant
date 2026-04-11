@@ -12,6 +12,7 @@ import engine.process.Simulation;
 import engine.process.SimulationUtility;
 import gui.menu.RecettesMenu;
 import gui.menu.SuccesMenu;
+import gui.util.FondPanel;
 
 public class InfoDisplay extends JPanel {
   private JFrame owner;
@@ -32,13 +33,20 @@ public class InfoDisplay extends JPanel {
   private SuccesButton succesButton = new SuccesButton();
   private RecettesButton recettesButton = new RecettesButton();
 
+  Image imgProprete = SimulationUtility.lireImage("src/resources/proprete.png");
+  Image imgPause = SimulationUtility.lireImage("src/resources/pause.png");
+  Image imgFond = SimulationUtility.lireImage("src/resources/fond_bois.png");
+
+  private FondPanel fondPanel;
+
   public InfoDisplay(JFrame owner, Simulation simulation) {
     this.owner = owner;
     this.simulation = simulation;
     this.chrono = new TempsLabel(simulation.getChronometre(), font);
+    this.fondPanel = new FondPanel(imgFond);
 
     setLayout(new BorderLayout());
-    setBackground(Color.gray);
+    fondPanel.setLayout(new BorderLayout());
 
     JPanel panelGauche = new JPanel(new FlowLayout(FlowLayout.LEFT));
     panelGauche.setOpaque(false);
@@ -46,7 +54,6 @@ public class InfoDisplay extends JPanel {
     panelGauche.add(reputationLabel);
     panelGauche.add(propreteLabel);
 
-    Image imgProprete = SimulationUtility.lireImage("src/resources/proprete.png");
     if (imgProprete != null) {
       nettoyerButton.setIcon(new ImageIcon(imgProprete.getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
     }
@@ -54,12 +61,12 @@ public class InfoDisplay extends JPanel {
     panelGauche.add(nettoyerButton);
 
     accelererButton.setFont(font);
+    accelererButton.setForeground(Color.white);
     accelererButton.addActionListener(new AccelererAction());
 
     JPanel panelDroit = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     panelDroit.setOpaque(false);
 
-    Image imgPause = SimulationUtility.lireImage("src/resources/pause.png");
     if (imgPause != null) {
       pauseButton.setIcon(new ImageIcon(imgPause.getScaledInstance(30, 30, Image.SCALE_SMOOTH)));
     }
@@ -75,8 +82,10 @@ public class InfoDisplay extends JPanel {
     panelDroit.add(chrono);
     panelDroit.add(jourLabel);
 
-    add(panelGauche, BorderLayout.WEST);
-    add(panelDroit, BorderLayout.EAST);
+    fondPanel.add(panelGauche, BorderLayout.WEST);
+    fondPanel.add(panelDroit, BorderLayout.EAST);
+
+    add(fondPanel, BorderLayout.CENTER);
   }
 
   private class PauseAction implements ActionListener {

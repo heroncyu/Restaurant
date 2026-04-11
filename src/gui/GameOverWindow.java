@@ -60,6 +60,7 @@ public class GameOverWindow extends JDialog {
         setBackground(Color.GRAY);
         setSize(1000, 800);
         setLocationRelativeTo(owner);
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setVisible(true);
 
     }

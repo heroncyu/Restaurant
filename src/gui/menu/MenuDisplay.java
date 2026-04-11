@@ -9,9 +9,12 @@ import javax.swing.*;
 import engine.process.DayStatistics;
 import engine.process.RestaurantManager;
 import engine.process.Simulation;
+import engine.process.SimulationUtility;
+import gui.util.FondPanel;
 
 public class MenuDisplay extends JPanel {
 	private JFrame owner;
+	private FondPanel fondPanel;
 
 	private Simulation simulation;
 	private DayStatistics dayStatistics;
@@ -22,24 +25,29 @@ public class MenuDisplay extends JPanel {
 	private MenuButton meubleButton = new MenuButton("Meuble", 300, 200);
 	private MenuButton ingredientButton = new MenuButton("Stock", 300, 200);
 
+	private Image imgFond = SimulationUtility.lireImage("src/resources/fond_bois.png");
+
 	public MenuDisplay(JFrame owner, Simulation simulation, DayStatistics dayStatistics) {
 		this.owner = owner;
 		this.simulation = simulation;
 		this.dayStatistics = dayStatistics;
 		this.restaurantManager = simulation.getRestaurantManager();
-		setLayout(new GridLayout(0, 1, 0, 100));
+		this.fondPanel = new FondPanel(imgFond);
 
-		setBackground(Color.GRAY);
+		fondPanel.setLayout(new GridLayout(0, 1, 0, 100));
 
 		personnelButton.addActionListener(new PersonnelButtonAction());
 		buildButton.addActionListener(new BuildButtonAction());
 		ingredientButton.addActionListener(new IngredientButtonAction());
 		meubleButton.addActionListener(new MeubleButtonAction());
 
-		add(buildButton);
-		add(personnelButton);
-		add(meubleButton);
-		add(ingredientButton);
+		fondPanel.add(buildButton);
+		fondPanel.add(personnelButton);
+		fondPanel.add(meubleButton);
+		fondPanel.add(ingredientButton);
+
+		setLayout(new BorderLayout());
+		add(fondPanel, BorderLayout.CENTER);
 	}
 
 	private class PersonnelButtonAction implements ActionListener {

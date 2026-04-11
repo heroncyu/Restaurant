@@ -18,12 +18,15 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import engine.process.SimulationUtility;
+import gui.util.FondPanel;
+
 import java.awt.Image;
 
 public class EcranTitreGUI extends JFrame {
+    private Image fondImage = SimulationUtility.lireImage("src/resources/ecran_titre_fond.png");
 
     private JPanel boutonPanel = new JPanel();
-    private FondPanel fondPanel = new FondPanel();
+    private FondPanel fondPanel;
 
     private JButton jouerButton = new JButton("JOUER");
     private JButton quitterButton = new JButton("QUITTER");
@@ -32,14 +35,15 @@ public class EcranTitreGUI extends JFrame {
     private JLabel creditLabel = new JLabel();
     private JLabel titreLabel = new JLabel();
 
-    private Image fondImage = SimulationUtility.lireImage("src/resources/ecran_titre_fond.png");
+    
     
     public EcranTitreGUI() {
         super("Restaurant");
+        setSize(1000, 800);
+        this.fondPanel = new FondPanel(fondImage);
 
         init();
-
-        setSize(1000, 800);
+ 
         setLocationRelativeTo(null);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -146,16 +150,6 @@ public class EcranTitreGUI extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             dispose();
-        }
-    }
-
-    private class FondPanel extends JPanel {
-        @Override
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (fondImage != null) {
-                g.drawImage(fondImage, 0, 0, getWidth(), getHeight(), null);
-            }
         }
     }
 }
