@@ -110,28 +110,32 @@ public class RestaurantManager {
             Block blockCible = simulation.getMap().getBlock(ligne, colonne);
             Zone zoneDuBlockCible = ZoneManager.getZone(blockCible, simulation.getZones());
             if (zoneDuBlockCible != null && zoneDuBlockCible.getNom().equals("CONSTRUCTIBLE")) {
-
-                List<Block> construBlocksLigne = ZoneManager.getBlockLigne(ligne, zoneDuBlockCible);
-                List<Block> construBlocksColonne = ZoneManager.getBlockColonne(colonne, zoneDuBlockCible);
-
-                List<Block> construListTemp;
-                if (construBlocksLigne.size() > construBlocksColonne.size()) {
-                    construListTemp = new ArrayList<Block>(construBlocksLigne);
-                } else {
-                    construListTemp = new ArrayList<Block>(construBlocksColonne);
-                }
-
                 int prix = calculerPrixConstruction();
-                argentRepository.retirerMonnaie(prix);
-                simulation.getDayStatistics().addCoutConstruction(prix);
+                if (argentRepository.getMonnaie() >= prix) {
 
-                for (Block block : construListTemp) {
-                    ZoneManager.ajouterBlockDansZone(block, zoneDuBlockCible, zoneBlockSelec);
-                    logger.trace("block ajouté à la zone " + zoneBlockSelec.getNom());
+                    List<Block> construBlocksLigne = ZoneManager.getBlockLigne(ligne, zoneDuBlockCible);
+                    List<Block> construBlocksColonne = ZoneManager.getBlockColonne(colonne, zoneDuBlockCible);
+
+                    List<Block> construListTemp;
+                    if (construBlocksLigne.size() > construBlocksColonne.size()) {
+                        construListTemp = new ArrayList<Block>(construBlocksLigne);
+                    } else {
+                        construListTemp = new ArrayList<Block>(construBlocksColonne);
+                    }
+                    
+                    for (Block block : construListTemp) {
+                        ZoneManager.ajouterBlockDansZone(block, zoneDuBlockCible, zoneBlockSelec);
+                        logger.trace("block ajouté à la zone " + zoneBlockSelec.getNom());
+                    }
+
+                    argentRepository.retirerMonnaie(prix);
+                    simulation.getDayStatistics().addCoutConstruction(prix);
+
+                    zoneBlockSelec = null;
+                    simulation.getZones().get("CONSTRUCTIBLE").getBlocks().clear();
+                } else {
+                    logger.trace("Pas assez d'argent pour agrandir la zone");
                 }
-
-                zoneBlockSelec = null;
-                simulation.getZones().get("CONSTRUCTIBLE").getBlocks().clear();
             } else {
                 zoneBlockSelec = null;
                 simulation.getZones().get("CONSTRUCTIBLE").getBlocks().clear();
