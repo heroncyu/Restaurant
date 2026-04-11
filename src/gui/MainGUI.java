@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 import engine.process.RestaurantManager;
 import org.apache.log4j.Logger;
@@ -17,6 +17,8 @@ import engine.process.Simulation;
 import gui.info.InfoDisplay;
 import gui.menu.MenuDisplay;
 import log.LoggerUtility;
+import engine.prestige.Succes;
+import engine.process.SuccesRepository;
 
 public class MainGUI extends JFrame implements Runnable {
     private static Logger logger = LoggerUtility.getLogger(MainGUI.class, "html");
@@ -99,7 +101,42 @@ public class MainGUI extends JFrame implements Runnable {
             }
         }
     }
+    private void afficherNotificationSucces(Succes s) {
+        JWindow notif = new JWindow(this);
+        JPanel panel = new JPanel();
+        panel.setBackground(new Color(30, 30, 30));
+        panel.setBorder(BorderFactory.createLineBorder(new Color(200, 160, 0), 2));
+        panel.setLayout(new BorderLayout(10, 10));
 
+        JLabel titre = new JLabel("  Succès débloqué !", SwingConstants.CENTER);
+        titre.setForeground(new Color(200, 160, 0));
+        titre.setFont(new Font("Comic Sans MS", Font.BOLD, 18));
+
+        JLabel nom = new JLabel(s.getNom(), SwingConstants.CENTER);
+        nom.setForeground(Color.WHITE);
+        nom.setFont(new Font("Comic Sans MS", Font.PLAIN, 16));
+
+        JLabel recompense = new JLabel("+" + s.getRecompense() + " gold", SwingConstants.CENTER);
+        recompense.setForeground(new Color(200, 160, 0));
+        recompense.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
+
+        panel.add(titre, BorderLayout.NORTH);
+        panel.add(nom, BorderLayout.CENTER);
+        panel.add(recompense, BorderLayout.SOUTH);
+        panel.setPreferredSize(new Dimension(300, 100));
+
+        notif.add(panel);
+        notif.pack();
+
+        int x = getX() + (getWidth() - notif.getWidth()) / 2;
+        int y = getY() + 30;
+        notif.setLocation(x, y);
+        notif.setVisible(true);
+
+        Timer timer = new Timer(4000, e -> notif.dispose());
+        timer.setRepeats(false);
+        timer.start();
+    }
     public void run() {
         while (true) {
             try {
@@ -113,6 +150,11 @@ public class MainGUI extends JFrame implements Runnable {
                 new BilanWindow(this, simulation.getDayStatistics());
                 simulation.getDayStatistics().update();
                 simulation.setStop(false);
+            }
+            simulation.nextRound();
+            Succes notif = SuccesRepository.getInstance().Notification();
+            if (notif != null) {
+                afficherNotificationSucces(notif);
             }
             dashboard.repaint();
             infoDisplay.repaint();
