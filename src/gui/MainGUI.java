@@ -6,6 +6,7 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.*;
 
+import engine.prestige.Succes;
 import engine.process.RestaurantManager;
 import org.apache.log4j.Logger;
 
@@ -17,8 +18,6 @@ import engine.process.Simulation;
 import gui.info.InfoDisplay;
 import gui.menu.MenuDisplay;
 import log.LoggerUtility;
-import engine.prestige.Succes;
-import engine.process.SuccesRepository;
 
 public class MainGUI extends JFrame implements Runnable {
     private static Logger logger = LoggerUtility.getLogger(MainGUI.class, "html");
@@ -33,11 +32,18 @@ public class MainGUI extends JFrame implements Runnable {
 
     public MainGUI() {
         super("Restaurant");
+
+        Rectangle usable = GraphicsEnvironment
+                .getLocalGraphicsEnvironment()
+                .getMaximumWindowBounds();
+
+
+        GameConfiguration.init(usable.width, usable.height);
+
         init();
     }
 
     private void init() {
-
         simulation = new Simulation();
         dashboard = new GameDisplay(simulation.getMap(), simulation);
         infoDisplay = new InfoDisplay(this,simulation);
@@ -77,6 +83,7 @@ public class MainGUI extends JFrame implements Runnable {
         setPreferredSize(preferredSize);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
         setVisible(true);
     }
 
@@ -137,6 +144,7 @@ public class MainGUI extends JFrame implements Runnable {
         timer.setRepeats(false);
         timer.start();
     }
+
     public void run() {
         while (true) {
             try {
@@ -147,18 +155,9 @@ public class MainGUI extends JFrame implements Runnable {
             simulation.nextRound();
             if (simulation.checkFinJournee()) {
                 ArgentRepository.getInstance().nouveauJour();
-                if (ArgentRepository.getInstance().getMonnaie() < 0) {
-                    new GameOverWindow(this, simulation.getGameStats());
-                } else {
-                    new BilanWindow(this, simulation.getDayStatistics());
-                    simulation.getDayStatistics().update();
-                    simulation.setStop(false);
-                }
-            }
-            simulation.nextRound();
-            Succes notif = SuccesRepository.getInstance().Notification();
-            if (notif != null) {
-                afficherNotificationSucces(notif);
+                new BilanWindow(this, simulation.getDayStatistics());
+                simulation.getDayStatistics().update();
+                simulation.setStop(false);
             }
             dashboard.repaint();
             infoDisplay.repaint();

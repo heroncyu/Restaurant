@@ -219,7 +219,7 @@ public class Simulation {
             }
 
             int randomColonne = SimulationUtility.getRandomNumber(0, map.getColumnCount() - 1);
-            Block spawn = map.getBlock(23,15);
+            Block spawn = map.getBlock(23,randomColonne);
 
             int tirage = SimulationUtility.getRandomNumber(1, 100);
             Client client;
@@ -371,22 +371,23 @@ public class Simulation {
     }
 
     private void assignerCuisinier() {
-        ArrayList<Commande> aRetirer = new ArrayList<>();
+        boolean cuisinierDisponible = true;
 
-        for(Commande commande : commandesACuisiner){
+        while (commandesACuisiner.size() > 0 && cuisinierDisponible) {
+            Commande commande = commandesACuisiner.remove(0);
             Recette recette = commande.getPlat().getRecette();
 
             Cuisinier libre = manager.trouverCuisinierLibre(recette);
-
             if (libre != null) {
-                aRetirer.add(commande);
-
                 manager.assignerCommandeCuisinier(libre, commande);
                 manager.changerEtatCuisinier(libre, GameConfiguration.ETAT_VA_CHERCHER_COMMANDE);
+                logger.trace("cuisinier va chercher une commande à cuisiner");
                 manager.donnerDestinationCuisinier(libre, comptoirC);
             }
+            else{
+                cuisinierDisponible = false;
+            }
         }
-        commandesACuisiner.removeAll(aRetirer);
     }
 
     private void moveCuisiniers() {

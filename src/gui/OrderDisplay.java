@@ -121,9 +121,6 @@ public class OrderDisplay extends JPanel {
 
     public void updateCommandesEnAttente() {
         ArrayList<Commande> commandesEnAttente = simulation.getCommandesEnAttente();
-        //logger.debug("Commandes en attente : " + commandesEnAttente.size());
-
-        logger.debug("Commandes en attente : " + commandesEnAttente.size());
 
         for (int i = 0; i < MAX_COMMANDES; i++) {
             if (i < commandesEnAttente.size()) {
@@ -182,8 +179,6 @@ public class OrderDisplay extends JPanel {
     }
 
     public void updateAll() {
-        logger.debug("Panel EnAttente nb composants : " + panelCommandesEnAttente.getComponentCount());
-        logger.debug("Label[0] texte : " + labelsEnAttente[0].getText());
         updateLabelsTitres();
         updateCommandesEnAttente();
         updateCommandesACuisiner();

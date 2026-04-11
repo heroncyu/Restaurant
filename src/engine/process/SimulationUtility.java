@@ -132,7 +132,7 @@ public class SimulationUtility {
         }
 
         int index = (int) (Math.random() * bonNiveau.size());
-        return disponibles.get(index);
+        return bonNiveau.get(index);
     }
 
     public static int getNombreFours(ArrayList<Meuble> meubles){

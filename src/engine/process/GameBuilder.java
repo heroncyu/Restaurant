@@ -116,18 +116,21 @@ public class GameBuilder {
         omelette.ajouterIngredient(ingredients.get(9), 2);
         omelette.ajouterIngredient(ingredients.get(2), 1);
         omelette.ajouterIngredient(ingredients.get(11), 1);
+        recettes.add(omelette);
 
         Recette tajine = new Recette("Tajine", 45, 20, 4);
         tajine.ajouterIngredient(ingredients.get(7), 1);
         tajine.ajouterIngredient(ingredients.get(8), 1);
         tajine.ajouterIngredient(ingredients.get(13), 1);
         tajine.ajouterIngredient(ingredients.get(0), 1);
+        recettes.add(tajine);
 
         Recette saumon = new Recette("Saumon grille", 60, 25, 5);
         saumon.ajouterIngredient(ingredients.get(12), 1);
         saumon.ajouterIngredient(ingredients.get(13), 1);
         saumon.ajouterIngredient(ingredients.get(10), 1);
         saumon.ajouterIngredient(ingredients.get(8), 1);
+        recettes.add(saumon);
 
         return recettes;
     }
