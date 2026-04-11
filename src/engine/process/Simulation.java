@@ -84,9 +84,9 @@ public class Simulation {
 
         SuccesRepository.getInstance().setSucces(GameBuilder.buildSucces());
 
-        comptoirS = map.getBlock(22, 10);
-        comptoirC = map.getBlock(22, 9);
-        entree = map.getBlock(19, 20);
+        comptoirS = map.getBlock(19, 10);
+        comptoirC = map.getBlock(19, 9);
+        entree = map.getBlock(22, 15);
 
         for (Meuble meuble : new ArrayList<>(meubles)) {
             Zone zoneMeuble = ZoneManager.getZone(meuble.getPosition(), zones);
@@ -218,24 +218,24 @@ public class Simulation {
                 }
             }
 
-            int middleColumn = map.getColumnCount() / 2;
-            int randomLine = SimulationUtility.getRandomNumber(0, map.getLineCount() - 1);
-            Block position = map.getBlock(randomLine, middleColumn);
+            int randomColonne = SimulationUtility.getRandomNumber(0, map.getColumnCount() - 1);
+            Block spawn = map.getBlock(23,15);
 
             int tirage = SimulationUtility.getRandomNumber(1, 100);
             Client client;
             if (tirage <= 5) {
-                client = ClientFactory.createClient("STAR", position);
+                client = ClientFactory.createClient("STAR", spawn);
                 logger.trace("un client star arrive !!!!");
             } else if (tirage <= 10) {
-                client = ClientFactory.createClient("CRITIQUE", position);
+                client = ClientFactory.createClient("CRITIQUE", spawn);
                 logger.trace("un client critique arrive !!!!");
             } else {
-                client = ClientFactory.createClient("NORMAL", position);
+                client = ClientFactory.createClient("NORMAL", spawn);
             }
 
             Meuble tableChoisie = manager.getProchaineTableVide();
             manager.ajouterClient(client, tableChoisie);
+            manager.donnerDestinationClient(client, entree);
         }
     }
 

@@ -15,15 +15,19 @@ public class GameDisplay extends JPanel {
     private Map map;
     private Simulation simulation;
     private PaintStrategy paintStrategy = new PaintStrategy();
+    private int animationTick;
 
     public GameDisplay(Map map, Simulation simulation) {
         this.map = map;
         this.simulation = simulation;
+        this.animationTick = 0;
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        animationTick = (animationTick + 1) % 2;
 
         paintStrategy.paint(map, simulation.getZones(), g);
 
@@ -42,7 +46,7 @@ public class GameDisplay extends JPanel {
         }
 
         for (Serveur serveur : simulation.getManager().getServeurs()) {
-            paintStrategy.paint(serveur, g);
+            paintStrategy.paint(serveur, g,animationTick);
         }
 
         if (restaurantManager.getConstructionMode() == 1) {

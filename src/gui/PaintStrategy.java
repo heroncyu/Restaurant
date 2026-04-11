@@ -31,6 +31,7 @@ public class PaintStrategy {
     private Image four = SimulationUtility.lireImage("src/resources/four.png");
     private Image plante = SimulationUtility.lireImage("src/resources/plante.png");
     private Image porteManteau = SimulationUtility.lireImage("src/resources/porte_manteau.png");
+    private Image serveuse = SimulationUtility.lireImage("src/resources/serveuse.png");
 
     public void paint(Map map, HashMap<String, Zone> zones, Graphics graphics) {
         int blockSize = BLOCK_SIZE;
@@ -182,15 +183,21 @@ public class PaintStrategy {
         graphics.drawString(cuisinier.getName(), x + 5, y + 5);
     }
 
-    public void paint(Serveur serveur, Graphics graphics) {
+    public void paint(Serveur serveur, Graphics graphics, int animationTick) {
         Block position = serveur.getPosition();
         int blockSize = BLOCK_SIZE;
 
         int y = position.getLine() * blockSize;
         int x = position.getColumn() * blockSize;
 
-        graphics.setColor(Color.RED);
-        graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
+        if(serveuse != null){
+            graphics.drawImage(serveuse, x, y, blockSize, blockSize, null);
+        }
+        else {
+            graphics.setColor(Color.RED);
+            graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
+        }
+
         graphics.setColor(new Color(240, 231, 230));
         graphics.setFont(new Font("Dialog", Font.PLAIN, 18));
         graphics.drawString(serveur.getName(), x + 5, y + 5);

@@ -26,7 +26,7 @@ public class GameConfiguration {
     public static final int PRIX_SERVEUR = 200;
     public static final int PRIX_CUISINIER = 300;
     public static final int SALAIRE_SERVEUR_BASE = 50;
-    public static final int SALAIRE_CUISINIER_BASE = 100;
+    public static final int SALAIRE_CUISINIER_BASE = 80;
     public static final int PRIX_AMELIORATION = 50;
 
     public static final int PRIX_TABLE = 100;
@@ -45,4 +45,9 @@ public class GameConfiguration {
     public static final String ETAT_VA_CHERCHER_COMMANDE = "VA_CHERCHER_COMMANDE";
     public static final String ETAT_VA_CUISINER = "VA_CUISINER";
     public static final String ETAT_CUISINE = "CUISINE";
+
+    public static final String HAUT = "HAUT";
+    public static final String BAS = "BAS";
+    public static final String GAUCHE = "GAUCHE";
+    public static final String DROITE = "DROITE";
 }
