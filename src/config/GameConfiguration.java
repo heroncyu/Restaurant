@@ -45,4 +45,9 @@ public class GameConfiguration {
     public static final String ETAT_VA_CHERCHER_COMMANDE = "VA_CHERCHER_COMMANDE";
     public static final String ETAT_VA_CUISINER = "VA_CUISINER";
     public static final String ETAT_CUISINE = "CUISINE";
+
+    public static final String HAUT = "HAUT";
+    public static final String BAS = "BAS";
+    public static final String GAUCHE = "GAUCHE";
+    public static final String DROITE = "DROITE";
 }

@@ -12,7 +12,9 @@ import org.apache.log4j.Logger;
 
 public class OrderDisplay extends JPanel {
     private static Logger logger = LoggerUtility.getLogger(OrderDisplay.class, "html");
-    
+
+    private static final int MAX_COMMANDES = 10;
+
     private static Font labelTitreFont = new Font("Comis Sans MS", Font.BOLD, 18);
     private static Font labelCommandeFont = new Font("Comis Sans MS", Font.PLAIN, 16);
 
@@ -26,6 +28,11 @@ public class OrderDisplay extends JPanel {
     private JPanel panelCommandesCuisson;
     private JPanel panelCommandesPretes;
 
+    private JLabel[] labelsEnAttente = new JLabel[MAX_COMMANDES];
+    private JLabel[] labelsACuisiner = new JLabel[MAX_COMMANDES];
+    private JLabel[] labelsCuisson   = new JLabel[MAX_COMMANDES];
+    private JLabel[] labelsPretes    = new JLabel[MAX_COMMANDES];
+
     private Simulation simulation;
 
     public OrderDisplay(Simulation simulation) {
@@ -35,7 +42,6 @@ public class OrderDisplay extends JPanel {
         setLayout(new GridLayout(1, 4, 1, 0));
 
         initPanels();
-        updateAll();
     }
 
     private void initPanels() {
@@ -69,6 +75,33 @@ public class OrderDisplay extends JPanel {
         labelCuisson.setAlignmentX(CENTER_ALIGNMENT);
         labelPretes.setAlignmentX(CENTER_ALIGNMENT);
 
+        panelCommandesEnAttente.add(labelEnAttente);
+        panelCommandesACuisiner.add(labelACuisiner);
+        panelCommandesCuisson.add(labelCuisson);
+        panelCommandesPretes.add(labelPretes);
+
+        for (int i = 0; i < MAX_COMMANDES; i++) {
+            labelsEnAttente[i] = new JLabel("");
+            labelsEnAttente[i].setFont(labelCommandeFont);
+            labelsEnAttente[i].setAlignmentX(CENTER_ALIGNMENT);
+            panelCommandesEnAttente.add(labelsEnAttente[i]);
+
+            labelsACuisiner[i] = new JLabel("");
+            labelsACuisiner[i].setFont(labelCommandeFont);
+            labelsACuisiner[i].setAlignmentX(CENTER_ALIGNMENT);
+            panelCommandesACuisiner.add(labelsACuisiner[i]);
+
+            labelsCuisson[i] = new JLabel("");
+            labelsCuisson[i].setFont(labelCommandeFont);
+            labelsCuisson[i].setAlignmentX(CENTER_ALIGNMENT);
+            panelCommandesCuisson.add(labelsCuisson[i]);
+
+            labelsPretes[i] = new JLabel("");
+            labelsPretes[i].setFont(labelCommandeFont);
+            labelsPretes[i].setAlignmentX(CENTER_ALIGNMENT);
+            panelCommandesPretes.add(labelsPretes[i]);
+        }
+
         JScrollPane scrollPaneEnAttente = new JScrollPane(panelCommandesEnAttente);
         JScrollPane scrollPaneACuisiner = new JScrollPane(panelCommandesACuisiner);
         JScrollPane scrollPaneCuisson = new JScrollPane(panelCommandesCuisson);
@@ -83,55 +116,61 @@ public class OrderDisplay extends JPanel {
         add(scrollPaneACuisiner);
         add(scrollPaneCuisson);
         add(scrollPanePretes);
-    
+
     }
 
     public void updateCommandesEnAttente() {
         ArrayList<Commande> commandesEnAttente = simulation.getCommandesEnAttente();
         //logger.debug("Commandes en attente : " + commandesEnAttente.size());
-        panelCommandesEnAttente.removeAll();
-        panelCommandesEnAttente.add(labelEnAttente, BorderLayout.CENTER);
-        for (Commande commande : commandesEnAttente) {
-            JLabel labelCommande = new JLabel();
-            labelCommande.setText(commande.getPlat().getRecette().getNom());
-            labelCommande.setFont(labelCommandeFont);
-            panelCommandesEnAttente.add(labelCommande);
+
+        logger.debug("Commandes en attente : " + commandesEnAttente.size());
+
+        for (int i = 0; i < MAX_COMMANDES; i++) {
+            if (i < commandesEnAttente.size()) {
+                Commande commande = commandesEnAttente.get(i);
+                labelsEnAttente[i].setText(commande.getNomRecette());
+            } else {
+                labelsEnAttente[i].setText("");
+            }
         }
     }
 
     public void updateCommandesACuisiner() {
         ArrayList<Commande> commandesACuisiner = simulation.getCommandesACuisiner();
-        panelCommandesACuisiner.removeAll();
-        panelCommandesACuisiner.add(labelACuisiner, BorderLayout.CENTER);
-        for (Commande commande : commandesACuisiner) {
-            JLabel labelCommande = new JLabel();
-            labelCommande.setText(commande.getPlat().getRecette().getNom());
-            labelCommande.setFont(labelCommandeFont);
-            panelCommandesACuisiner.add(labelCommande);
+
+        for (int i = 0; i < MAX_COMMANDES; i++) {
+            if (i < commandesACuisiner.size()) {
+                Commande commande = commandesACuisiner.get(i);
+                labelsACuisiner[i].setText(commande.getNomRecette());
+            } else {
+                labelsACuisiner[i].setText("");
+            }
         }
     }
 
     public void updateCommandesCuisson() {
         ArrayList<Commande> commandesCuisson = simulation.getCommandesCuisson();
-        panelCommandesCuisson.removeAll();
-        panelCommandesCuisson.add(labelCuisson, BorderLayout.CENTER);
-        for (Commande commande : commandesCuisson) {
-            JLabel labelCommande = new JLabel();
-            labelCommande.setText(commande.getPlat().getRecette().getNom());
-            labelCommande.setFont(labelCommandeFont);
-            panelCommandesCuisson.add(labelCommande);
+
+        for (int i = 0; i < MAX_COMMANDES; i++) {
+            if (i < commandesCuisson.size()) {
+                Commande commande = commandesCuisson.get(i);
+                labelsCuisson[i].setText(commande.getNomRecette());
+            } else {
+                labelsCuisson[i].setText("");
+            }
         }
     }
 
     public void updateCommandesPretes() {
         ArrayList<Commande> commandesPretes = simulation.getCommandesPretes();
-        panelCommandesPretes.removeAll();
-        panelCommandesPretes.add(labelPretes, BorderLayout.CENTER);
-        for (Commande commande : commandesPretes) {
-            JLabel labelCommande = new JLabel();
-            labelCommande.setText(commande.getPlat().getRecette().getNom());
-            labelCommande.setFont(labelCommandeFont);
-            panelCommandesPretes.add(labelCommande);
+
+        for (int i = 0; i < MAX_COMMANDES; i++) {
+            if (i < commandesPretes.size()) {
+                Commande commande = commandesPretes.get(i);
+                labelsPretes[i].setText(commande.getNomRecette());
+            } else {
+                labelsPretes[i].setText("");
+            }
         }
     }
 
@@ -143,6 +182,8 @@ public class OrderDisplay extends JPanel {
     }
 
     public void updateAll() {
+        logger.debug("Panel EnAttente nb composants : " + panelCommandesEnAttente.getComponentCount());
+        logger.debug("Label[0] texte : " + labelsEnAttente[0].getText());
         updateLabelsTitres();
         updateCommandesEnAttente();
         updateCommandesACuisiner();

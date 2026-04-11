@@ -58,6 +58,8 @@ public class MobileElementManager {
 
     public void moveElementLeft(MobileElement element) {
         Block position = element.getPosition();
+        element.setDirection(GameConfiguration.GAUCHE);
+
         if (position.getColumn() > 0) {
             Block newPosition = map.getBlock(position.getLine(), position.getColumn() - 1);
             element.setPosition(newPosition);
@@ -66,6 +68,8 @@ public class MobileElementManager {
 
     public void moveElementRight(MobileElement element) {
         Block position = element.getPosition();
+        element.setDirection(GameConfiguration.DROITE);
+
         if (position.getColumn() < map.getColumnCount() - 1) {
             Block newPosition = map.getBlock(position.getLine(), position.getColumn() + 1);
             element.setPosition(newPosition);
@@ -74,6 +78,8 @@ public class MobileElementManager {
 
     public void moveElementBottom(MobileElement element){
         Block position = element.getPosition();
+        element.setDirection(GameConfiguration.BAS);
+
         if(position.getLine()<map.getLineCount()-1){
             Block newPosition=map.getBlock(position.getLine()+1, position.getColumn());
             element.setPosition(newPosition);
@@ -83,6 +89,8 @@ public class MobileElementManager {
 
     public void moveElementTop(MobileElement element){
         Block position = element.getPosition();
+        element.setDirection(GameConfiguration.HAUT);
+
         if(position.getLine()>0){
             Block newPosition=map.getBlock(position.getLine()-1, position.getColumn());
             element.setPosition(newPosition);
