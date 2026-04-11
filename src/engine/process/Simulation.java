@@ -62,6 +62,7 @@ public class Simulation {
     private int speedMultiplier = 1;
 
     private DayStatistics dayStatistics = new DayStatistics();
+    private HashMap<String, Integer> gameStats = new HashMap<>();
 
     public Simulation() {
         map = GameBuilder.buildMap();
@@ -91,6 +92,24 @@ public class Simulation {
             Zone zoneMeuble = ZoneManager.getZone(meuble.getPosition(), zones);
             restaurantManager.enregistrerMeuble(meuble, zoneMeuble);
         }
+
+        initGameStats();
+    }
+
+    private void initGameStats() {
+        gameStats.put("depenses", 0);
+        gameStats.put("revenus", 0);
+        gameStats.put("reputation", 0);
+        gameStats.put("nbMeubles", 0);
+        gameStats.put("nbServeurs", 0);
+        gameStats.put("nbCuisiniers", 0);
+        gameStats.put("nbCommandes", 0);
+        gameStats.put("achats", 0);
+        gameStats.put("loyers", 0);
+        gameStats.put("salaires", 0);
+        gameStats.put("construction", 0);
+        gameStats.put("pourboires", 0);
+        gameStats.put("jour", 1);
     }
 
 
@@ -508,6 +527,8 @@ public class Simulation {
             dayStatistics.calculDepenses();
             dayStatistics.calculBenefices();
 
+            updateGameStats();
+
             logger.info("Fin de journée");
 
             return true;
@@ -515,6 +536,21 @@ public class Simulation {
         return false;
     }
 
+    private void updateGameStats() {
+        gameStats.put("depenses", dayStatistics.getDepensesDuJour() + gameStats.get("depenses"));
+        gameStats.put("revenus", dayStatistics.getRevenusDuJour() + gameStats.get("revenus"));
+        gameStats.put("reputation", dayStatistics.getReputationJourPrecedent() + gameStats.get("reputation"));
+        gameStats.put("nbMeubles", meubles.size() + gameStats.get("nbMeubles"));
+        gameStats.put("nbServeurs", manager.getServeurs().size() + gameStats.get("nbServeurs"));
+        gameStats.put("nbCuisiniers", manager.getCuisiniers().size() + gameStats.get("nbCuisiniers"));
+        gameStats.put("nbCommandes", dayStatistics.getNbCommandesTotal() + gameStats.get("nbCommandes"));
+        gameStats.put("achats", dayStatistics.getAchatDujour() + gameStats.get("achats"));
+        gameStats.put("loyers", dayStatistics.getCoutLoyerDuJour() + gameStats.get("loyers"));
+        gameStats.put("salaires", dayStatistics.getCoutSalairesDuJour() + gameStats.get("salaires"));
+        gameStats.put("construction", dayStatistics.getCoutConstructionDuJour() + gameStats.get("construction"));
+        gameStats.put("pourboires", dayStatistics.getRevenusPourboireDuJour() + gameStats.get("pourboires"));
+        gameStats.put("jour", dayStatistics.getNbJour());
+    }
 
     private static int getRandomNumber(int min, int max) {
         return (int) (Math.random() * (max + 1 - min)) + min;
@@ -594,5 +630,12 @@ public class Simulation {
     public Block getComptoirS(){
         return comptoirS;
     }
-    public RestaurantManager getRestaurantManager() { return restaurantManager; }
+
+    public RestaurantManager getRestaurantManager() { 
+        return restaurantManager; 
+    }
+
+    public HashMap<String, Integer> getGameStats() { 
+        return gameStats; 
+    }
 }
