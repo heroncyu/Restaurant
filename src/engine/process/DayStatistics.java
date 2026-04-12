@@ -217,4 +217,8 @@ public class DayStatistics {
     public void setAchatDujour(int achatDujour) {
         this.achatDujour = achatDujour;
     }
+
+    public void setNbJour(int nbJour) {
+        this.nbJour = nbJour;
+    }
 }

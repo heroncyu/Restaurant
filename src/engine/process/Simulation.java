@@ -527,6 +527,7 @@ public class Simulation {
             dayStatistics.calculRevenus();
             dayStatistics.calculDepenses();
             dayStatistics.calculBenefices();
+            dayStatistics.setNbJour(dayStatistics.getNbJour()+1);
 
             updateGameStats();
 
@@ -540,7 +541,7 @@ public class Simulation {
     private void updateGameStats() {
         gameStats.put("depenses", dayStatistics.getDepensesDuJour() + gameStats.get("depenses"));
         gameStats.put("revenus", dayStatistics.getRevenusDuJour() + gameStats.get("revenus"));
-        gameStats.put("reputation", dayStatistics.getReputationJourPrecedent() + gameStats.get("reputation"));
+        gameStats.put("reputation", ReputationRepository.getInstance().getReputation());
         gameStats.put("nbMeubles", meubles.size() + gameStats.get("nbMeubles"));
         gameStats.put("nbServeurs", manager.getServeurs().size() + gameStats.get("nbServeurs"));
         gameStats.put("nbCuisiniers", manager.getCuisiniers().size() + gameStats.get("nbCuisiniers"));
