@@ -1,27 +1,22 @@
 package config;
 
 public class GameConfiguration {
-    // 1. LES PANNEAUX (Tes tailles exactes)
+
     public static final int INFO_PANEL_HEIGHT   = 50;
     public static final int ORDERS_PANEL_HEIGHT = 69;
     public static final int MENU_PANEL_WIDTH    = 119;
 
-    // 2. LA GRILLE FIXE (Ne change pas tes calculs de GameBuilder)
     public static final int LINE_COUNT = 24;
     public static final int COLUMN_COUNT = 45;
 
-    // 3. LA CORRECTION MAGIQUE : 36 au lieu de 40.
-    // Ça donne un jeu de 983 pixels de haut au total. Il rentre PARFAITEMENT sur un écran 1080p !
     public static final int BLOCK_SIZE = 36;
 
-    // 4. LES TAILLES GLOBALES CALCULEES EN DUR
     public static final int GAME_WIDTH  = COLUMN_COUNT * BLOCK_SIZE;
     public static final int GAME_HEIGHT = LINE_COUNT * BLOCK_SIZE;
 
     public static final int WINDOW_WIDTH = GAME_WIDTH + MENU_PANEL_WIDTH;
     public static final int WINDOW_HEIGHT = GAME_HEIGHT + INFO_PANEL_HEIGHT + ORDERS_PANEL_HEIGHT;
 
-    // 5. LE RESTE DE TES DONNEES
     public static final int GAME_SPEED = 250;
     public static final int INITIAL_MONEY = 1550;
     public static final int END_OF_DAY_HOUR = 22;
