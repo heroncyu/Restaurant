@@ -26,9 +26,11 @@ public class GameBuilder {
 
     public static HashMap<String, Zone> buildZones(Map map) {
         HashMap<String, Zone> zones = new HashMap<>();
+        int h = map.getLineCount();
+        int bas = h - 1;
 
         Zone cuisine = new Zone("CUISINE");
-        for (int line = 14; line <= 22; line++) {
+        for (int line = 14; line <= bas-1; line++) {
             for (int col = 4; col <= 9; col++) {
                 cuisine.ajouterBlock(map.getBlock(line, col));
             }
@@ -36,7 +38,7 @@ public class GameBuilder {
         zones.put("CUISINE", cuisine);
 
         Zone salle = new Zone("SALLE");
-        for (int line = 14; line <= 22; line++) {
+        for (int line = 14; line <= bas-1; line++) {
             for (int col = 10; col <= 19; col++) {
                 salle.ajouterBlock(map.getBlock(line, col));
             }
@@ -44,7 +46,7 @@ public class GameBuilder {
         zones.put("SALLE", salle);
 
         Zone reserve = new Zone("RESERVE");
-        for (int line = 14; line <= 22; line++) {
+        for (int line = 14; line <= bas-1; line++) {
             for (int col = 0; col <= 3; col++) {
                 reserve.ajouterBlock(map.getBlock(line, col));
             }
@@ -59,28 +61,33 @@ public class GameBuilder {
 
     public static ArrayList<Meuble> buildMeubles(Map map) {
         ArrayList<Meuble> meubles = new ArrayList<>();
+        int h = map.getLineCount();
 
-        meubles.add(new Meuble(map.getBlock(17, 6), "FOUR"));
+        meubles.add(new Meuble(map.getBlock(h-7, 6), "FOUR"));
 
-        meubles.add(new Meuble(map.getBlock(15, 12), "TABLE"));
-        meubles.add(new Meuble(map.getBlock(15, 15), "TABLE"));
+        meubles.add(new Meuble(map.getBlock(h-9, 12), "TABLE"));
+        meubles.add(new Meuble(map.getBlock(h-9, 15), "TABLE"));
 
-        meubles.add(new Meuble(map.getBlock(22, 10), "PLANTE"));
-        meubles.add(new Meuble(map.getBlock(22, 19), "PLANTE"));
-        meubles.add(new Meuble(map.getBlock(14, 19), "PLANTE"));
+        meubles.add(new Meuble(map.getBlock(h-2, 10), "PLANTE"));
+        meubles.add(new Meuble(map.getBlock(h-2, 19), "PLANTE"));
+        meubles.add(new Meuble(map.getBlock(h-10, 19), "PLANTE"));
 
         return meubles;
     }
 
     public static ArrayList<Cuisinier> buildCuisiniers(Map map) {
         ArrayList<Cuisinier> cuisiniers = new ArrayList<>();
-        cuisiniers.add(new Cuisinier(map.getBlock(21, 5), 1, 100, "Jean"));
+        int h = map.getLineCount();
+
+        cuisiniers.add(new Cuisinier(map.getBlock(h-3, 5), 1, 100, "Jean"));
         return cuisiniers;
     }
 
     public static ArrayList<Serveur> buildServeurs(Map map) {
         ArrayList<Serveur> serveurs = new ArrayList<>();
-        serveurs.add(new Serveur(map.getBlock(21, 10), 1, 50, "Marie"));
+        int h = map.getLineCount();
+
+        serveurs.add(new Serveur(map.getBlock(h-3, 10), 1, 50, "Marie"));
         return serveurs;
     }
 

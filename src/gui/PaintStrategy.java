@@ -46,6 +46,9 @@ public class PaintStrategy {
                 int x = colonne * blockSize;
                 int y = ligne * blockSize;
 
+                String cord = String.valueOf(block.getLine());
+                graphics.drawString(cord, x + 4, y + 15);
+
                 String nomZone = null;
                 Iterator<Zone> it = zones.values().iterator();
                 while (it.hasNext()) {
@@ -91,8 +94,8 @@ public class PaintStrategy {
                 }
 
 
-                //graphics.setColor(Color.BLACK);
-                //graphics.drawRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
+                graphics.setColor(Color.BLACK);
+                graphics.drawRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
             }
         }
     }

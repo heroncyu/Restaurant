@@ -22,54 +22,32 @@ import log.LoggerUtility;
 
 public class MainGUI extends JFrame implements Runnable {
     private static Logger logger = LoggerUtility.getLogger(MainGUI.class, "html");
-    
+
     private Simulation simulation;
     private GameDisplay dashboard;
     private InfoDisplay infoDisplay;
     private OrderDisplay orderDisplay;
     private MenuDisplay buttonPanel;
 
+    
     private final static Dimension preferredSize = new Dimension(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT);
 
     public MainGUI() {
         super("Restaurant");
-
-        Rectangle usable = GraphicsEnvironment
-                .getLocalGraphicsEnvironment()
-                .getMaximumWindowBounds();
-
-
-        GameConfiguration.init(usable.width, usable.height);
-
         init();
     }
 
     private void init() {
         simulation = new Simulation();
         dashboard = new GameDisplay(simulation.getMap(), simulation);
-        infoDisplay = new InfoDisplay(this,simulation);
-        buttonPanel = new MenuDisplay(this, simulation,simulation.getDayStatistics());
+        infoDisplay = new InfoDisplay(this, simulation);
+        buttonPanel = new MenuDisplay(this, simulation, simulation.getDayStatistics());
         orderDisplay = new OrderDisplay(simulation);
 
-        infoDisplay.setPreferredSize(new Dimension(
-                GameConfiguration.WINDOW_WIDTH,
-                GameConfiguration.INFO_PANEL_HEIGHT
-        ));
-
-        orderDisplay.setPreferredSize(new Dimension(
-                GameConfiguration.WINDOW_WIDTH,
-                GameConfiguration.ORDERS_PANEL_HEIGHT
-        ));
-
-        buttonPanel.setPreferredSize(new Dimension(
-                GameConfiguration.MENU_PANEL_WIDTH,
-                GameConfiguration.GAME_HEIGHT
-        ));
-
-        dashboard.setPreferredSize(new Dimension(
-                GameConfiguration.GAME_WIDTH,
-                GameConfiguration.GAME_HEIGHT
-        ));
+        infoDisplay.setPreferredSize(new Dimension(GameConfiguration.WINDOW_WIDTH, GameConfiguration.INFO_PANEL_HEIGHT));
+        orderDisplay.setPreferredSize(new Dimension(GameConfiguration.WINDOW_WIDTH, GameConfiguration.ORDERS_PANEL_HEIGHT));
+        buttonPanel.setPreferredSize(new Dimension(GameConfiguration.MENU_PANEL_WIDTH, GameConfiguration.GAME_HEIGHT));
+        dashboard.setPreferredSize(new Dimension(GameConfiguration.GAME_WIDTH, GameConfiguration.GAME_HEIGHT));
 
         dashboard.addMouseListener(new CliqueGauche());
 
@@ -80,11 +58,9 @@ public class MainGUI extends JFrame implements Runnable {
         contentPane.add(orderDisplay, BorderLayout.SOUTH);
         contentPane.add(buttonPanel, BorderLayout.EAST);
 
-        pack();
-        setPreferredSize(preferredSize);
-        setResizable(false);
+        pack(); // Assemble les pièces
+        setResizable(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-
         setVisible(true);
     }
 
