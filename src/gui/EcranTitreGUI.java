@@ -131,10 +131,10 @@ public class EcranTitreGUI extends JFrame {
     private class JouerButtonAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            dispose();
             MainGUI GUI = new MainGUI();
             Thread gameThread = new Thread(GUI);
             gameThread.start();
-            dispose();
         }
     }
 
