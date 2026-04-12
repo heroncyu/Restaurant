@@ -55,7 +55,7 @@ public class ZoneManager {
                 }
             }
 
-            if (ligne + 1 < map.getLineCount()) {
+            if (ligne + 1 < map.getLineCount() - 1) {
                 Block blockVoisin = map.getBlock(block.getLine() + 1, block.getColumn()); // Block du Bas
                 zoneDuBlockVoisin = getZone(blockVoisin, zones);
                 if (zoneDuBlockVoisin == null) {
