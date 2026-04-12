@@ -49,6 +49,8 @@ public class Simulation {
     private static StockRepository stockageRepository = StockRepository.getInstance();
     private static PropreteRepository propreteRepository = PropreteRepository.getInstance();
 
+    private int h;
+
     private Block comptoirS;
     private Block comptoirC;
     private Block entree;
@@ -84,9 +86,11 @@ public class Simulation {
 
         SuccesRepository.getInstance().setSucces(GameBuilder.buildSucces());
 
-        comptoirS = map.getBlock(19, 10);
-        comptoirC = map.getBlock(19, 9);
-        entree = map.getBlock(22, 15);
+         this.h = map.getLineCount();
+
+        comptoirS = map.getBlock(h-5, 10);
+        comptoirC = map.getBlock(h-5, 9);
+        entree = map.getBlock(h-1, 15);
 
         for (Meuble meuble : new ArrayList<>(meubles)) {
             Zone zoneMeuble = ZoneManager.getZone(meuble.getPosition(), zones);
@@ -218,8 +222,9 @@ public class Simulation {
                 }
             }
 
+            int spawnLine = map.getLineCount()-1;
             int randomColonne = SimulationUtility.getRandomNumber(0, map.getColumnCount() - 1);
-            Block spawn = map.getBlock(23,randomColonne);
+            Block spawn = map.getBlock(spawnLine,randomColonne);
 
             int tirage = SimulationUtility.getRandomNumber(1, 100);
             Client client;
