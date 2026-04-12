@@ -3,6 +3,7 @@ package engine.process;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -58,7 +59,6 @@ public class Simulation {
     private boolean stop = false;
     private boolean alerteStock = false;
 
-
     private ArrayList<Block> blocksOccupees = new ArrayList<>();
 
     private int speedMultiplier = 1;
@@ -79,7 +79,10 @@ public class Simulation {
         ingredients = GameBuilder.buildIngredients();
         Stockage stockage = GameBuilder.buildStockage(ingredients);
         stockageRepository.setStockage(stockage);
-        stockageRepository.setNbCases(ingredients.size());
+
+        int nbBlocsReserveInitiaux = zones.get("RESERVE").getBlocks().size();
+        stockageRepository.setNbCases(nbBlocsReserveInitiaux);
+
         recettes = GameBuilder.buildRecette(ingredients);
 
         chronometre = GameBuilder.buildChronometer();
@@ -379,11 +382,12 @@ public class Simulation {
         boolean cuisinierDisponible = true;
 
         while (commandesACuisiner.size() > 0 && cuisinierDisponible) {
-            Commande commande = commandesACuisiner.remove(0);
+            Commande commande = commandesACuisiner.get(0);
             Recette recette = commande.getPlat().getRecette();
 
             Cuisinier libre = manager.trouverCuisinierLibre(recette);
             if (libre != null) {
+                commandesACuisiner.remove(0);
                 manager.assignerCommandeCuisinier(libre, commande);
                 manager.changerEtatCuisinier(libre, GameConfiguration.ETAT_VA_CHERCHER_COMMANDE);
                 logger.trace("cuisinier va chercher une commande à cuisiner");

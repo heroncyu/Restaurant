@@ -33,7 +33,7 @@ public class GameConfiguration {
     public static final int PRIX_FOUR = 200;
     public static final int PRIX_PLANTE = 50;
     public static final int PRIX_PORTE_MANTEAU = 75;
-    public static final int CAPACITE_PAR_CASE = 15;
+    public static final int CAPACITE_PAR_CASE = 10;
 
     public static final String ETAT_LIBRE = "LIBRE";
     public static final String ETAT_VA_PRENDRE = "VA_PRENDRE";

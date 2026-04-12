@@ -33,6 +33,11 @@ public class PaintStrategy {
     private Image plante = SimulationUtility.lireImage("src/resources/plante.png");
     private Image porteManteau = SimulationUtility.lireImage("src/resources/porte_manteau.png");
     private Image serveuse = SimulationUtility.lireImage("src/resources/serveuse.png");
+    private Image cuisinierSprite = SimulationUtility.lireImage("src/resources/cuisinier.png");
+
+    private Image clientRiche = SimulationUtility.lireImage("src/resources/riche.png");
+    private Image clientCritique = SimulationUtility.lireImage("src/resources/critique.png");
+    private Image clientLambda = SimulationUtility.lireImage("src/resources/client.png");
 
     public void paint(Map map, HashMap<String, Zone> zones, Graphics graphics) {
         int blockSize = BLOCK_SIZE;
@@ -94,8 +99,8 @@ public class PaintStrategy {
                 }
 
 
-                graphics.setColor(Color.BLACK);
-                graphics.drawRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
+                //graphics.setColor(Color.BLACK);
+                //graphics.drawRect(colonne * blockSize, ligne * blockSize, blockSize, blockSize);
             }
         }
     }
@@ -166,11 +171,25 @@ public class PaintStrategy {
         int x = position.getColumn() * blockSize;
         int y = position.getLine() * blockSize;
 
-        graphics.setColor(Color.BLUE);
-        graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
+        Image spriteAffiche = clientLambda;
 
-        graphics.setFont(new Font("Dialog", Font.PLAIN, 18));
-        graphics.drawString((String.valueOf(client.getSatisfaction())), x + 5, y + 5);
+        if (client instanceof engine.mobile.ClientStar) {
+            spriteAffiche = clientRiche;
+        } else if (client instanceof engine.mobile.ClientCritique) {
+            spriteAffiche = clientCritique;
+        }
+
+        if (spriteAffiche != null) {
+            graphics.drawImage(spriteAffiche, x, y, blockSize, blockSize, null);
+        } else {
+            graphics.setColor(Color.BLUE);
+            graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
+        }
+
+        graphics.setColor(Color.WHITE);
+        graphics.setFont(new Font("Dialog", Font.BOLD, 14));
+
+        graphics.drawString(String.valueOf(client.getSatisfaction()), x + 2, y + 12);
     }
 
     public void paint(Cuisinier cuisinier, Graphics graphics) {
@@ -180,8 +199,14 @@ public class PaintStrategy {
         int y = position.getLine() * blockSize;
         int x = position.getColumn() * blockSize;
 
-        graphics.setColor(Color.YELLOW);
-        graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
+        if(cuisinierSprite != null){
+            graphics.drawImage(cuisinierSprite, x, y, blockSize, blockSize, null);
+        }
+        else {
+            graphics.setColor(Color.YELLOW);
+            graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
+        }
+
         graphics.setColor(new Color(240, 231, 230));
         graphics.setFont(new Font("Dialog", Font.PLAIN, 18));
         graphics.drawString(cuisinier.getName(), x + 5, y + 5);

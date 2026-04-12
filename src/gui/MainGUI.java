@@ -59,7 +59,7 @@ public class MainGUI extends JFrame implements Runnable {
         contentPane.add(buttonPanel, BorderLayout.EAST);
 
         pack(); // Assemble les pièces
-        setResizable(true);
+        setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }

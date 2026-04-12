@@ -20,13 +20,13 @@ public class SimulationUtility {
     public static int calculerQualite(Cuisinier cuisinier){
         int niveauEtoile = cuisinier.getNiveau();
         if(niveauEtoile <= 1){
-            return 100;
+            return 50;
         }
         if(niveauEtoile <= 2){
-            return 55;
+            return 65;
         }
         if(niveauEtoile <= 3){
-            return 70;
+            return 75;
         }
         if(niveauEtoile <= 4){
             return 85;

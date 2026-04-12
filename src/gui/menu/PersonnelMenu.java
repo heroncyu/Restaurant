@@ -85,7 +85,7 @@ public class PersonnelMenu extends JDialog {
         ameliorer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (restaurantManager.ameliorerServeur(serveur)) {
-                    repaint();
+                    refresh();
                 }
             }
         });
@@ -108,7 +108,7 @@ public class PersonnelMenu extends JDialog {
         ameliorer.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (restaurantManager.ameliorerCuisinier(cuisinier)) {
-                    repaint();
+                    refresh();
                 }
             }
         });
@@ -131,7 +131,7 @@ public class PersonnelMenu extends JDialog {
         acheter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (restaurantManager.acheterServeur()) {
-                    repaint();
+                    refresh();
                 }
             }
         });
@@ -153,13 +153,19 @@ public class PersonnelMenu extends JDialog {
         acheter.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (restaurantManager.acheterCuisinier()) {
-                    repaint();
+                    refresh();
                 }
             }
         });
 
         ligne.add(acheter);
         return ligne;
+    }
+
+    private void refresh() {
+        contenu.removeAll();
+        init();
+        repaint();
     }
 
     private JButton creerBoutonStyle(String texte) {
