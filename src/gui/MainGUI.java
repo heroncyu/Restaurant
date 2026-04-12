@@ -98,6 +98,7 @@ public class MainGUI extends JFrame implements Runnable {
                 ArgentRepository.getInstance().nouveauJour();
                 if (ArgentRepository.getInstance().getMonnaie() < 0) {
                     new GameOverWindow(this, simulation.getGameStats());
+                    dispose();
                 } else {
                     new BilanWindow(this, simulation.getDayStatistics());
                     simulation.getDayStatistics().update();
