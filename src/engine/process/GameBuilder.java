@@ -94,13 +94,13 @@ public class GameBuilder {
         burger.ajouterIngredient(ingredients.get(6), 1);
         recettes.add(burger);
 
-        Recette pizza = new Recette("Pizza", 25, 20,2);
+        Recette pizza = new Recette("Pizza", 18, 20,1);
         pizza.ajouterIngredient(ingredients.get(3), 1);
         pizza.ajouterIngredient(ingredients.get(4), 1);
         pizza.ajouterIngredient(ingredients.get(2), 1);
         recettes.add(pizza);
 
-        Recette pasta = new Recette("Pasta", 18, 10,1);
+        Recette pasta = new Recette("Pasta", 25, 10,2);
         pasta.ajouterIngredient(ingredients.get(5), 1);
         pasta.ajouterIngredient(ingredients.get(4), 1);
         pasta.ajouterIngredient(ingredients.get(6), 1);

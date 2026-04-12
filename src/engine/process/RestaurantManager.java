@@ -132,6 +132,10 @@ public class RestaurantManager {
                     argentRepository.retirerMonnaie(prix);
                     simulation.getDayStatistics().addCoutConstruction(prix);
 
+                    if (zoneBlockSelec.getNom().equals("RESERVE")) {
+                        StockRepository.getInstance().setNbCases(simulation.getZones().get("RESERVE").getBlocks().size());
+                    }
+
                     zoneBlockSelec = null;
                     simulation.getZones().get("CONSTRUCTIBLE").getBlocks().clear();
                 } else {

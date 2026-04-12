@@ -7,6 +7,7 @@ import engine.mobile.Client;
 import engine.mobile.Cuisinier;
 import engine.mobile.Meuble;
 import engine.mobile.Serveur;
+import engine.prestige.Succes;
 import engine.process.SimulationUtility;
 import gui.info.JourLabel;
 import gui.info.MonnaieLabel;
@@ -269,5 +270,30 @@ public class PaintStrategy {
 
         graphics.setColor(new Color(255, 50, 50));
         graphics.drawString(message, x, y);
+    }
+    public void paint(Succes s, Graphics g, int panelWidth, int panelHeight) {
+        int largeur = 300;
+        int hauteur = 100;
+        int x = (panelWidth - largeur) / 2;
+        int y = 30;
+
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(new Color(30, 30, 30, 220));
+        g2d.fillRoundRect(x, y, largeur, hauteur, 20, 20);
+        g2d.setColor(new Color(200, 160, 0));
+        g2d.setStroke(new BasicStroke(2));
+        g2d.drawRoundRect(x, y, largeur, hauteur, 20, 20);
+
+        g2d.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+        g2d.setColor(new Color(200, 160, 0));
+        g2d.drawString("Succes debloque !", x + 20, y + 28);
+
+        g2d.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
+        g2d.setColor(Color.WHITE);
+        g2d.drawString(s.getNom(), x + 20, y + 55);
+
+        g2d.setFont(new Font("Comic Sans MS", Font.PLAIN, 13));
+        g2d.setColor(new Color(200, 160, 0));
+        g2d.drawString("+" + s.getRecompense() + " gold", x + 20, y + 80);
     }
 }

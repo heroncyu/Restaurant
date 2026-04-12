@@ -5,6 +5,7 @@ import engine.mobile.Client;
 import engine.mobile.Cuisinier;
 import engine.mobile.Meuble;
 import engine.mobile.Serveur;
+import engine.prestige.Succes;
 import engine.process.RestaurantManager;
 import engine.process.Simulation;
 
@@ -16,11 +17,17 @@ public class GameDisplay extends JPanel {
     private Simulation simulation;
     private PaintStrategy paintStrategy = new PaintStrategy();
     private int animationTick;
+    private Succes succesEnCours = null;
+    private int tempsRestants = 0;
 
     public GameDisplay(Map map, Simulation simulation) {
         this.map = map;
         this.simulation = simulation;
         this.animationTick = 0;
+    }
+    public void afficherSucces(Succes s) {
+        succesEnCours = s;
+        tempsRestants = 30;
     }
 
     @Override
@@ -51,7 +58,14 @@ public class GameDisplay extends JPanel {
 
         if (restaurantManager.getConstructionMode() == 1) {
             paintStrategy.paint(g, "Mode construction : Agrandissement du terrain", restaurantManager.calculerPrixConstruction());
-        } 
+        }
+        if (succesEnCours != null) {
+            paintStrategy.paint(succesEnCours, g, getWidth(), getHeight());
+            tempsRestants--;
+            if (tempsRestants <= 0) {
+                succesEnCours = null;
+            }
+        }
         
         if (restaurantManager.getConstructionMode() == 2) {
             paintStrategy.paint(g, "Mode construction : Placez votre nouveau meuble", 0);
