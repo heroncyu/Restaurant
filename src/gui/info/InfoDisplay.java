@@ -35,7 +35,7 @@ public class InfoDisplay extends JPanel {
 
   Image imgProprete = SimulationUtility.lireImage("src/resources/proprete.png");
   Image imgPause = SimulationUtility.lireImage("src/resources/pause.png");
-  Image imgFond = SimulationUtility.lireImage("src/resources/fond_bois.png");
+  Image imgFond = SimulationUtility.lireImage("src/resources/fond_bois_moyen.png");
 
   private FondPanel fondPanel;
 

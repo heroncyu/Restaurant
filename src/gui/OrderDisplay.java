@@ -2,6 +2,8 @@ package gui;
 
 import engine.item.Commande;
 import engine.process.Simulation;
+import engine.process.SimulationUtility;
+import gui.util.FondPanel;
 import log.LoggerUtility;
 
 import javax.swing.*;
@@ -10,7 +12,7 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 
-public class OrderDisplay extends JPanel {
+public class OrderDisplay extends FondPanel {
     private static Logger logger = LoggerUtility.getLogger(OrderDisplay.class, "html");
 
     private static final int MAX_COMMANDES = 10;
@@ -36,8 +38,8 @@ public class OrderDisplay extends JPanel {
     private Simulation simulation;
 
     public OrderDisplay(Simulation simulation) {
+        super(SimulationUtility.lireImage("src/resources/fond_bois_moyen.png"));
         this.simulation = simulation;
-        setBackground(Color.WHITE);
 
         setLayout(new GridLayout(1, 4, 1, 0));
 
@@ -55,10 +57,10 @@ public class OrderDisplay extends JPanel {
         panelCommandesCuisson.setLayout(new BoxLayout(panelCommandesCuisson, BoxLayout.Y_AXIS));
         panelCommandesPretes.setLayout(new BoxLayout(panelCommandesPretes, BoxLayout.Y_AXIS));
 
-        panelCommandesEnAttente.setBackground(Color.gray);
-        panelCommandesACuisiner.setBackground(Color.gray);
-        panelCommandesCuisson.setBackground(Color.gray);
-        panelCommandesPretes.setBackground(Color.gray);
+        panelCommandesEnAttente.setOpaque(false);
+        panelCommandesACuisiner.setOpaque(false);
+        panelCommandesCuisson.setOpaque(false);
+        panelCommandesPretes.setOpaque(false);
 
         labelEnAttente = new JLabel("Commandes en attente : 0");
         labelACuisiner = new JLabel("Commandes à cuisiner : 0");
@@ -111,6 +113,22 @@ public class OrderDisplay extends JPanel {
         scrollPaneACuisiner.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
         scrollPaneCuisson.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
         scrollPanePretes.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+
+        scrollPaneEnAttente.setOpaque(false);
+        scrollPaneEnAttente.getViewport().setOpaque(false);
+        scrollPaneEnAttente.setBorder(null);
+
+        scrollPaneACuisiner.setOpaque(false);
+        scrollPaneACuisiner.getViewport().setOpaque(false);
+        scrollPaneACuisiner.setBorder(null);
+
+        scrollPaneCuisson.setOpaque(false);
+        scrollPaneCuisson.getViewport().setOpaque(false);
+        scrollPaneCuisson.setBorder(null);
+
+        scrollPanePretes.setOpaque(false);
+        scrollPanePretes.getViewport().setOpaque(false);
+        scrollPanePretes.setBorder(null);
 
         add(scrollPaneEnAttente);
         add(scrollPaneACuisiner);

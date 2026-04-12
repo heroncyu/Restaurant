@@ -25,7 +25,7 @@ public class MenuDisplay extends JPanel {
 	private MenuButton meubleButton = new MenuButton("Meuble", 300, 200);
 	private MenuButton ingredientButton = new MenuButton("Stock", 300, 200);
 
-	private Image imgFond = SimulationUtility.lireImage("src/resources/fond_bois.png");
+	private Image imgFond = SimulationUtility.lireImage("src/resources/fond_bois_moyen.png");
 
 	public MenuDisplay(JFrame owner, Simulation simulation, DayStatistics dayStatistics) {
 		this.owner = owner;
