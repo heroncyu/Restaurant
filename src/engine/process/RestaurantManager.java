@@ -82,13 +82,14 @@ public class RestaurantManager {
     }
 
     public void ajouterMeuble(int ligne, int colonne) {
-        Zone zoneMeuble = ZoneManager.getZone(simulation.getMap().getBlock(ligne, colonne), simulation.getZones());
+        Block blockMeuble = simulation.getMap().getBlock(ligne, colonne);
+        Zone zoneMeuble = ZoneManager.getZone(blockMeuble, simulation.getZones());
         
-        if (zoneMeuble != null) {
-            Meuble meuble = new Meuble(simulation.getMap().getBlock(ligne, colonne), meubleACreer);
+        if (zoneMeuble != null && !simulation.getBlocksOccupees().contains(blockMeuble)) {
+            Meuble meuble = new Meuble(blockMeuble, meubleACreer);
             enregistrerMeuble(meuble, zoneMeuble);
         } else {
-            logger.trace("Veuillez placer le meuble dans une zone valide");
+            logger.trace("Veuillez placer le meuble dans une zone valide et non occupée");
         }
     }
 
