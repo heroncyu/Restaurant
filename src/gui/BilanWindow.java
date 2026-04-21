@@ -78,9 +78,9 @@ public class BilanWindow extends JDialog {
         panelRevenus.add(labelRevenus);
         panelBenefices.add(labelBenefices);
 
-        labelDepenses.setFont(new Font("Comis Sans MS", Font.BOLD, 24));
-        labelRevenus.setFont(new Font("Comis Sans MS", Font.BOLD, 24));
-        labelBenefices.setFont(new Font("Comis Sans MS", Font.BOLD, 24));
+        labelDepenses.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        labelRevenus.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        labelBenefices.setFont(new Font("Segoe UI", Font.BOLD, 24));
 
         JTextArea textDepenses = new JTextArea(builderDepenses());
         JTextArea textRevenus = new JTextArea(builderRevenus());
@@ -98,9 +98,9 @@ public class BilanWindow extends JDialog {
         textRevenus.setBackground(Color.LIGHT_GRAY);
         textBenefices.setBackground(Color.LIGHT_GRAY);
 
-        textDepenses.setFont(new Font("Comis Sans MS", Font.PLAIN, 20));
-        textRevenus.setFont(new Font("Comis Sans MS", Font.PLAIN, 20));
-        textBenefices.setFont(new Font("Comis Sans MS", Font.PLAIN, 20));
+        textDepenses.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        textRevenus.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        textBenefices.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 
         panelDepenses.add(textDepenses);
         panelRevenus.add(textRevenus);

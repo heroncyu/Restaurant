@@ -15,7 +15,7 @@ import engine.process.SimulationUtility;
 public class PersonnelMenu extends JDialog {
     private Simulation simulation;
     private JPanel contenu;
-    private Font font = new Font("comic sans ms", Font.BOLD, 20);
+    private Font font = new Font("Segoe UI", Font.BOLD, 20);
     private RestaurantManager restaurantManager;
 
     public PersonnelMenu(JFrame owner, Simulation simulation) {
@@ -64,7 +64,7 @@ public class PersonnelMenu extends JDialog {
         int nbFours = SimulationUtility.getNombreFours(simulation.getMeubles());
         int nbTables = SimulationUtility.getNombreTables(simulation.getMeubles());
         JLabel infoLabel = new JLabel("Fours: " + nbFours + " | Tables: " + nbTables + " | 1 cuisinier/four, 1 serveur/2 tables");
-        infoLabel.setFont(new Font("comic sans ms", Font.ITALIC, 14));
+        infoLabel.setFont(new Font("Segoe UI", Font.ITALIC, 14));
         infoLabel.setHorizontalAlignment(JLabel.CENTER);
         contenu.add(infoLabel);
 

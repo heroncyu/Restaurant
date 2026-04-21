@@ -17,8 +17,8 @@ public class OrderDisplay extends FondPanel {
 
     private static final int MAX_COMMANDES = 10;
 
-    private static Font labelTitreFont = new Font("Comis Sans MS", Font.BOLD, 18);
-    private static Font labelCommandeFont = new Font("Comis Sans MS", Font.PLAIN, 16);
+    private static Font labelTitreFont = new Font("Segoe UI", Font.BOLD, 18);
+    private static Font labelCommandeFont = new Font("Segoe UI", Font.PLAIN, 16);
 
     private JLabel labelEnAttente;
     private JLabel labelACuisiner;

@@ -24,7 +24,7 @@ public class ListeIngredientMenu extends JPanel {
 
     private ArrayList<JPanel> ligneIngredientList = new ArrayList<JPanel>();
     private DayStatistics dayStatistics;
-    private Font font = new Font("comic sans ms", Font.BOLD, 20);
+    private Font font = new Font("Segoe UI", Font.BOLD, 20);
     private JProgressBar barreStock;
     private JLabel labelStock;
 

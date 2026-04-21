@@ -17,7 +17,7 @@ public class PropreteLabel extends JLabel {
     public PropreteLabel() {
         super();
 
-        setFont(new Font("comis sans ms", Font.PLAIN, 20));
+        setFont(new Font("Segoe UI", Font.PLAIN, 20));
         setForeground(Color.BLACK);
 
         setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));

@@ -81,9 +81,9 @@ public class EcranTitreGUI extends JFrame {
         tutoButton.addActionListener(new TutoButtonAction());
         quitterButton.addActionListener(new QuitterButtonAction());
 
-        jouerButton.setFont(new Font("comic sans ms", Font.BOLD, 20));
-        tutoButton.setFont(new Font("comic sans ms", Font.BOLD, 20));
-        quitterButton.setFont(new Font("comic sans ms", Font.BOLD, 20));
+        jouerButton.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        tutoButton.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        quitterButton.setFont(new Font("Segoe UI", Font.BOLD, 20));
 
         jouerButton.setForeground(Color.white);
         tutoButton.setForeground(Color.white);
@@ -114,14 +114,14 @@ public class EcranTitreGUI extends JFrame {
     private void initLabel() {
         creditLabel.setText("Par : EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim");
 
-        creditLabel.setFont(new Font("comic sans ms", Font.BOLD, 20));
+        creditLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
         creditLabel.setForeground(Color.white);
         creditLabel.setOpaque(false);
         creditLabel.setHorizontalAlignment(JLabel.CENTER);
 
         titreLabel.setText("Restaurant");
 
-        titreLabel.setFont(new Font("comic sans ms", Font.ITALIC, 80));
+        titreLabel.setFont(new Font("Segoe UI", Font.ITALIC, 80));
         titreLabel.setForeground(Color.red);
         titreLabel.setOpaque(false);
         titreLabel.setHorizontalAlignment(JLabel.CENTER);

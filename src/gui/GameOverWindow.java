@@ -88,12 +88,12 @@ public class GameOverWindow extends JDialog {
 
     private void initRemerciement() {
         labelFaillite.setText("Votre restaurant a fait faillite !!!");
-        labelFaillite.setFont(new Font("comic sans ms", Font.BOLD, 30));
+        labelFaillite.setFont(new Font("Segoe UI", Font.BOLD, 30));
         labelFaillite.setForeground(Color.WHITE);
         labelFaillite.setHorizontalAlignment(JLabel.CENTER);
 
         textExplication.setText(getExplication());
-        textExplication.setFont(new Font("comic sans ms", Font.BOLD, 22));
+        textExplication.setFont(new Font("Segoe UI", Font.BOLD, 22));
         textExplication.setForeground(Color.WHITE);
         textExplication.setEditable(false);
         textExplication.setOpaque(false);
@@ -102,7 +102,7 @@ public class GameOverWindow extends JDialog {
         textExplication.setBorder(new EmptyBorder(20, 20, 20, 20));
 
         labelRemerciement.setText("Merci d'avoir joué !");
-        labelRemerciement.setFont(new Font("comic sans ms", Font.BOLD, 30));
+        labelRemerciement.setFont(new Font("Segoe UI", Font.BOLD, 30));
         labelRemerciement.setForeground(Color.WHITE);
         labelRemerciement.setHorizontalAlignment(JLabel.CENTER);
 
@@ -158,12 +158,12 @@ public class GameOverWindow extends JDialog {
             }
 
             JLabel keyLabel = new JLabel(labelText);
-            keyLabel.setFont(new Font("comic sans ms", Font.BOLD, 20));
+            keyLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
             keyLabel.setForeground(Color.WHITE);
             keyLabel.setHorizontalAlignment(JLabel.RIGHT);
 
             JLabel valueLabel = new JLabel(gameStats.get(key).toString());
-            valueLabel.setFont(new Font("comic sans ms", Font.BOLD, 22));
+            valueLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
             valueLabel.setForeground(Color.WHITE);
             valueLabel.setHorizontalAlignment(JLabel.LEFT);
 
@@ -186,7 +186,7 @@ public class GameOverWindow extends JDialog {
     }
 
     private void styleButton(JButton btn) {
-        btn.setFont(new Font("comic sans ms", Font.BOLD, 20));
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 20));
         btn.setForeground(Color.WHITE);
         btn.setBackground(Color.GRAY);
         btn.setBorder(BorderFactory.createLineBorder(Color.BLACK));

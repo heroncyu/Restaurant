@@ -138,7 +138,7 @@ public class MeubleMenu extends JDialog {
     }
 
     private void initLabels() {
-        Font font = new Font("comic sans ms", Font.BOLD, 20);
+        Font font = new Font("Segoe UI", Font.BOLD, 20);
 
         table.setFont(font);
         four.setFont(font);

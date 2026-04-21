@@ -19,7 +19,7 @@ public class InfoDisplay extends JPanel {
 
   private Simulation simulation;
 
-  private static Font font = new Font("Comis Sans MS", Font.BOLD, 24);
+  private static Font font = new Font("Segoe UI", Font.BOLD, 24);
 
   private MonnaieLabel goldLabel = new MonnaieLabel(font);
   private JourLabel jourLabel = new JourLabel(font);

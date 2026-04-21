@@ -280,7 +280,7 @@ public class PaintStrategy {
 
     public void paint(Graphics graphics, String message, int prix) {
         graphics.setColor(Color.RED);
-        graphics.setFont(new Font("Comis Sans MS", Font.BOLD, 24));
+        graphics.setFont(new Font("Segoe UI", Font.BOLD, 24));
         if (prix > 0) {
             graphics.drawString(message + " ( " + prix + " G )", 10, 30);
         } else {
@@ -291,7 +291,7 @@ public class PaintStrategy {
     public void paint(Graphics graphics, int panelWidth) {
         String message = "Manque d'ingrédients, veuillez en acheter, sinon plus de nouveaux clients...";
 
-        graphics.setFont(new Font("Comis Sans MS", Font.BOLD, 24));
+        graphics.setFont(new Font("Segoe UI", Font.BOLD, 24));
         int textWidth = graphics.getFontMetrics().stringWidth(message);
         int x = (panelWidth - textWidth) / 2;
         int y = 40;
@@ -312,15 +312,15 @@ public class PaintStrategy {
         g2d.setStroke(new BasicStroke(2));
         g2d.drawRoundRect(x, y, largeur, hauteur, 20, 20);
 
-        g2d.setFont(new Font("Comic Sans MS", Font.BOLD, 16));
+        g2d.setFont(new Font("Segoe UI", Font.BOLD, 16));
         g2d.setColor(new Color(200, 160, 0));
         g2d.drawString("Succes debloque !", x + 20, y + 28);
 
-        g2d.setFont(new Font("Comic Sans MS", Font.PLAIN, 14));
+        g2d.setFont(new Font("Segoe UI", Font.PLAIN, 14));
         g2d.setColor(Color.WHITE);
         g2d.drawString(s.getNom(), x + 20, y + 55);
 
-        g2d.setFont(new Font("Comic Sans MS", Font.PLAIN, 13));
+        g2d.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         g2d.setColor(new Color(200, 160, 0));
         g2d.drawString("+" + s.getRecompense() + " gold", x + 20, y + 80);
     }

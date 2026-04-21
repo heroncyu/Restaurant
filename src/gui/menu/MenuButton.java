@@ -31,7 +31,7 @@ public class MenuButton extends JButton {
         this.setFocusPainted(false);
         this.setContentAreaFilled(false);
 
-        this.setFont(new Font("comic sans ms", Font.BOLD, 20));
+        this.setFont(new Font("Segoe UI", Font.BOLD, 20));
         this.setHorizontalAlignment(SwingConstants.CENTER);
         this.setVerticalAlignment(SwingConstants.CENTER);
     }
