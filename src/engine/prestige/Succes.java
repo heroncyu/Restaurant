@@ -1,5 +1,13 @@
 package engine.prestige;
 
+/**
+ * Structure de donnees pour un accomplissement / succes specifique dans le jeu.
+ * 
+ * Definit les prerequis textuels et donne un statut de debloquage pour 
+ * recompenser le joueur (traite par {@link SuccesRepository}).
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class Succes {
     private String nom;
     private String description;
@@ -7,6 +15,13 @@ public class Succes {
     private boolean estDebloque;
     private boolean estReclame;
 
+    /**
+     * Definit un nouveau succes recuperable.
+     * 
+     * @param nom le titre du succes
+     * @param description la condition pour valider ce succes
+     * @param recompense le bonus remunere accordé lors de la recuperation
+     */
     public Succes(String nom, String description, int recompense) {
         this.nom = nom;
         this.description = description;

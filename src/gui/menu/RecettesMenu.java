@@ -8,8 +8,21 @@ import engine.item.Ingredient;
 import engine.item.Recette;
 import engine.process.Simulation;
 
+/**
+ * Livre de recettes qui montre tous les plats que l'on peut servir.
+ * 
+ * Certaines recettes restent grisées si aucun cuisinier n'a un niveau assez élevé.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class RecettesMenu extends JDialog {
 
+    /**
+     * Affiche la fenêtre avec la liste des plats.
+     * 
+     * @param owner fenêtre ancrée et parente
+     * @param simulation le jeu en cours
+     */
     public RecettesMenu(JFrame owner, Simulation simulation) {
         super(owner, "Menu des Recettes", true);
         setSize(600, 500);

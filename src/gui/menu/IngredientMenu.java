@@ -9,6 +9,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.CardLayout;
 
+/**
+ * Fenêtre qui apparaît pour acheter de nouveaux ingrédients.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class IngredientMenu extends JDialog {
 
     private CardLayout cl;
@@ -16,6 +21,12 @@ public class IngredientMenu extends JDialog {
 
     private JPanel listeIngredientPanel;
 
+    /**
+     * Ouvre la fenêtre d'achat des ingrédients.
+     * 
+     * @param owner la fenêtre principale du jeu
+     * @param daystatistic statistiques pour dépenser l'argent du jour
+     */
     public IngredientMenu(JFrame owner,DayStatistics daystatistic) {
         super(owner, "Gestion des ingrédients", true);
         cl = new CardLayout();

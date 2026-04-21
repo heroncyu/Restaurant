@@ -8,6 +8,11 @@ import javax.swing.JButton;
 
 import javax.swing.SwingConstants;
 
+/**
+ * Les gros boutons carrés (semi-transparents) qu'on retrouve dans le menu à droite.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class MenuButton extends JButton {
     private final int TAILLE = 40;
 
@@ -16,6 +21,13 @@ public class MenuButton extends JButton {
     private Color texteNormal = new Color(200, 200, 200);
     private Color bordureNormal = new Color(100, 100, 100);
 
+    /**
+     * Prépare les couleurs et le texte d'un des boutons du menu.
+     * 
+     * @param text ce qui est écrit dessus
+     * @param x sa position horizontale
+     * @param y sa position verticale
+     */
     public MenuButton(String text, int x, int y) {
         super(text);
 
@@ -36,6 +48,11 @@ public class MenuButton extends JButton {
         this.setVerticalAlignment(SwingConstants.CENTER);
     }
 
+    /**
+     * Dessine le bouton (et le rend plus sombre quand on clique dessus).
+     * 
+     * @param g l'outil de dessin
+     */
     @Override
     protected void paintComponent(Graphics g) {
         if (getModel().isPressed()) {

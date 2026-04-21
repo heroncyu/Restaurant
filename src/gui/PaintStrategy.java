@@ -24,6 +24,13 @@ import javax.swing.JLabel;
 
 import static config.GameConfiguration.BLOCK_SIZE;
 
+/**
+ * La classe qui contient toutes les règles de dessin.
+ * 
+ * C'est ici qu'on décide à quoi ressemble un client, un four, ou une table.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class PaintStrategy {
     private Image solHerbe = SimulationUtility.lireImage("src/resources/herbe.jpg");
     private Image solSalle = SimulationUtility.lireImage("src/resources/salle.jpg");
@@ -39,6 +46,13 @@ public class PaintStrategy {
     private Image clientCritique = SimulationUtility.lireImage("src/resources/critique.png");
     private Image clientLambda = SimulationUtility.lireImage("src/resources/client.png");
 
+    /**
+     * Dessine le sol de toutes les cases (herbe, salle, cuisine...).
+     * 
+     * @param map la carte du restaurant
+     * @param zones la liste des zones pour savoir quoi dessiner
+     * @param graphics pinceau de dessin
+     */
     public void paint(Map map, HashMap<String, Zone> zones, Graphics graphics) {
         int blockSize = BLOCK_SIZE;
         Block[][] blocks = map.getBlocks();
@@ -105,6 +119,12 @@ public class PaintStrategy {
         }
     }
 
+    /**
+     * Met en rouge les cases déjà occupées quand on essaie de construire un meuble.
+     * 
+     * @param blocksOccupees les cases où il y a déjà un mur ou un meuble
+     * @param graphics pinceau
+     */
     public void paint(List<Block> blocksOccupees, Graphics graphics) {
         int blockSize = BLOCK_SIZE;
         for (Block block : blocksOccupees) {
@@ -113,6 +133,12 @@ public class PaintStrategy {
         }
     }
 
+    /**
+     * Dessine les meubles (fours, tables, plantes) sur l'écran.
+     * 
+     * @param meuble le meuble à dessiner
+     * @param graphics pinceau
+     */
     public void paint(Meuble meuble, Graphics graphics) {
         Block position = meuble.getPosition();
         int blockSize = BLOCK_SIZE;
@@ -164,6 +190,12 @@ public class PaintStrategy {
         }
     }
 
+    /**
+     * Dessine le client (riche, lambda ou critique) avec sa jauge de satisfaction au-dessus.
+     * 
+     * @param client la personne
+     * @param graphics pinceau
+     */
     public void paint(Client client, Graphics graphics) {
         Block position = client.getPosition();
         int blockSize = BLOCK_SIZE;
@@ -192,6 +224,12 @@ public class PaintStrategy {
         graphics.drawString(String.valueOf(client.getSatisfaction()), x + 2, y + 12);
     }
 
+    /**
+     * Dessine les cuisiniers dans la cuisine avec leur nom.
+     * 
+     * @param cuisinier l'employé
+     * @param graphics pinceau
+     */
     public void paint(Cuisinier cuisinier, Graphics graphics) {
         Block position = cuisinier.getPosition();
         int blockSize = BLOCK_SIZE;
@@ -212,6 +250,13 @@ public class PaintStrategy {
         graphics.drawString(cuisinier.getName(), x + 5, y + 5);
     }
 
+    /**
+     * Dessine les serveurs qui bougent dans le restaurant avec leur nom.
+     * 
+     * @param serveur l'employé
+     * @param graphics pinceau
+     * @param animationTick variable pour une future animation de marche
+     */
     public void paint(Serveur serveur, Graphics graphics, int animationTick) {
         Block position = serveur.getPosition();
         int blockSize = BLOCK_SIZE;
@@ -232,6 +277,12 @@ public class PaintStrategy {
         graphics.drawString(serveur.getName(), x + 5, y + 5);
     }
 
+    /**
+     * Permet de dessiner de beaux contours et fonds ronds pour les étiquettes en haut de l'écran (argent, jour).
+     * 
+     * @param label l'étiquette à décorer
+     * @param graphics pinceau
+     */
     public void paint(JLabel label, Graphics graphics) {
         int weight = label.getWidth();
         int height = label.getHeight();
@@ -278,6 +329,13 @@ public class PaintStrategy {
         }
     }
 
+    /**
+     * Affiche un message rouge en haut de l'écran quand on est en mode "Construire".
+     * 
+     * @param graphics pinceau
+     * @param message le texte
+     * @param prix combien ça coûte (0 si ça ne s'achète pas direct)
+     */
     public void paint(Graphics graphics, String message, int prix) {
         graphics.setColor(Color.RED);
         graphics.setFont(new Font("Segoe UI", Font.BOLD, 24));
@@ -288,6 +346,12 @@ public class PaintStrategy {
         }
     }
 
+    /**
+     * Affiche un gros message rouge s'il n'y a plus d'ingrédients.
+     * 
+     * @param graphics pinceau
+     * @param panelWidth largeur de l'écran
+     */
     public void paint(Graphics graphics, int panelWidth) {
         String message = "Manque d'ingrédients, veuillez en acheter, sinon plus de nouveaux clients...";
 
@@ -299,6 +363,14 @@ public class PaintStrategy {
         graphics.setColor(new Color(255, 50, 50));
         graphics.drawString(message, x, y);
     }
+    /**
+     * Dessine le petit encart noir "Succès débloqué !" quand on réussit un palier.
+     * 
+     * @param s le succès en question
+     * @param g pinceau
+     * @param panelWidth largeur visée pour centrer
+     * @param panelHeight hauteur d'ajustement
+     */
     public void paint(Succes s, Graphics g, int panelWidth, int panelHeight) {
         int largeur = 300;
         int hauteur = 100;

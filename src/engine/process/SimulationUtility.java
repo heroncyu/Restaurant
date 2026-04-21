@@ -11,12 +11,25 @@ import javax.imageio.ImageIO;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Classe boîte à outils avec plein de petites fonctions (random, pourboire, niveau...).
+ * 
+ * Permet d'alléger un peu le gros fichier Simulation.java.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class SimulationUtility {
 
     private static ReputationRepository reputationRepository = ReputationRepository.getInstance();
     private static StockRepository stockageRepository = StockRepository.getInstance();
     private static PropreteRepository propreteRepository = PropreteRepository.getInstance();
 
+    /**
+     * Calcule la qualité d'un plat en fonction du niveau en étoiles du cuisinier.
+     * 
+     * @param cuisinier la personne qui prépare
+     * @return un pourcentage de qualité (ex: 50, 75, 100)
+     */
     public static int calculerQualite(Cuisinier cuisinier){
         int niveauEtoile = cuisinier.getNiveau();
         if(niveauEtoile <= 1){
@@ -34,6 +47,13 @@ public class SimulationUtility {
         return 100;
     }
 
+    /**
+     * Change le bonheur du client en fonction de la qualité du plat servi.
+     * S'il est très bon, le client est heureux. S'il est mauvais, il sera fâché.
+     * 
+     * @param client le mangeur
+     * @param commande la trace des infos du plat mangé
+     */
     public static void appliquerBonusQualite(Client client, Commande commande){
         int qualite = commande.getPlat().getQualite();
 
@@ -54,6 +74,14 @@ public class SimulationUtility {
 
     }
 
+    /**
+     * Vérifie si le client est juste assis à attendre (il ne mange pas et on ne l'emmène nulle part).
+     * 
+     * @param client examiné
+     * @param manager gère ses déplacements
+     * @param tempsManger compteur de temps pour ceux actifs
+     * @return vrai s'il attend les mains vides
+     */
     public static boolean estEnTrainAttendre(Client client, MobileElementManager manager, HashMap<Client,Integer> tempsManger){
         Block destination = manager.getDestinationClient(client);
 
@@ -68,6 +96,15 @@ public class SimulationUtility {
         return assis && !mange;
     }
 
+    /**
+     * Calcule le pourboire (extra) qu'un client va donner. Un client critique est radin, 
+     * une star est généreuse. Ça dépend aussi du service.
+     * 
+     * @param client celui qui paye
+     * @param commande la recette qu'il a prise
+     * @param serveur celui qui l'a servi (les bons serveurs ont + de pourboires)
+     * @return l'argent d'extra en nombre entier
+     */
     public static int calculerPourboire(Client client, Commande commande, Serveur serveur) {
 
         int prixPlat = commande.getPrixRecette();
@@ -105,6 +142,16 @@ public class SimulationUtility {
         return (int)(prixPlat * pourcentage * bonusServeur);
     }
 
+    /**
+     * Fonction rapide qui rassemble la facture du client + son pourboire et l'enregistre
+     * dans la moyenne de la journée.
+     * 
+     * @param client le mangeur
+     * @param commande repas
+     * @param serveur qui l'a amené
+     * @param dayStatistics les stats de fin de journée
+     * @return prix du plat avec tip (pourboire)
+     */
     public static int calculerTotal(Client client, Commande commande, Serveur serveur,DayStatistics dayStatistics){
         SimulationUtility.appliquerBonusQualite(client,commande);
 
@@ -117,6 +164,14 @@ public class SimulationUtility {
         return prixPlat + pourboire;
     }
 
+    /**
+     * Demande à un client de tirer au sort ce qu'il va vouloir manger.
+     * Il évite de demander un truc impossible ou qu'un chef n'a pas le niveau de cuisiner.
+     * 
+     * @param recettes la liste des plats entiers du code
+     * @param niveauMaxCuisinier niveau maximum de ceux dans la salle
+     * @return recette choisie, ou null s'il y a rien
+     */
     public static Recette choisirRecetteAlea(ArrayList<Recette> recettes, int niveauMaxCuisinier){
         ArrayList<Recette> disponibles = stockageRepository.recettesDisponibles(recettes);
 
@@ -135,6 +190,12 @@ public class SimulationUtility {
         return bonNiveau.get(index);
     }
 
+    /**
+     * Compte combien il y a de fours posés dans la cuisine.
+     * 
+     * @param meubles ensemble global de pièces
+     * @return nombre de fours posés
+     */
     public static int getNombreFours(ArrayList<Meuble> meubles){
         int cpt = 0;
         for(Meuble meuble : meubles){
@@ -145,6 +206,12 @@ public class SimulationUtility {
         return cpt;
     }
 
+    /**
+     * Compte combien de tables ont été placées dans le restaurant.
+     * 
+     * @param meubles ensemble global
+     * @return nombre de tables
+     */
     public static int getNombreTables(ArrayList<Meuble> meubles){
         int cpt = 0;
         for(Meuble meuble : meubles){
@@ -155,21 +222,48 @@ public class SimulationUtility {
         return cpt;
     }
 
+    /**
+     * Vérifie si on peut embaucher (s'il y a un four de libre pour le petit nouveau).
+     * 
+     * @param meubles stock
+     * @param nbCuisiniers quantité d'humains
+     * @return vrai si on a un four en plus
+     */
     public static boolean peutAcheterCuisinier(ArrayList<Meuble> meubles, int nbCuisiniers){
         int nbFours = getNombreFours(meubles);
         return nbCuisiniers < nbFours;
     }
 
+    /**
+     * Vérifie si on peut embaucher un serveur (max 1 serveur pour 2 tables).
+     * 
+     * @param meubles mobilier présent
+     * @param nbServeurs les serveurs déjà présents
+     * @return vrai s'il y a trop de tables par rapport aux serveurs, donc ok
+     */
     public static boolean peutAcheterServeur(ArrayList<Meuble> meubles, int nbServeurs){
         int nbTable = getNombreTables(meubles);
         int maxServeurs = nbTable/2;
         return nbServeurs < maxServeurs;
     }
 
+    /**
+     * Math.Random qui tire un nombre au hasard.
+     * 
+     * @param min plus petit possible
+     * @param max le plus grand
+     * @return un entier aléatoire
+     */
     public static int getRandomNumber(int min, int max) {
         return (int) (Math.random() * (max + 1 - min)) + min;
     }
 
+    /**
+     * Charge une image depuis le disque (utile pour les sprites).
+     * 
+     * @param chemin local sur le disque du PC
+     * @return variable de Image pour Java
+     */
     public static Image lireImage(String chemin) {
         try {
             return ImageIO.read(new File(chemin));

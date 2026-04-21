@@ -12,6 +12,13 @@ import engine.process.Simulation;
 import engine.process.SimulationUtility;
 import gui.util.FondPanel;
 
+/**
+ * Panneau situé à droite de l'écran avec les 4 gros boutons principaux.
+ * 
+ * Permet d'ouvrir les menus pour construire, gérer le personnel, les meubles ou le stock.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class MenuDisplay extends JPanel {
 	private JFrame owner;
 	private FondPanel fondPanel;
@@ -27,6 +34,13 @@ public class MenuDisplay extends JPanel {
 
 	private Image imgFond = SimulationUtility.lireImage("src/resources/fond_bois_moyen.png");
 
+	/**
+	 * Configure la colonne de boutons à droite.
+	 * 
+	 * @param owner la fenêtre principale
+	 * @param simulation le jeu en cours
+	 * @param dayStatistics les statistiques (pour les achats)
+	 */
 	public MenuDisplay(JFrame owner, Simulation simulation, DayStatistics dayStatistics) {
 		this.owner = owner;
 		this.simulation = simulation;

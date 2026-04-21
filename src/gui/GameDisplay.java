@@ -12,6 +12,13 @@ import engine.process.Simulation;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Panneau qui s'occupe de dessiner tout le jeu (les murs, les personnages, les meubles).
+ * 
+ * Il appelle la classe PaintStrategy pour faire le vrai dessin des éléments de la Simulation.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class GameDisplay extends JPanel {
     private Map map;
     private Simulation simulation;
@@ -20,16 +27,32 @@ public class GameDisplay extends JPanel {
     private Succes succesEnCours = null;
     private int tempsRestants = 0;
 
+    /**
+     * Prépare la zone de dessin.
+     * 
+     * @param map la carte du restaurant (les cases)
+     * @param simulation la simulation qui contient tous les éléments (serveurs, tables...)
+     */
     public GameDisplay(Map map, Simulation simulation) {
         this.map = map;
         this.simulation = simulation;
         this.animationTick = 0;
     }
+    /**
+     * Affiche une alerte à l'écran quand on débloque un succès.
+     * 
+     * @param s le succès gagné
+     */
     public void afficherSucces(Succes s) {
         succesEnCours = s;
         tempsRestants = 30;
     }
 
+    /**
+     * Méthode appelée tout le temps par Java pour redessiner le jeu à l'écran.
+     * 
+     * @param g l'outil de Java pour dessiner des images et des formes
+     */
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);

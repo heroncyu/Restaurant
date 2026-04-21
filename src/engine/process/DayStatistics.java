@@ -4,6 +4,13 @@ import config.GameConfiguration;
 
 import java.util.HashMap;
 
+/**
+ * Classe qui calcule le résumé comptable de la journée.
+ * 
+ * Stocke et fournit des fonctions pour calculer les recettes, les depenses, etc.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class DayStatistics {
     private int nbJour;
     private int nbCommandesDuJour;
@@ -24,6 +31,9 @@ public class DayStatistics {
 
     private HashMap<String,Integer> ventesParRecette = new HashMap<>();
 
+    /**
+     * Initialise toutes les statistiques à zéro lors du lancement de la partie.
+     */
     public DayStatistics() {
         this.nbJour = 0;
         this.nbCommandesDuJour = 0;
@@ -41,6 +51,9 @@ public class DayStatistics {
         this.achatDujour = 0;
     }
 
+    /**
+     * Remet à zéro toutes les variables pour commencer une nouvelle journée.
+     */
     public void update() {
         this.nbJour++;
         this.nbCommandesDuJour = 0;
@@ -57,50 +70,103 @@ public class DayStatistics {
         this.achatDujour = 0;
     }
 
+    /**
+     * Calcule le bénéfice en faisant la différence avec l'argent de la veille.
+     * 
+     * @return l'argent gagné ou perdu
+     */
     public int calculBenefices() {
         this.beneficesDuJour = ArgentRepository.getInstance().getMonnaie() - this.argentJourPrecedent;
         return this.beneficesDuJour;
     }
 
+    /**
+     * Calcule le total de rentrée d'argent de la journée.
+     * 
+     * @return l'argent total reçu
+     */
     public int calculRevenus() {
         this.revenusDuJour = this.revenusCommandesDuJour + this.revenusPourboireDuJour;
         return this.revenusDuJour;
     }
 
+    /**
+     * Calcule le total des dépenses de la journée.
+     * 
+     * @return l'argent total dépensé
+     */
     public int calculDepenses() {
         this.depensesDuJour = this.coutLoyerDuJour + this.coutSalairesDuJour + this.coutConstructionDuJour + this.achatDujour;
         return this.depensesDuJour;
     }
 
+    /**
+     * Ajoute une dépense de construction (ex: achat d'une table).
+     * 
+     * @param coutConstruction montant dépensé
+     */
     public void addCoutConstruction(int coutConstruction) {
         this.coutConstructionDuJour += coutConstruction;
     }
 
+    /**
+     * Ajoute l'argent gagné suite à une commande servie.
+     * 
+     * @param coutCommandes montant perçu
+     */
     public void addRevenusCommandes(int coutCommandes) {
         this.revenusCommandesDuJour += coutCommandes;
     }
 
+    /**
+     * Ajoute le salaire à payer pour les employés.
+     * 
+     * @param coutSalaires montant des salaires versés
+     */
     public void addCoutSalaires(int coutSalaires) {
         this.coutSalairesDuJour += coutSalaires;
     }
 
+    /**
+     * Ajoute le coût du loyer de la salle du restaurant.
+     * 
+     * @param coutLoyer loyer payé pour les tables
+     */
     public void addCoutLoyer(int coutLoyer) {
         this.coutLoyerDuJour += coutLoyer;
     }
 
+    /**
+     * Incrémente le nombre de plats servis.
+     */
     public void addCommande() {
         this.nbCommandesDuJour++;
         this.nbCommandesTotal++;
     }
 
+    /**
+     * Ajoute les pourboires laissés par les clients.
+     * 
+     * @param pourboire montant du pourboire
+     */
     public void addRevenusPourboire(int pourboire) {
         this.revenusPourboireDuJour += pourboire;
     }
 
+    /**
+     * Ajoute le coût d'achat pour des ingrédients.
+     * 
+     * @param achat coût en gold enlevé à la caisse
+     */
     public void addAchat(int achat) {
         this.achatDujour += achat;
     }
 
+    /**
+     * Compte le nombre de fois qu'une recette a été vendue.
+     * 
+     * @param nomRecette nom de la recette
+     */
     public void addVenteRecette(String nomRecette){
         int actuel = ventesParRecette.getOrDefault(nomRecette,0);
         ventesParRecette.put(nomRecette,actuel+1);

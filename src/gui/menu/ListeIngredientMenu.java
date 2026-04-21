@@ -20,6 +20,13 @@ import engine.process.ArgentRepository;
 import engine.process.DayStatistics;
 import engine.process.StockRepository;
 
+/**
+ * Fait la liste de tous les ingrédients qu'on peut acheter au supermarché.
+ * 
+ * Vérifie si on a assez d'argent et de place avant d'ajouter au stock.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class ListeIngredientMenu extends JPanel {
 
     private ArrayList<JPanel> ligneIngredientList = new ArrayList<JPanel>();
@@ -28,6 +35,11 @@ public class ListeIngredientMenu extends JPanel {
     private JProgressBar barreStock;
     private JLabel labelStock;
 
+    /**
+     * Prépare la liste avec la barre de défilement pour qu'on puisse la parcourir de haut en bas.
+     * 
+     * @param dayStatistics pour noter tout ce qu'on dépense cette journée
+     */
     public ListeIngredientMenu(DayStatistics dayStatistics) {
         this.dayStatistics = dayStatistics;
         setLayout(new GridLayout(0, 1, 0, 10));

@@ -22,6 +22,13 @@ import gui.util.FondPanel;
 
 import java.awt.Image;
 
+/**
+ * Fenêtre du menu principal qui s'ouvre au lancement du jeu.
+ * 
+ * Contient les boutons pour jouer, voir le tutoriel ou quitter.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class EcranTitreGUI extends JFrame {
     private Image fondImage = SimulationUtility.lireImage("src/resources/ecran_titre_fond.png");
 
@@ -37,6 +44,9 @@ public class EcranTitreGUI extends JFrame {
 
     
     
+    /**
+     * Crée et affiche l'interface de l'écran titre.
+     */
     public EcranTitreGUI() {
         super("Restaurant");
         setSize(1000, 800);

@@ -24,6 +24,13 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Menu d'achat des objets et de la décoration (fours, tables...).
+ * 
+ * Si on a assez d'argent, ça permet de choisir un meuble à placer sur la carte.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class MeubleMenu extends JDialog {
     private ArgentRepository argentRepository = ArgentRepository.getInstance();
     private RestaurantManager restaurantManager;
@@ -57,6 +64,12 @@ public class MeubleMenu extends JDialog {
 
 
 
+    /**
+     * Ouvre la fenêtre montrant les prix de chaque meuble.
+     * 
+     * @param owner la fenêtre principale
+     * @param simulation le jeu en cours
+     */
     public MeubleMenu(JFrame owner, Simulation simulation) {
         super(owner, "Menu Meuble", true);
         this.restaurantManager = simulation.getRestaurantManager();

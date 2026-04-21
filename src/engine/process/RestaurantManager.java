@@ -13,6 +13,13 @@ import engine.mobile.Meuble;
 import engine.mobile.Serveur;
 import log.LoggerUtility;
 
+/**
+ * Gère tout ce que le joueur ("manageur") fait pendant la partie.
+ * 
+ * S'occupe d'acheter des meubles, d'agrandir les zones et d'embaucher du personnel.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class RestaurantManager {
     private static Logger logger = LoggerUtility.getLogger(RestaurantManager.class, "html");
 
@@ -24,10 +31,21 @@ public class RestaurantManager {
 
     private static ArgentRepository argentRepository = ArgentRepository.getInstance();
 
+    /**
+     * Crée le gestionnaire du restaurant.
+     * 
+     * @param simulation la simulation principale du jeu
+     */
     public RestaurantManager(Simulation simulation) {
         this.simulation = simulation;
     }
 
+    /**
+     * Place un meuble sur la carte et paye son prix.
+     * 
+     * @param meuble le meuble à placer
+     * @param zoneMeuble la zone où on le place (ex: Salle pour une table)
+     */
     public void enregistrerMeuble(Meuble meuble, Zone zoneMeuble) {
         MobileElementManager manager = simulation.getManager();
         Map map = simulation.getMap();
@@ -81,6 +99,12 @@ public class RestaurantManager {
         }
     }
 
+    /**
+     * Essaie d'acheter et de placer un meuble sur une case.
+     * 
+     * @param ligne coordonnée Y
+     * @param colonne coordonnée X
+     */
     public void ajouterMeuble(int ligne, int colonne) {
         Block blockMeuble = simulation.getMap().getBlock(ligne, colonne);
         Zone zoneMeuble = ZoneManager.getZone(blockMeuble, simulation.getZones());
@@ -93,6 +117,12 @@ public class RestaurantManager {
         }
     }
 
+    /**
+     * Agrandit une zone du restaurant en achetant de l'espace vide.
+     * 
+     * @param ligne coordonnée Y de la case cliquée
+     * @param colonne coordonnée X de la case cliquée
+     */
     public void agrandirZone(int ligne, int colonne) {
         if (zoneBlockSelec == null) {
             Block blockSelec = simulation.getMap().getBlock(ligne, colonne);
@@ -148,6 +178,11 @@ public class RestaurantManager {
         }
     }
 
+    /**
+     * Calcule le prix total de l'espace qu'on veut acheter.
+     * 
+     * @return prix total à payer
+     */
     public int calculerPrixConstruction() {
         Zone zoneConstructible = simulation.getZones().get("CONSTRUCTIBLE");
         int prix = 0;
@@ -157,6 +192,11 @@ public class RestaurantManager {
         return prix;
     }
 
+    /**
+     * Embauche un nouveau serveur si on a assez d'argent.
+     * 
+     * @return vrai si l'achat est réussi
+     */
     public boolean acheterServeur() {
         int prix = GameConfiguration.PRIX_SERVEUR;
         int nbServeurs = simulation.getManager().getServeurs().size();
@@ -181,6 +221,11 @@ public class RestaurantManager {
         return true;
     }
 
+    /**
+     * Embauche un nouveau cuisinier.
+     * 
+     * @return vrai si l'achat est réussi
+     */
     public boolean acheterCuisinier() {
         int prix = GameConfiguration.PRIX_CUISINIER;
         int nbCuisiniers = simulation.getManager().getCuisiniers().size();
@@ -206,6 +251,12 @@ public class RestaurantManager {
     }
 
 
+    /**
+     * Améliore un serveur (niveau +1, salaire +20).
+     * 
+     * @param serveur employé à améliorer
+     * @return vrai s'il a été amélioré, faux si niveau max ou pas d'argent
+     */
     public boolean ameliorerServeur(Serveur serveur) {
         int prix = GameConfiguration.PRIX_AMELIORATION;
 
@@ -224,6 +275,12 @@ public class RestaurantManager {
         return true;
     }
 
+    /**
+     * Améliore un cuisinier (niveau +1, salaire +30).
+     * 
+     * @param cuisinier cuisinier à améliorer
+     * @return vrai s'il a été amélioré, faux si niveau max ou pas d'argent
+     */
     public boolean ameliorerCuisinier(Cuisinier cuisinier) {
         int prix = GameConfiguration.PRIX_AMELIORATION;
 

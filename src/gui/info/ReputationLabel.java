@@ -10,10 +10,18 @@ import javax.swing.JLabel;
 import engine.process.ReputationRepository;
 import gui.PaintStrategy;
 
+/**
+ * L'étiquette qui montre notre score de réputation (en nombre d'étoiles ou de points).
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class ReputationLabel extends JLabel {
     private PaintStrategy paintStrategy = new PaintStrategy();
     private ReputationRepository reputationRepository = ReputationRepository.getInstance();
 
+    /**
+     * Prépare le texte pour afficher la réputation.
+     */
     public ReputationLabel() {
         super();
 
@@ -25,6 +33,11 @@ public class ReputationLabel extends JLabel {
 
     }
 
+    /**
+     * Met à jour tout seul le score si des clients sont contents ou fâchés, et le redessine.
+     * 
+     * @param graphics l'outil de dessin
+     */
     @Override
     protected void paintComponent(Graphics graphics) {
         paintStrategy.paint(this, graphics);

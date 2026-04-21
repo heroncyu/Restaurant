@@ -32,6 +32,13 @@ import engine.process.ArgentRepository;
 import engine.process.SimulationUtility;
 import gui.util.FondPanel;
 
+/**
+ * Fenêtre de fin de partie quand on n'a plus d'argent.
+ * 
+ * Elle empêche de continuer à jouer et affiche tout ce qu'on a fait depuis le début.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class GameOverWindow extends JDialog {
     private Image fondImage = SimulationUtility.lireImage("src/resources/fond_bois.png");
     private FondPanel panelPrincipal = new FondPanel(fondImage);
@@ -54,6 +61,12 @@ public class GameOverWindow extends JDialog {
 
     private HashMap<String, Integer> gameStats;
 
+    /**
+     * Crée la fenêtre de faillite.
+     * 
+     * @param owner la fenêtre principale du jeu
+     * @param gameStats toutes les statistiques générales (ex: "Nombre de serveurs")
+     */
     public GameOverWindow(JFrame owner, HashMap<String, Integer> gameStats) {
         super(owner, "Fin de partie", true);
 

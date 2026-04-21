@@ -24,6 +24,13 @@ import org.jfree.data.xy.XYSeriesCollection;
 import engine.process.ArgentRepository;
 import engine.process.DayStatistics;
 
+/**
+ * Fenêtre qui s'affiche à la fin de chaque journée.
+ * 
+ * Elle montre combien d'argent on a gagné ou perdu (avec du texte et un graphique).
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class BilanWindow extends JDialog {
     private ChartPanel panelGraph;
     private JPanel panelStats;
@@ -35,6 +42,12 @@ public class BilanWindow extends JDialog {
     private JLabel labelRevenus = new JLabel("Revenus");
 
     
+    /**
+     * Crée la fenêtre du bilan de fin de journée.
+     * 
+     * @param owner la fenêtre principale du jeu
+     * @param dayStatistics les statistiques de la journée (argent, plats servis...)
+     */
     public BilanWindow(JFrame owner, DayStatistics dayStatistics) {
         super(owner, "Bilan du jour", true);
 
@@ -56,6 +69,9 @@ public class BilanWindow extends JDialog {
     }
 
 
+    /**
+     * Prépare le texte qui montre tous les gains et les pertes.
+     */
     public void initStats() {
         panelStats = new JPanel();
         panelStats.setLayout(new GridLayout(1, 3, 20, 0));
@@ -111,6 +127,9 @@ public class BilanWindow extends JDialog {
         panelStats.add(panelBenefices);
     }
 
+    /**
+     * Prépare le graphique qui montre l'évolution de l'argent.
+     */
     public void initGraph() {
         JFreeChart chart = getBilanChart();
         chart.setBackgroundPaint(Color.GRAY);
@@ -146,6 +165,11 @@ public class BilanWindow extends JDialog {
         return sb.toString();
     }
 
+    /**
+     * Crée la courbe avec l'historique de l'argent du restaurant jour par jour.
+     * 
+     * @return le dessin du graphique
+     */
     public JFreeChart getBilanChart() {
         List<Integer> argentHistory = ArgentRepository.getInstance().getArgentHistory();
 		XYSeries serie = new XYSeries("Bilan");

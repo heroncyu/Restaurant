@@ -14,6 +14,13 @@ import gui.menu.RecettesMenu;
 import gui.menu.SuccesMenu;
 import gui.util.FondPanel;
 
+/**
+ * Barre d'informations tout en haut de l'écran. 
+ * 
+ * On y trouve notre argent, la réputation, mais aussi les boutons pour faire Pause ou avancer plus vite.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class InfoDisplay extends JPanel {
   private JFrame owner;
 
@@ -39,6 +46,12 @@ public class InfoDisplay extends JPanel {
 
   private FondPanel fondPanel;
 
+  /**
+   * Place tous les textes (argent, jour, heure) et tous les boutons (pause, succès).
+   * 
+   * @param owner la fenêtre du jeu
+   * @param simulation le cœur du jeu pour lire les valeurs
+   */
   public InfoDisplay(JFrame owner, Simulation simulation) {
     this.owner = owner;
     this.simulation = simulation;

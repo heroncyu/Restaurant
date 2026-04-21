@@ -1,5 +1,13 @@
 package config;
 
+/**
+ * Constantes et valeurs de configuration globales pour la boucle de jeu.
+ * 
+ * Définit notamment la structure d'un {@link Block}, les coûts des achats 
+ * et les états du {@link MobileElementManager}.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class GameConfiguration {
 
     public static final int INFO_PANEL_HEIGHT   = 50;

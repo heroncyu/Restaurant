@@ -12,12 +12,25 @@ import engine.process.RestaurantManager;
 import engine.process.Simulation;
 import engine.process.SimulationUtility;
 
+/**
+ * Menu pour embaucher ou améliorer ses cuisiniers et serveurs.
+ * 
+ * Il bloque l'achat si on n'a plus de place (pas assez de fours ou de tables).
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class PersonnelMenu extends JDialog {
     private Simulation simulation;
     private JPanel contenu;
     private Font font = new Font("Segoe UI", Font.BOLD, 20);
     private RestaurantManager restaurantManager;
 
+    /**
+     * Ouvre le menu complet du personnel.
+     * 
+     * @param owner la fenêtre principale du jeu
+     * @param simulation le jeu pour vérifier les chaises et l'argent
+     */
     public PersonnelMenu(JFrame owner, Simulation simulation) {
         super(owner, "Personnel", true);
         this.simulation = simulation;

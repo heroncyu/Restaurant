@@ -10,8 +10,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+/**
+ * Fenêtre de tous les succès du jeu (comme des quêtes ou des missions).
+ * 
+ * On peut y voir quels succès on a gagnés et cliquer pour gagner l'argent de récompense.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class SuccesMenu extends JDialog {
 
+    /**
+     * Ouvre la fenêtre des succès.
+     * 
+     * @param owner la fenêtre principale du jeu
+     */
     public SuccesMenu(JFrame owner) {
         super(owner, "Succès", true);
         setLayout(new BorderLayout());

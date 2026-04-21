@@ -12,6 +12,13 @@ import java.util.ArrayList;
 import org.apache.log4j.Logger;
 
 
+/**
+ * Panneau en bas de l'écran qui montre les commandes des clients.
+ * 
+ * Divisé en 4 colonnes (en attente, à cuisiner, en cuisson, prêtes).
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class OrderDisplay extends FondPanel {
     private static Logger logger = LoggerUtility.getLogger(OrderDisplay.class, "html");
 
@@ -37,6 +44,11 @@ public class OrderDisplay extends FondPanel {
 
     private Simulation simulation;
 
+    /**
+     * Prépare les 4 listes pour afficher les plats aux différents stades.
+     * 
+     * @param simulation le jeu pour lire l'état actuel des commandes
+     */
     public OrderDisplay(Simulation simulation) {
         super(SimulationUtility.lireImage("src/resources/fond_bois_moyen.png"));
         this.simulation = simulation;
@@ -137,6 +149,9 @@ public class OrderDisplay extends FondPanel {
 
     }
 
+    /**
+     * Met à jour la liste visuelle des plats commandés mais pas encore pris par un serveur.
+     */
     public void updateCommandesEnAttente() {
         ArrayList<Commande> commandesEnAttente = simulation.getCommandesEnAttente();
 
@@ -150,6 +165,9 @@ public class OrderDisplay extends FondPanel {
         }
     }
 
+    /**
+     * Met à jour la liste des plats que les cuisiniers doivent préparer.
+     */
     public void updateCommandesACuisiner() {
         ArrayList<Commande> commandesACuisiner = simulation.getCommandesACuisiner();
 
@@ -163,6 +181,9 @@ public class OrderDisplay extends FondPanel {
         }
     }
 
+    /**
+     * Met à jour la liste des plats qui chauffent dans les fours.
+     */
     public void updateCommandesCuisson() {
         ArrayList<Commande> commandesCuisson = simulation.getCommandesCuisson();
 
@@ -176,6 +197,9 @@ public class OrderDisplay extends FondPanel {
         }
     }
 
+    /**
+     * Met à jour la liste des plats cuits qui attendent d'être apportés au client.
+     */
     public void updateCommandesPretes() {
         ArrayList<Commande> commandesPretes = simulation.getCommandesPretes();
 
@@ -189,6 +213,9 @@ public class OrderDisplay extends FondPanel {
         }
     }
 
+    /**
+     * Met à jour les titres pour afficher combien il y a de commandes dans chaque catégorie.
+     */
     public void updateLabelsTitres() {
         labelEnAttente.setText("Commandes en attente : " + simulation.getCommandesEnAttente().size());
         labelACuisiner.setText("Commandes à cuisiner : " + simulation.getCommandesACuisiner().size());
@@ -196,6 +223,9 @@ public class OrderDisplay extends FondPanel {
         labelPretes.setText("Commandes prêtes : " + simulation.getCommandesPretes().size());
     }
 
+    /**
+     * Rafraîchit absolument toutes les colonnes en même temps.
+     */
     public void updateAll() {
         updateLabelsTitres();
         updateCommandesEnAttente();
@@ -204,6 +234,11 @@ public class OrderDisplay extends FondPanel {
         updateCommandesPretes();
     }
 
+    /**
+     * Redessine le panneau en mettant à jour le texte avant.
+     * 
+     * @param g le pinceau pour dessiner
+     */
     @Override
     public void paintComponent(Graphics g) {
         updateAll();

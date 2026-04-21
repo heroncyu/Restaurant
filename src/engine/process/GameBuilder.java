@@ -15,8 +15,18 @@ import engine.mobile.Serveur;
 import engine.prestige.Succes;
 import engine.process.chrono.Chronometer;
 
+/**
+ * Classe qui crée tous les éléments du jeu (map, meubles, cuisiniers) au démarrage.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class GameBuilder {
 
+    /**
+     * Crée la grille principale du jeu.
+     * 
+     * @return la carte de jeu vide
+     */
     public static Map buildMap() {
         return new Map(
                 GameConfiguration.LINE_COUNT,
@@ -24,6 +34,12 @@ public class GameBuilder {
         );
     }
 
+    /**
+     * Divise la carte en différentes zones géographiques (CUISINE, SALLE, etc).
+     * 
+     * @param map la matrice de la carte
+     * @return le dictionnaire des différentes zones créées
+     */
     public static HashMap<String, Zone> buildZones(Map map) {
         HashMap<String, Zone> zones = new HashMap<>();
         int h = map.getLineCount();
@@ -59,6 +75,12 @@ public class GameBuilder {
         return zones;
     }
 
+    /**
+     * Pose les meubles de départ du restaurant.
+     * 
+     * @param map carte de base
+     * @return la liste des meubles placés
+     */
     public static ArrayList<Meuble> buildMeubles(Map map) {
         ArrayList<Meuble> meubles = new ArrayList<>();
         int h = map.getLineCount();
@@ -75,6 +97,12 @@ public class GameBuilder {
         return meubles;
     }
 
+    /**
+     * Crée le cuisinier de départ qui travaille en cuisine.
+     * 
+     * @param map carte
+     * @return liste contentant le premier cuisinier
+     */
     public static ArrayList<Cuisinier> buildCuisiniers(Map map) {
         ArrayList<Cuisinier> cuisiniers = new ArrayList<>();
         int h = map.getLineCount();
@@ -83,6 +111,12 @@ public class GameBuilder {
         return cuisiniers;
     }
 
+    /**
+     * Crée le serveur de départ pour déposer les plats.
+     * 
+     * @param map carte
+     * @return liste contenant le premier serveur
+     */
     public static ArrayList<Serveur> buildServeurs(Map map) {
         ArrayList<Serveur> serveurs = new ArrayList<>();
         int h = map.getLineCount();
@@ -91,6 +125,12 @@ public class GameBuilder {
         return serveurs;
     }
 
+    /**
+     * Définit toutes les recettes du jeu.
+     * 
+     * @param ingredients base de données des ingrédients existants
+     * @return la liste des recettes
+     */
     public static ArrayList<Recette> buildRecette(ArrayList<Ingredient> ingredients) {
         ArrayList<Recette> recettes = new ArrayList<>();
 
@@ -142,6 +182,12 @@ public class GameBuilder {
         return recettes;
     }
 
+    /**
+     * Initialise le garde-manger avec 10 ingrédients de chaque type pour commencer.
+     * 
+     * @param ingredients types d'ingrédients possibles
+     * @return l'inventaire prêt pour la partie
+     */
     public static Stockage buildStockage(ArrayList<Ingredient> ingredients) {
         HashMap<Ingredient, Integer> stock = new HashMap<Ingredient, Integer>();
         for (Ingredient ingredient : ingredients) {
@@ -150,6 +196,11 @@ public class GameBuilder {
         return new Stockage(stock);
     }
 
+    /**
+     * Crée tous les ingrédients dont les prix sont définis en dur.
+     * 
+     * @return liste des ingrédients disponibles
+     */
     public static ArrayList<Ingredient> buildIngredients() {
         ArrayList<Ingredient> ingredients = new ArrayList<>();
         ingredients.add(new Ingredient("Tomate", 2));
@@ -169,12 +220,22 @@ public class GameBuilder {
         return ingredients;
     }
 
+    /**
+     * Prépare le système de gestion du temps (chronomètre).
+     * 
+     * @return le chrono du jeu
+     */
     public static Chronometer buildChronometer() {
         Chronometer chronometre = new Chronometer();
         chronometre.init();
         return chronometre;
     }
 
+    /**
+     * Définit les succès déblocables et leurs récompenses pour le joueur.
+     * 
+     * @return liste des succès
+     */
     public static ArrayList<Succes> buildSucces() {
         ArrayList<Succes> succes = new ArrayList<>();
         succes.add(new Succes("Bon debut", "Servir 10 commandes", 150));

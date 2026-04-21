@@ -20,6 +20,14 @@ import gui.info.InfoDisplay;
 import gui.menu.MenuDisplay;
 import log.LoggerUtility;
 
+/**
+ * La fenêtre principale du jeu complet une fois lancé.
+ * 
+ * Elle assemble tous les menus (infos en haut, jeu au centre, boutons à droite)
+ * et fait avancer le jeu en boucle.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class MainGUI extends JFrame implements Runnable {
     private static Logger logger = LoggerUtility.getLogger(MainGUI.class, "html");
 
@@ -32,6 +40,9 @@ public class MainGUI extends JFrame implements Runnable {
     
     private final static Dimension preferredSize = new Dimension(GameConfiguration.WINDOW_WIDTH, GameConfiguration.WINDOW_HEIGHT);
 
+    /**
+     * Prépare la grande fenêtre avec tous ses morceaux (jeu, menus, commandes).
+     */
     public MainGUI() {
         super("Restaurant");
         init();
@@ -86,6 +97,10 @@ public class MainGUI extends JFrame implements Runnable {
         }
     }
 
+    /**
+     * Boucle qui tourne tout le temps pour faire avancer le jeu (clients qui bougent, temps qui passe) 
+     * et qui redessine l'écran. C'est le moteur du jeu.
+     */
     public void run() {
         while (true) {
             try {

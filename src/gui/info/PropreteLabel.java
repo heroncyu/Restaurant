@@ -10,10 +10,18 @@ import javax.swing.JLabel;
 import engine.process.PropreteRepository;
 import gui.PaintStrategy;
 
+/**
+ * L'étiquette qui montre le score de propreté du restaurant.
+ * 
+ * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
+ */
 public class PropreteLabel extends JLabel {
     private PaintStrategy paintStrategy = new PaintStrategy();
     private PropreteRepository propreteRepository = PropreteRepository.getInstance();
 
+    /**
+     * Prépare le texte noir avec son fond et ses marges.
+     */
     public PropreteLabel() {
         super();
 
@@ -24,6 +32,11 @@ public class PropreteLabel extends JLabel {
         setOpaque(false);
     }
 
+    /**
+     * Met à jour tout seul la propreté (si ça se salit ou si on nettoie) et redessine l'étiquette.
+     * 
+     * @param graphics l'outil de dessin
+     */
     @Override
     protected void paintComponent(Graphics graphics) {
         paintStrategy.paint(this, graphics);
