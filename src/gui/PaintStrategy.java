@@ -1,5 +1,6 @@
 package gui;
 
+import config.GameConfiguration;
 import engine.map.Block;
 import engine.map.Map;
 import engine.map.Zone;
@@ -52,6 +53,26 @@ public class PaintStrategy {
     private Image satisfactionLOW = SimulationUtility.lireImage("src/resources/satisfactionLOW.png");
     private Image satisfactionRED = SimulationUtility.lireImage("src/resources/satisfactionRED.png");
 
+    // Sprites Serveur - BAS
+    private Image servBasRepos = SimulationUtility.lireImage("src/resources/serveuse/serv_bas_repos.png");
+    private Image servBas1 = SimulationUtility.lireImage("src/resources/serveuse/serv_bas_1.png");
+    private Image servBas2 = SimulationUtility.lireImage("src/resources/serveuse/serv_bas_2.png");
+
+    // Sprites Serveur - HAUT
+    private Image servHautRepos = SimulationUtility.lireImage("src/resources/serveuse/serv_haut_repos.png");
+    private Image servHaut1 = SimulationUtility.lireImage("src/resources/serveuse/serv_haut_1.png");
+    private Image servHaut2 = SimulationUtility.lireImage("src/resources/serveuse/serv_haut_2.png");
+
+    // Sprites Serveur - GAUCHE
+    private Image servGaucheRepos = SimulationUtility.lireImage("src/resources/serveuse/serv_gauche_repos.png");
+    private Image servGauche1 = SimulationUtility.lireImage("src/resources/serveuse/serv_gauche_1.png");
+    private Image servGauche2 = SimulationUtility.lireImage("src/resources/serveuse/serv_gauche_2.png");
+
+    // Sprites Serveur - DROITE
+    private Image servDroiteRepos = SimulationUtility.lireImage("src/resources/serveuse/serv_droite_repos.png");
+    private Image servDroite1 = SimulationUtility.lireImage("src/resources/serveuse/serv_droite_1.png");
+    private Image servDroite2 = SimulationUtility.lireImage("src/resources/serveuse/serv_droite_2.png");
+
     /**
      * Dessine le sol de toutes les cases (herbe, salle, cuisine...).
      * 
@@ -59,8 +80,6 @@ public class PaintStrategy {
      * @param zones la liste des zones pour savoir quoi dessiner
      * @param graphics pinceau de dessin
      */
-
-
     public void paint(Map map, HashMap<String, Zone> zones, Graphics graphics) {
         int blockSize = BLOCK_SIZE;
         Block[][] blocks = map.getBlocks();
@@ -290,24 +309,57 @@ public class PaintStrategy {
      * @param graphics pinceau
      * @param animationTick variable pour une future animation de marche
      */
-    public void paint(Serveur serveur, Graphics graphics, int animationTick) {
+    public void paint(Serveur serveur, Graphics graphics, int animationTick, String etat) {
         Block position = serveur.getPosition();
         int blockSize = BLOCK_SIZE;
 
         int y = position.getLine() * blockSize;
         int x = position.getColumn() * blockSize;
 
-        if(serveuse != null){
-            graphics.drawImage(serveuse, x, y, blockSize, blockSize, null);
+
+        int agrandissement = 10;
+        int tailleImage = blockSize + agrandissement;
+
+        int decalageX = agrandissement / 2;
+        int decalageY = agrandissement - 5;
+
+        Image imageADessiner = servBasRepos;
+        String direction = serveur.getDirection();
+
+        boolean estArrete = etat.equals(GameConfiguration.ETAT_LIBRE);
+
+        switch (direction) {
+            case GameConfiguration.BAS:
+                if (estArrete) imageADessiner = servBasRepos;
+                else imageADessiner = (animationTick == 0) ? servBas1 : servBas2;
+                break;
+
+            case GameConfiguration.HAUT:
+                if (estArrete) imageADessiner = servHautRepos;
+                else imageADessiner = (animationTick == 0) ? servHaut1 : servHaut2;
+                break;
+
+            case GameConfiguration.GAUCHE:
+                if (estArrete) imageADessiner = servGaucheRepos;
+                else imageADessiner = (animationTick == 0) ? servGauche1 : servGauche2;
+                break;
+
+            case GameConfiguration.DROITE:
+                if (estArrete) imageADessiner = servDroiteRepos;
+                else imageADessiner = (animationTick == 0) ? servDroite1 : servDroite2;
+                break;
         }
-        else {
+
+        if (imageADessiner != null) {
+            graphics.drawImage(imageADessiner, x - decalageX, y - decalageY, tailleImage, tailleImage, null);
+        } else {
             graphics.setColor(Color.RED);
             graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
         }
 
         graphics.setColor(new Color(240, 231, 230));
         graphics.setFont(new Font("Dialog", Font.PLAIN, 18));
-        graphics.drawString(serveur.getName(), x + 5, y + 5);
+        graphics.drawString(serveur.getName(), x + 5, y - 5); // Remonté un peu pour pas cacher la tête
     }
 
     /**
