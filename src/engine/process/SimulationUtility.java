@@ -272,4 +272,11 @@ public class SimulationUtility {
             return null;
         }
     }
+
+    public static void resetGame() {
+        ArgentRepository.getInstance().reset();
+        ReputationRepository.getInstance().reset();
+        PropreteRepository.getInstance().reset();
+        SuccesRepository.getInstance().reset();
+    }
 }

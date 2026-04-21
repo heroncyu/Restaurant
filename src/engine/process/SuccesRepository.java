@@ -21,9 +21,18 @@ public class SuccesRepository {
     private SuccesRepository() {
     }
 
+
+    public void reset() {
+        for (Succes s : succes) {
+            s.setEstDebloque(false);
+            s.setEstReclame(false);
+        }
+        aAfficher.clear();
+    }
+
     /**
      * Récupère l'instance unique gérant les défis de la session.
-     * 
+     *
      * @return l'instance unique
      */
     public static SuccesRepository getInstance() {

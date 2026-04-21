@@ -77,6 +77,11 @@ public class Simulation {
      * Prépare toute la simulation de A à Z (carte, listes, recettes).
      */
     public Simulation() {
+        ArgentRepository.getInstance().reset();
+        PropreteRepository.getInstance().reset();
+        ReputationRepository.getInstance().reset();
+        SuccesRepository.getInstance().reset();
+
         map = GameBuilder.buildMap();
         zones = GameBuilder.buildZones(map);
         meubles = GameBuilder.buildMeubles(map);
@@ -99,7 +104,7 @@ public class Simulation {
 
         SuccesRepository.getInstance().setSucces(GameBuilder.buildSucces());
 
-         this.h = map.getLineCount();
+        this.h = map.getLineCount();
 
         comptoirS = map.getBlock(h-5, 10);
         comptoirC = map.getBlock(h-5, 9);

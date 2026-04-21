@@ -20,6 +20,12 @@ public class ArgentRepository {
     
 	private static ArgentRepository instance = new ArgentRepository();
 
+    public void reset() {
+        argent.setMonnaie(config.GameConfiguration.INITIAL_MONEY);
+        argentHistory.clear();
+        argentHistory.add(config.GameConfiguration.INITIAL_MONEY);
+    }
+
 
 	    /**
      * Constructeur privé pour le design pattern Singleton.

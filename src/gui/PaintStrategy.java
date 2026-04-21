@@ -38,6 +38,7 @@ public class PaintStrategy {
     private Image table = SimulationUtility.lireImage("src/resources/table.png");
     private Image four = SimulationUtility.lireImage("src/resources/four.png");
     private Image plante = SimulationUtility.lireImage("src/resources/plante.png");
+    private Image tapisEntree = SimulationUtility.lireImage("src/resources/tapis.png");
     private Image porteManteau = SimulationUtility.lireImage("src/resources/porte_manteau.png");
     private Image serveuse = SimulationUtility.lireImage("src/resources/serveuse.png");
     private Image cuisinierSprite = SimulationUtility.lireImage("src/resources/cuisinier.png");
@@ -53,6 +54,8 @@ public class PaintStrategy {
      * @param zones la liste des zones pour savoir quoi dessiner
      * @param graphics pinceau de dessin
      */
+
+
     public void paint(Map map, HashMap<String, Zone> zones, Graphics graphics) {
         int blockSize = BLOCK_SIZE;
         Block[][] blocks = map.getBlocks();
@@ -110,6 +113,17 @@ public class PaintStrategy {
                 } else if (nomZone.equals("CONSTRUCTIBLE")) {
                     graphics.setColor(Color.cyan);
                     graphics.fillRect(x, y, blockSize, blockSize);
+                }
+
+                if(block.equals(map.getBlock(22, 15))){
+                    if(tapisEntree != null){
+                        graphics.drawImage(tapisEntree, x, y, blockSize, blockSize, null);
+                        System.out.println("tapis ajouté");
+                    }
+                    else{
+                        graphics.setColor(new Color(255, 255, 255));
+                        graphics.fillRect(x, y, blockSize-10, blockSize-10);
+                    }
                 }
 
 
