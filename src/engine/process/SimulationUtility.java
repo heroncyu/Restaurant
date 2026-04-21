@@ -268,7 +268,7 @@ public class SimulationUtility {
         try {
             return ImageIO.read(new File(chemin));
         } catch (IOException e) {
-            System.err.println("-- Impossible de lire le fichier image !--");
+            System.err.println("-- Impossible de lire le fichier image !--" + chemin);
             return null;
         }
     }

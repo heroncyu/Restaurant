@@ -47,6 +47,11 @@ public class PaintStrategy {
     private Image clientCritique = SimulationUtility.lireImage("src/resources/critique.png");
     private Image clientLambda = SimulationUtility.lireImage("src/resources/client.png");
 
+    private Image satisfactionHigh = SimulationUtility.lireImage("src/resources/satisfactionHIGH.png");
+    private Image satisfactionMID = SimulationUtility.lireImage("src/resources/satisfactionMID.png");
+    private Image satisfactionLOW = SimulationUtility.lireImage("src/resources/satisfactionLOW.png");
+    private Image satisfactionRED = SimulationUtility.lireImage("src/resources/satisfactionRED.png");
+
     /**
      * Dessine le sol de toutes les cases (herbe, salle, cuisine...).
      * 
@@ -118,7 +123,6 @@ public class PaintStrategy {
                 if(block.equals(map.getBlock(22, 15))){
                     if(tapisEntree != null){
                         graphics.drawImage(tapisEntree, x, y, blockSize, blockSize, null);
-                        System.out.println("tapis ajouté");
                     }
                     else{
                         graphics.setColor(new Color(255, 255, 255));
@@ -232,10 +236,25 @@ public class PaintStrategy {
             graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
         }
 
-        graphics.setColor(Color.WHITE);
-        graphics.setFont(new Font("Dialog", Font.BOLD, 14));
+        int satisfaction = client.getSatisfaction();
+        Image aDessiner = satisfactionHigh;
 
-        graphics.drawString(String.valueOf(client.getSatisfaction()), x + 2, y + 12);
+        if (satisfaction > 50 && satisfaction <= 75) {
+            aDessiner = satisfactionMID;
+        } else if (satisfaction <= 50) {
+            aDessiner = satisfactionLOW;
+        } else if(satisfaction <= 25) {
+            aDessiner = satisfactionRED;
+        }
+
+        if(aDessiner != null){
+            graphics.drawImage(aDessiner, x+30, y-10, blockSize-20, blockSize-20, null);
+        }
+        else{
+            graphics.setColor(Color.WHITE);
+            graphics.setFont(new Font("Dialog", Font.BOLD, 14));
+            graphics.drawString(String.valueOf(satisfaction), x + 2, y + 12);
+        }
     }
 
     /**
