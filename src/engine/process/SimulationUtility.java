@@ -189,6 +189,15 @@ public class SimulationUtility {
         int index = (int) (Math.random() * bonNiveau.size());
         return bonNiveau.get(index);
     }
+    public static ArrayList<Recette> recettesParNiveau(ArrayList<Recette> recettes, int niveauMax) {
+        ArrayList<Recette> bonNiveau = new ArrayList<>();
+        for (Recette recette : recettes) {
+            if (recette.estDebloquee(niveauMax)) {
+                bonNiveau.add(recette);
+            }
+        }
+        return bonNiveau;
+    }
 
     /**
      * Compte combien il y a de fours posés dans la cuisine.

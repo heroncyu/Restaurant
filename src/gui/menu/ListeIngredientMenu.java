@@ -4,11 +4,13 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.border.EmptyBorder;
 import java.awt.GridLayout;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ import javax.swing.JLabel;
 import engine.item.Ingredient;
 import engine.process.ArgentRepository;
 import engine.process.DayStatistics;
+import engine.process.SimulationUtility;
 import engine.process.StockRepository;
 
 /**
@@ -108,13 +111,27 @@ public class ListeIngredientMenu extends JPanel {
 
         StockRepository stockRepository = StockRepository.getInstance();
 
-        JLabel nom = new JLabel("Nom : " + ingredient.getNom());
+        JLabel imgLabel = new JLabel();
+        String nomFichier = ingredient.getNom().toLowerCase().replace(" ", "_");
+        Image img = SimulationUtility.lireImage("src/resources/" + nomFichier + ".png");
+        if (img != null) {
+            imgLabel.setIcon(new ImageIcon(img.getScaledInstance(170, 120, Image.SCALE_SMOOTH)));
+        }
+        imgLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        JPanel infosPanel = new JPanel(new GridLayout(2, 1, 0, 5));
+        infosPanel.setBackground(Color.gray);
+
+        JLabel nom = new JLabel(ingredient.getNom());
         nom.setFont(font);
         nom.setHorizontalAlignment(JLabel.CENTER);
 
         JLabel infos = new JLabel("Stock : " + stockRepository.getStockage().getIngredients().getOrDefault(ingredient, 0) + "  |  Prix : " + ingredient.getPrix() + " G");
         infos.setFont(font);
         infos.setHorizontalAlignment(JLabel.CENTER);
+
+        infosPanel.add(nom);
+        infosPanel.add(infos);
 
         JButton acheter = new JButton("Acheter");
         acheter.setFont(font);
@@ -145,8 +162,8 @@ public class ListeIngredientMenu extends JPanel {
             }
         });
 
-        ligne.add(nom);
-        ligne.add(infos);
+        ligne.add(imgLabel);
+        ligne.add(infosPanel);
         ligne.add(acheterPanel);
 
         return ligne;

@@ -81,7 +81,11 @@ public class GameDisplay extends JPanel {
         }
 
         if (restaurantManager.getConstructionMode() == 1) {
-            paintStrategy.paint(g, "Mode construction : Agrandissement du terrain", restaurantManager.calculerPrixConstruction());
+            paintStrategy.paintConstruction(g, "Agrandissement du terrain", restaurantManager.calculerPrixConstruction(), getWidth());
+        }
+        if (restaurantManager.getConstructionMode() == 2) {
+            paintStrategy.paintConstruction(g, "Placez votre nouveau meuble", 0, getWidth());
+            paintStrategy.paint(simulation.getBlocksOccupees(), g);
         }
         if (succesEnCours != null) {
             paintStrategy.paint(succesEnCours, g, getWidth(), getHeight());
@@ -89,11 +93,6 @@ public class GameDisplay extends JPanel {
             if (tempsRestants <= 0) {
                 succesEnCours = null;
             }
-        }
-        
-        if (restaurantManager.getConstructionMode() == 2) {
-            paintStrategy.paint(g, "Mode construction : Placez votre nouveau meuble", 0);
-            paintStrategy.paint(simulation.getBlocksOccupees(), g);
         }
 
         if(simulation.isAlerteStock()){

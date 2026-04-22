@@ -1,81 +1,110 @@
 package gui.menu;
 
-import engine.prestige.Succes;
-import engine.process.ArgentRepository;
-import engine.process.SuccesRepository;
-
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-/**
- * Fenêtre de tous les succès du jeu (comme des quêtes ou des missions).
- * 
- * On peut y voir quels succès on a gagnés et cliquer pour gagner l'argent de récompense.
- * 
- * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
- */
+import engine.prestige.Succes;
+import engine.process.ArgentRepository;
+import engine.process.SuccesRepository;
+import engine.process.SimulationUtility;
+
 public class SuccesMenu extends JDialog {
 
-    /**
-     * Ouvre la fenêtre des succès.
-     * 
-     * @param owner la fenêtre principale du jeu
-     */
     public SuccesMenu(JFrame owner) {
         super(owner, "Succès", true);
-        setLayout(new BorderLayout());
-
-        JPanel conteneur = new JPanel();
-        conteneur.setLayout(new GridLayout(0, 1, 10, 10));
-        conteneur.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        conteneur.setBackground(Color.GRAY);
-
-        init(conteneur);
-
-        JScrollPane scrollPane = new JScrollPane(conteneur);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-        add(scrollPane, BorderLayout.CENTER);
-
-        setSize(600, 400);
+        setSize(600, 500);
         setLocationRelativeTo(owner);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(Color.darkGray);
+        panel.setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        init(panel);
+
+        JScrollPane scroll = new JScrollPane(panel);
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.setBorder(null);
+
+        add(scroll);
         setVisible(true);
     }
 
-    private void init(JPanel conteneur) {
+    private void init(JPanel panel) {
         ArrayList<Succes> succes = SuccesRepository.getInstance().getSucces();
-
         for (Succes s : succes) {
-            conteneur.add(creerLigne(s));
+            panel.add(creerCarte(s));
+            panel.add(Box.createVerticalStrut(10));
         }
     }
 
-    private JPanel creerLigne(Succes s) {
-        JPanel ligne = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
-        ligne.setBackground(Color.LIGHT_GRAY);
+    private JPanel creerCarte(Succes s) {
+        boolean debloque = s.isEstDebloque();
+        boolean reclame = s.isEstReclame();
 
-        JTextArea description = new JTextArea();
-        StringBuilder text = new StringBuilder();
-        text.append(s.getNom() + "\n");
-        text.append(s.getDescription() + "\n");
-        text.append("Récompense : " + s.getRecompense() + " gold");
-        description.setText(text.toString());
-        description.setEditable(false);
-        description.setFocusable(false);
-        description.setBackground(Color.LIGHT_GRAY);
-        description.setFont(new Font("SansSerif", Font.PLAIN, 16));
 
-        JButton reclamer = new JButton("Réclamer");
-        reclamer.setFont(new Font("SansSerif", Font.BOLD, 14));
+        JPanel carte = new JPanel(new BorderLayout(10, 0));
+        carte.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.GRAY, 2),
+                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+        carte.setBackground(new Color(50, 50, 50));
 
-        if (!s.isEstDebloque()) {
-            reclamer.setEnabled(false);
+        JLabel imgLabel = new JLabel();
+        String nomFichier = s.getNom().toLowerCase().replace(" ", "_");
+        Image img = SimulationUtility.lireImage("src/resources/" + nomFichier + ".png");
+
+        if (img == null) {
+            img = SimulationUtility.lireImage("src/resources/trophee.png");
+        }
+
+        if (img != null) {
+            imgLabel.setIcon(new ImageIcon(img.getScaledInstance(80, 80, Image.SCALE_SMOOTH)));
+        }
+
+        imgLabel.setPreferredSize(new Dimension(90, 90));
+        imgLabel.setHorizontalAlignment(JLabel.CENTER);
+
+        JPanel infos = new JPanel();
+        infos.setLayout(new BoxLayout(infos, BoxLayout.Y_AXIS));
+        infos.setOpaque(false);
+
+        JLabel nomLabel = new JLabel(s.getNom());
+        nomLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+        nomLabel.setForeground(Color.WHITE);
+
+        JLabel descLabel = new JLabel(
+                s.getDescription() + "  —  Récompense : " + s.getRecompense() + " gold");
+        descLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
+        descLabel.setForeground(Color.LIGHT_GRAY);
+
+
+        JButton reclamer = new JButton();
+        reclamer.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+        reclamer.setFocusPainted(false);
+        reclamer.setOpaque(true);
+        reclamer.setBorderPainted(false);
+
+        if (!debloque) {
             reclamer.setText("Verrouillé");
-        } else if (s.isEstReclame()) {
             reclamer.setEnabled(false);
-            reclamer.setText("Réclamé ");
+            reclamer.setBackground(Color.RED);
+            reclamer.setForeground(Color.WHITE);
+
+        } else if (reclame) {
+            reclamer.setText("Réclamé");
+            reclamer.setEnabled(false);
+            reclamer.setBackground(Color.GRAY);
+            reclamer.setForeground(Color.WHITE);
+
+        } else {
+            reclamer.setText("Réclamer");
+            reclamer.setBackground(new Color(50, 180, 50));
+            reclamer.setForeground(Color.BLACK);
         }
 
         reclamer.addActionListener(new ActionListener() {
@@ -83,13 +112,26 @@ public class SuccesMenu extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 s.setEstReclame(true);
                 ArgentRepository.getInstance().ajouterMonnaie(s.getRecompense());
+
                 reclamer.setEnabled(false);
-                reclamer.setText("Réclamé ");
+                reclamer.setText("Réclamé");
+                reclamer.setBackground(Color.GRAY);
+                reclamer.setForeground(Color.WHITE);
             }
         });
 
-        ligne.add(description);
-        ligne.add(reclamer);
-        return ligne;
+        infos.add(nomLabel);
+        infos.add(Box.createVerticalStrut(6));
+        infos.add(descLabel);
+        infos.add(Box.createVerticalStrut(8));
+        infos.add(reclamer);
+
+        carte.add(imgLabel, BorderLayout.WEST);
+        carte.add(infos, BorderLayout.CENTER);
+
+        carte.setMaximumSize(new Dimension(560, 110));
+        carte.setPreferredSize(new Dimension(560, 110));
+
+        return carte;
     }
 }

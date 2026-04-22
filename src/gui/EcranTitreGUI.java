@@ -18,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import engine.process.SimulationUtility;
+import gui.TutorielGUI;
 import gui.util.FondPanel;
 
 import java.awt.Image;
@@ -151,8 +152,7 @@ public class EcranTitreGUI extends JFrame {
     private class TutoButtonAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            //new TutoGUI();
-            //dispose();
+            new TutorielGUI(EcranTitreGUI.this);
         }
     }
 

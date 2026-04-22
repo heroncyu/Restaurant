@@ -142,7 +142,8 @@ public class Simulation {
      */
     public void nextRound() {
         if (restaurantManager.getConstructionMode() == 0 && !stop) {
-            alerteStock = !stockageRepository.auMoinsUneRecetteDisponible(recettes);
+            ArrayList<Recette> recettesDispos = SimulationUtility.recettesParNiveau(recettes, manager.getNiveauMaxCuisinier());
+            alerteStock = !stockageRepository.auMoinsUneRecetteDisponible(recettesDispos);
 
             generateClient();
             satisfactionUpdate();

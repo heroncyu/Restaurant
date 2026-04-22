@@ -137,7 +137,6 @@ public class GameBuilder {
         Recette burger = new Recette("Burger", 16, 15,1);
         burger.ajouterIngredient(ingredients.get(0), 1);
         burger.ajouterIngredient(ingredients.get(1), 1);
-        burger.ajouterIngredient(ingredients.get(2), 1);
         burger.ajouterIngredient(ingredients.get(6), 1);
         recettes.add(burger);
 
