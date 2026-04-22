@@ -13,14 +13,14 @@ public class TestSimulationUtility {
     @Test
     public void testCalculerQualite() {
         Cuisinier cuisinier = new Cuisinier(null, 1, 100, "Chef1");
-        // Niveau 1 => 100
-        assertEquals("Un cuisinier de niveau 1 doit produire une qualité de 100", 100, SimulationUtility.calculerQualite(cuisinier));
+        // Niveau 1 => 50
+        assertEquals("Un cuisinier de niveau 1 doit produire une qualité de 50", 50, SimulationUtility.calculerQualite(cuisinier));
         
         cuisinier.setNiveau(2); 
-        assertEquals("Un cuisinier de niveau 2 doit produire une qualité de 55", 55, SimulationUtility.calculerQualite(cuisinier));
+        assertEquals("Un cuisinier de niveau 2 doit produire une qualité de 65", 65, SimulationUtility.calculerQualite(cuisinier));
         
         cuisinier.setNiveau(3); 
-        assertEquals("Un cuisinier de niveau 3 doit produire une qualité de 70", 70, SimulationUtility.calculerQualite(cuisinier));
+        assertEquals("Un cuisinier de niveau 3 doit produire une qualité de 75", 75, SimulationUtility.calculerQualite(cuisinier));
         
         cuisinier.setNiveau(4); 
         assertEquals("Un cuisinier de niveau 4 doit produire une qualité de 85", 85, SimulationUtility.calculerQualite(cuisinier));

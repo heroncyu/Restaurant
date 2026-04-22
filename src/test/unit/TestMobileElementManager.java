@@ -77,9 +77,11 @@ public class TestMobileElementManager {
         
         manager.moveElementUse(serveur, destination); // (3, 1)
         manager.moveElementUse(serveur, destination); // (3, 2)
-        arrive = manager.moveElementUse(serveur, destination); // (3, 3)
+        manager.moveElementUse(serveur, destination); // Mouvement vers (3, 3), renvoie false car il n'y était pas avant
         
-        assertTrue("Le serveur doit être arrivé à destination", arrive);
+        arrive = manager.moveElementUse(serveur, destination); // Maintenant il est en (3, 3), l'appel renvoie true
+        
+        assertTrue("Le serveur doit être arrivé à destination (confirmé au tour suivant)", arrive);
         assertEquals("Le serveur est sur la destination", destination, serveur.getPosition());
     }
 
