@@ -156,6 +156,7 @@ public class RestaurantManager {
                     
                     for (Block block : construListTemp) {
                         ZoneManager.ajouterBlockDansZone(block, zoneDuBlockCible, zoneBlockSelec);
+                        simulation.getArbres().remove(block);
                         logger.trace("block ajouté à la zone " + zoneBlockSelec.getNom());
                     }
 

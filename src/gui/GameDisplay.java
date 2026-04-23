@@ -1,5 +1,6 @@
 package gui;
 
+import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Client;
 import engine.mobile.Cuisinier;
@@ -65,6 +66,10 @@ public class GameDisplay extends JPanel {
         paintStrategy.paint(map, simulation.getZones(), g);
 
         RestaurantManager restaurantManager = simulation.getRestaurantManager();
+
+        for(Block positionArbre : simulation.getArbres()){
+            paintStrategy.paint(positionArbre, g, animationTick);
+        }
 
         for (Meuble meuble : simulation.getMeubles()) {
             boolean estOccupe = false;

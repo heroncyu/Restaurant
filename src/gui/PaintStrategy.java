@@ -44,10 +44,9 @@ public class PaintStrategy {
     private Image tapisEntree = SimulationUtility.lireImage("src/resources/tapis.png");
     private Image porteManteau = SimulationUtility.lireImage("src/resources/porte_manteau.png");
 
-    private Image clientRiche = SimulationUtility.lireImage("src/resources/riche.png");
-    private Image clientCritique = SimulationUtility.lireImage("src/resources/critique.png");
     private Image clientLambda = SimulationUtility.lireImage("src/resources/client.png");
 
+    // Sprites Satisfaction
     private Image satisfactionHigh = SimulationUtility.lireImage("src/resources/satisfactionHIGH.png");
     private Image satisfactionMID = SimulationUtility.lireImage("src/resources/satisfactionMID.png");
     private Image satisfactionLOW = SimulationUtility.lireImage("src/resources/satisfactionLOW.png");
@@ -124,6 +123,8 @@ public class PaintStrategy {
     private Image critiqueDroite2 = SimulationUtility.lireImage("src/resources/client/critique/client_droite_2.png");
 
     private Image route = SimulationUtility.lireImage("src/resources/route.png");
+    private Image arbre1 = SimulationUtility.lireImage("src/resources/arbre_1.png");
+    private Image arbre2 = SimulationUtility.lireImage("src/resources/arbre_2.png");
 
     /**
      * Dessine le sol de toutes les cases (herbe, salle, cuisine...).
@@ -210,6 +211,7 @@ public class PaintStrategy {
                         graphics.fillRect(x, y, blockSize-10, blockSize-10);
                     }
                 }
+
 
 
                 //graphics.setColor(Color.BLACK);
@@ -701,7 +703,7 @@ public class PaintStrategy {
     public void paint(FloatingText ft, Graphics graphics) {
         Graphics2D g2d = (Graphics2D) graphics;
 
-        g2d.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+        g2d.setFont(new Font("Segoe UI", Font.BOLD, 15));
         String msg = "+" + ft.getText();
 
         g2d.setColor(Color.BLACK);
@@ -718,5 +720,23 @@ public class PaintStrategy {
         g2d.setColor(new Color(184, 134, 11));
         g2d.setStroke(new BasicStroke(1.5f));
         g2d.drawOval(coinX, coinY, 14, 14);
+    }
+
+    /**
+     * Dessine les arbres
+     * @param position la position des arbres sur la carte
+     * @param graphics pinceau
+     * @param animationTick ce qui nous permet de savoir quel sprite afficher
+     */
+    public void paint(Block position, Graphics graphics, int animationTick) {
+        Image imageArbre = (animationTick == 0) ? arbre1 : arbre2;
+
+        if (imageArbre != null) {
+            int blockSize = BLOCK_SIZE;
+            int x = position.getColumn() * blockSize;
+            int y = position.getLine() * blockSize;
+
+            graphics.drawImage(imageArbre, x - 20, y - 40, blockSize + 40, blockSize + 50, null);
+        }
     }
 }

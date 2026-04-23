@@ -75,6 +75,8 @@ public class Simulation {
 
     private ArrayList<FloatingText> floatingTexts = new ArrayList<>();
 
+    private ArrayList<Block> arbres;
+
     /**
      * Prépare toute la simulation de A à Z (carte, listes, recettes).
      */
@@ -87,6 +89,7 @@ public class Simulation {
         map = GameBuilder.buildMap();
         zones = GameBuilder.buildZones(map);
         meubles = GameBuilder.buildMeubles(map);
+        arbres = GameBuilder.buildArbres(map);
         ArrayList<Serveur> serveurs = GameBuilder.buildServeurs(map);
         ArrayList<Cuisinier> cuisiniers = GameBuilder.buildCuisiniers(map);
 
@@ -574,6 +577,8 @@ public class Simulation {
             stop = true;
             chronometre.init();
 
+            resetFinDeJournee();
+
             int loyer = ZoneManager.calculerLoyer(zones);
             argentRepository.retirerMonnaie(loyer);
             dayStatistics.addCoutLoyer(loyer);
@@ -618,6 +623,56 @@ public class Simulation {
         gameStats.put("construction", dayStatistics.getCoutConstructionDuJour() + gameStats.get("construction"));
         gameStats.put("pourboires", dayStatistics.getRevenusPourboireDuJour() + gameStats.get("pourboires"));
         gameStats.put("jour", dayStatistics.getNbJour());
+    }
+
+    /**
+     * Getter pour récupérer le temps restant d'un cuisinier (pour la barre de progression)
+     * @param cuisinier le cuisinier concerné
+     * @return le temps restant
+     */
+    public int getPourcentageCuisson(Cuisinier cuisinier) {
+        String etat = manager.getEtatCuisinier(cuisinier);
+        if (GameConfiguration.ETAT_CUISINE.equals(etat)) {
+            int tempsRestant = tempsCuisson.getOrDefault(cuisinier, 0);
+            Commande commande = manager.getCommandeCuisinier(cuisinier);
+            if (commande != null) {
+                int tempsTotal = commande.getPlat().getRecette().getTempsPreparation();
+                if (tempsTotal > 0) {
+                    return (int) (((tempsTotal - tempsRestant) / (double) tempsTotal) * 100);
+                }
+            }
+        }
+        return -1; //signifie ne cuisine pas
+    }
+
+    private void resetFinDeJournee() {
+        ArrayList<Client> clientsRestants = new ArrayList<>(manager.getClients());
+        for (Client c : clientsRestants) {
+            manager.libererTable(c);
+            manager.retirerClient(c);
+        }
+
+        commandesEnAttente.clear();
+        commandesACuisiner.clear();
+        commandesCuisson.clear();
+        commandesPretes.clear();
+        tempsCuisson.clear();
+        tempsManger.clear();
+        clientEnTrainManger.clear();
+        serveurQuiAServi.clear();
+        floatingTexts.clear();
+
+        for (Serveur serveur : manager.getServeurs()) {
+            manager.libererServeur(serveur);
+            manager.donnerDestinationServeur(serveur, comptoirS);
+            serveur.setDirection(GameConfiguration.BAS);
+        }
+        for (Cuisinier cuisinier : manager.getCuisiniers()) {
+            manager.libererCuisinier(cuisinier);
+            manager.libererFour(cuisinier);
+            manager.donnerDestinationCuisinier(cuisinier, comptoirC);
+            cuisinier.setDirection(GameConfiguration.BAS);
+        }
     }
 
     /**
@@ -813,23 +868,8 @@ public class Simulation {
         return floatingTexts;
     }
 
-    /**
-     * Getter pour récupérer le temps restant d'un cuisinier (pour la barre de progression)
-     * @param cuisinier le cuisinier concerné
-     * @return le temps restant
-     */
-    public int getPourcentageCuisson(Cuisinier cuisinier) {
-        String etat = manager.getEtatCuisinier(cuisinier);
-        if (GameConfiguration.ETAT_CUISINE.equals(etat)) {
-            int tempsRestant = tempsCuisson.getOrDefault(cuisinier, 0);
-            Commande commande = manager.getCommandeCuisinier(cuisinier);
-            if (commande != null) {
-                int tempsTotal = commande.getPlat().getRecette().getTempsPreparation();
-                if (tempsTotal > 0) {
-                    return (int) (((tempsTotal - tempsRestant) / (double) tempsTotal) * 100);
-                }
-            }
-        }
-        return -1; //signifie ne cuisine pas
+
+    public ArrayList<Block> getArbres() {
+        return arbres;
     }
 }

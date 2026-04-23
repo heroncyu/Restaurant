@@ -494,11 +494,12 @@ public class MobileElementManager {
      * @return vrai si il est occupé, faux sinon
      */
     public boolean isFourAllume(Meuble four) {
-        for (java.util.Map.Entry<Cuisinier, Meuble> entry : fourOccupe.entrySet()) {
-            if (entry.getValue() == four) {
-                Cuisinier cuisinier = entry.getKey();
+        for (Cuisinier cuisinier : fourOccupe.keySet()) {
+            if (fourOccupe.get(cuisinier) == four) {
                 String etat = cuisinierEtats.get(cuisinier);
-                return GameConfiguration.ETAT_CUISINE.equals(etat);
+                if (GameConfiguration.ETAT_CUISINE.equals(etat)) {
+                    return true;
+                }
             }
         }
         return false;

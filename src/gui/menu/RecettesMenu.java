@@ -72,13 +72,13 @@ public class RecettesMenu extends JDialog {
         infos.setOpaque(false);
 
         JLabel nomLabel = new JLabel(recette.getNom());
-        nomLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+        nomLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
 
         JLabel prixLabel = new JLabel("Prix : " + recette.getPrix() + " G  |  Temps : " + recette.getTempsPreparation() + " tours");
-        prixLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
+        prixLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
         JLabel niveauLabel = new JLabel("Niveau requis : " + recette.getNiveauRequis());
-        niveauLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
+        niveauLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         if (!debloquee) niveauLabel.setForeground(Color.RED);
 
         String ingredientsStr = "Ingredients : ";
@@ -86,11 +86,11 @@ public class RecettesMenu extends JDialog {
             ingredientsStr += ingredient.getNom() + " x" + recette.getIngredients().get(ingredient) + "  ";
         }
         JLabel ingredientsLabel = new JLabel(ingredientsStr.trim());
-        ingredientsLabel.setFont(new Font("Comic Sans MS", Font.ITALIC, 11));
+        ingredientsLabel.setFont(new Font("Segoe UI", Font.ITALIC, 11));
 
         int ventes = simulation.getDayStatistics().getVentesRecette(recette.getNom());
         JLabel ventesLabel = new JLabel("Vendues : " + ventes);
-        ventesLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+        ventesLabel.setFont(new Font("Segoe UI", Font.BOLD, 12));
 
         infos.add(nomLabel);
         infos.add(prixLabel);
@@ -100,7 +100,7 @@ public class RecettesMenu extends JDialog {
 
         if (!debloquee) {
             JLabel verrou = new JLabel("VERROUILLE");
-            verrou.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+            verrou.setFont(new Font("Segoe UI", Font.BOLD, 12));
             verrou.setForeground(Color.RED);
             infos.add(verrou);
         }

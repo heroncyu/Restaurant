@@ -1,21 +1,11 @@
 package gui.menu;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.GridLayout;
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.GridBagLayout;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-import javax.swing.JLabel;
 
 import engine.item.Ingredient;
 import engine.process.ArgentRepository;
@@ -106,7 +96,7 @@ public class ListeIngredientMenu extends JPanel {
     }
 
     private JPanel creerLigne(Ingredient ingredient) {
-        JPanel ligne = new JPanel(new GridLayout(1, 3));
+        JPanel ligne = new JPanel(new GridLayout(1, 4));
         ligne.setBorder(BorderFactory.createLineBorder(Color.black));
 
         StockRepository stockRepository = StockRepository.getInstance();
@@ -127,11 +117,26 @@ public class ListeIngredientMenu extends JPanel {
         nom.setHorizontalAlignment(JLabel.CENTER);
 
         JLabel infos = new JLabel("Stock : " + stockRepository.getStockage().getIngredients().getOrDefault(ingredient, 0) + "  |  Prix : " + ingredient.getPrix() + " G");
-        infos.setFont(font);
+        infos.setFont(new Font("Segoe UI", Font.BOLD, 15));
         infos.setHorizontalAlignment(JLabel.CENTER);
 
         infosPanel.add(nom);
         infosPanel.add(infos);
+
+        JPanel spinnerPanel = new JPanel(new GridBagLayout());
+        spinnerPanel.setBackground(Color.gray);
+
+        JLabel quantiteLabel = new JLabel("Qté : ");
+        quantiteLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
+
+        JSpinner quantiteSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
+        quantiteSpinner.setFont(new Font("Segoe UI", Font.BOLD, 16));
+
+        JPanel petitPanel = new JPanel(new FlowLayout());
+        petitPanel.setOpaque(false);
+        petitPanel.add(quantiteLabel);
+        petitPanel.add(quantiteSpinner);
+        spinnerPanel.add(petitPanel);
 
         JButton acheter = new JButton("Acheter");
         acheter.setFont(font);
@@ -141,22 +146,29 @@ public class ListeIngredientMenu extends JPanel {
         acheter.setOpaque(true);
 
         JPanel acheterPanel = new JPanel(new GridBagLayout());
+        acheterPanel.setBackground(Color.gray);
         acheterPanel.add(acheter);
 
         acheter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ArgentRepository argentRepository = ArgentRepository.getInstance();
-                if (argentRepository.getMonnaie() >= ingredient.getPrix()) {
-                    if (!stockRepository.peutApprovisionner(1)) {
-                        javax.swing.JOptionPane.showMessageDialog(null, "Stockage plein !");
+
+                int quantiteDemandee = (Integer) quantiteSpinner.getValue();
+                int prixTotal = ingredient.getPrix() * quantiteDemandee;
+
+                if (argentRepository.getMonnaie() >= prixTotal) {
+                    if (!stockRepository.peutApprovisionner(quantiteDemandee)) {
+                        javax.swing.JOptionPane.showMessageDialog(null, "Espace de stockage insuffisant pour " + quantiteDemandee + " éléments !");
                     } else {
-                        argentRepository.retirerMonnaie(ingredient.getPrix());
-                        stockRepository.approvisionner(ingredient, 1);
-                        dayStatistics.addAchat(ingredient.getPrix());
+                        argentRepository.retirerMonnaie(prixTotal);
+                        stockRepository.approvisionner(ingredient, quantiteDemandee);
+                        dayStatistics.addAchat(prixTotal);
                         infos.setText("Stock : " + stockRepository.getStockage().getIngredients().getOrDefault(ingredient, 0) + "  |  Prix : " + ingredient.getPrix() + " G");
                         mettreAJourBarre();
                     }
+                } else {
+                    javax.swing.JOptionPane.showMessageDialog(null, "Pas assez d'argent ! Il vous faut " + prixTotal + " G.");
                 }
                 repaint();
             }
@@ -164,6 +176,7 @@ public class ListeIngredientMenu extends JPanel {
 
         ligne.add(imgLabel);
         ligne.add(infosPanel);
+        ligne.add(spinnerPanel);
         ligne.add(acheterPanel);
 
         return ligne;

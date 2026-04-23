@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+import config.GameConfiguration;
 import engine.process.ArgentRepository;
 import engine.process.PropreteRepository;
 import engine.process.Simulation;
@@ -99,6 +100,17 @@ public class InfoDisplay extends JPanel {
     fondPanel.add(panelDroit, BorderLayout.EAST);
 
     add(fondPanel, BorderLayout.CENTER);
+
+    goldLabel.setToolTipText("L'argent sert à payer le loyer, les salaires et les meubles. Attention à la faillite !");
+    reputationLabel.setToolTipText("Influe sur la probabilité d'apparition de clients Riches (Stars).");
+    propreteLabel.setToolTipText("Diminue chaque heure. Utilisez le balai pour nettoyer !");
+    chrono.setToolTipText("Fin de la journée à " + GameConfiguration.END_OF_DAY_HOUR + "h00. Les salaires et loyers seront prélevés.");
+
+    pauseButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    accelererButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    nettoyerButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    succesButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    recettesButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
   }
 
   private class PauseAction implements ActionListener {
