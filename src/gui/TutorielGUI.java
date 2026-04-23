@@ -7,8 +7,8 @@ import engine.process.SimulationUtility;
 
 public class TutorielGUI extends JDialog {
 
-    private Font fontTitre = new Font("comic sans ms", Font.BOLD, 22);
-    private Font fontTexte = new Font("comic sans ms", Font.PLAIN, 14);
+    private Font fontTitre = new Font("Segoe UI", Font.BOLD, 22);
+    private Font fontTexte = new Font("Segoe UI", Font.PLAIN, 14);
 
     private JPanel panel = new JPanel();
 
