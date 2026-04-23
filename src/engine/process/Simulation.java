@@ -240,6 +240,7 @@ public class Simulation {
                                 logger.trace("un client est sorti");
                             }
                         } else {
+                            c.setDirection(GameConfiguration.HAUT);
                             Recette recette = SimulationUtility.choisirRecetteAlea(recettes, manager.getNiveauMaxCuisinier());
 
                             if (recette != null) {
