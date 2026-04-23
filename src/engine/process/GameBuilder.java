@@ -14,6 +14,8 @@ import engine.mobile.Meuble;
 import engine.mobile.Serveur;
 import engine.prestige.Succes;
 import engine.process.chrono.Chronometer;
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
 
 /**
  * Classe qui crée tous les éléments du jeu (map, meubles, cuisiniers) au démarrage.
@@ -21,6 +23,7 @@ import engine.process.chrono.Chronometer;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class GameBuilder {
+    private static Logger logger = LoggerUtility.getLogger(GameBuilder.class, "html");
 
     /**
      * Crée la grille principale du jeu.
@@ -28,6 +31,7 @@ public class GameBuilder {
      * @return la carte de jeu vide
      */
     public static Map buildMap() {
+        logger.info("Création de la carte du jeu (" + GameConfiguration.LINE_COUNT + "x" + GameConfiguration.COLUMN_COUNT + ")");
         return new Map(
                 GameConfiguration.LINE_COUNT,
                 GameConfiguration.COLUMN_COUNT
@@ -41,6 +45,7 @@ public class GameBuilder {
      * @return le dictionnaire des différentes zones créées
      */
     public static HashMap<String, Zone> buildZones(Map map) {
+        logger.info("Génération des zones (CUISINE, SALLE, RESERVE...)");
         HashMap<String, Zone> zones = new HashMap<>();
         int h = map.getLineCount();
         int bas = h - 1;
@@ -132,6 +137,7 @@ public class GameBuilder {
      * @return la liste des recettes
      */
     public static ArrayList<Recette> buildRecette(ArrayList<Ingredient> ingredients) {
+        logger.debug("Initialisation du catalogue de recettes");
         ArrayList<Recette> recettes = new ArrayList<>();
 
         Recette burger = new Recette("Burger", 16, 15,1);
@@ -201,6 +207,7 @@ public class GameBuilder {
      * @return liste des ingrédients disponibles
      */
     public static ArrayList<Ingredient> buildIngredients() {
+        logger.debug("Création de la liste des ingrédients de base");
         ArrayList<Ingredient> ingredients = new ArrayList<>();
         ingredients.add(new Ingredient("Tomate", 2));
         ingredients.add(new Ingredient("Pain", 3));

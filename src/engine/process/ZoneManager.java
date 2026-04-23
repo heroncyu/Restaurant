@@ -9,6 +9,8 @@ import config.GameConfiguration;
 import engine.map.Block;
 import engine.map.Map;
 import engine.map.Zone;
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
 
 /**
  * Classe gérant les zones sur le terrain (Salle, Cuisine, Reserve...).
@@ -18,6 +20,7 @@ import engine.map.Zone;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class ZoneManager {
+    private static Logger logger = LoggerUtility.getLogger(ZoneManager.class, "html");
 
     /**
      * Récupère la zone à laquelle appartient une case spécifique.
@@ -48,8 +51,12 @@ public class ZoneManager {
         if (zoneDuBlock != null && zoneCible != null) {
             zoneDuBlock.supprimerBlock(block);
             zoneCible.ajouterBlock(block);
+            logger.info("Transfert d'un block vers la zone : " + zoneCible.getNom());
         } else if (zoneDuBlock == null && zoneCible != null) {
             zoneCible.ajouterBlock(block);
+            logger.info("Ajout d'un nouveau block dans la zone : " + zoneCible.getNom());
+        } else {
+            logger.warn("Échec d'ajout de block : Zone cible null");
         }
     }
 
@@ -185,6 +192,8 @@ public class ZoneManager {
                 nbCases += zones.get(nomZone).getBlocks().size();
             }
         }
-        return  nbCases * GameConfiguration.LOYER_PAR_CASE;
+        int loyerFinal = nbCases * GameConfiguration.LOYER_PAR_CASE;
+        logger.debug("Loyer calculé pour " + nbCases + " cases : " + loyerFinal);
+        return loyerFinal;
     }
 }

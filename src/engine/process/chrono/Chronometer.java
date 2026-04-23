@@ -1,6 +1,8 @@
 package engine.process.chrono;
 
 import config.GameConfiguration;
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
 
 /**
  * Classe gérant le temps et l'horloge du jeu.
@@ -10,6 +12,8 @@ import config.GameConfiguration;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class Chronometer {
+    private static Logger logger = LoggerUtility.getLogger(Chronometer.class, "html");
+
 	private CyclicCounter hour = new CyclicCounter(0, GameConfiguration.END_OF_DAY_HOUR, 10);
 	private CyclicCounter minute = new CyclicCounter(0, 59, 0);
 
@@ -20,6 +24,7 @@ public class Chronometer {
 		minute.increment();
 		if (minute.getValue() == 0) {
 			hour.increment();
+            logger.debug("Nouvelle heure passée en jeu : " + hour.getValue() + "h00");
 		}
 	}
 

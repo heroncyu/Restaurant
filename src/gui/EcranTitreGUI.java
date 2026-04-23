@@ -22,6 +22,8 @@ import javax.swing.border.EmptyBorder;
 import engine.process.SimulationUtility;
 import gui.TutorielGUI;
 import gui.util.FondPanel;
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
 
 import java.awt.Image;
 
@@ -33,6 +35,8 @@ import java.awt.Image;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class EcranTitreGUI extends JFrame {
+    private static Logger logger = LoggerUtility.getLogger(EcranTitreGUI.class, "html");
+
     private Image fondImage = SimulationUtility.lireImage("src/resources/ecran_titre_fond.png");
 
     private JPanel boutonPanel = new JPanel();
@@ -55,6 +59,7 @@ public class EcranTitreGUI extends JFrame {
         setSize(1280, 920);
         this.fondPanel = new FondPanel(fondImage);
 
+        logger.info("Initialisation de l'écran titre");
         init();
  
         setLocationRelativeTo(null);
@@ -121,6 +126,7 @@ public class EcranTitreGUI extends JFrame {
     private class JouerButtonAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            logger.trace("Bouton JOUER cliqué, lancement de MainGUI");
             dispose();
             MainGUI GUI = new MainGUI();
             Thread gameThread = new Thread(GUI);
@@ -131,6 +137,7 @@ public class EcranTitreGUI extends JFrame {
     private class TutoButtonAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            logger.trace("Bouton TUTORIEL cliqué, ouverture du tutoriel");
             new TutorielGUI(EcranTitreGUI.this);
         }
     }
@@ -138,6 +145,7 @@ public class EcranTitreGUI extends JFrame {
     private class QuitterButtonAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            logger.trace("Bouton QUITTER cliqué, fermeture de l'application");
             dispose();
         }
     }

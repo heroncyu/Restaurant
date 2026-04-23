@@ -7,6 +7,9 @@ import engine.item.Stockage;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
+
 /**
  * Classe gérant le stock d'ingrédients du restaurant dans des réserves.
  * 
@@ -15,6 +18,8 @@ import java.util.ArrayList;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class StockRepository {
+    private static Logger logger = LoggerUtility.getLogger(StockRepository.class, "html");
+
     private Stockage stockage;
     private static StockRepository instance = new StockRepository();
     private int nbCases;
@@ -60,6 +65,7 @@ public class StockRepository {
      */
     public void consommer(Ingredient ingredient, int quantite) {
         stockage.supprimerIngredient(ingredient, quantite);
+        logger.debug("Consommation : -" + quantite + " " + ingredient.getNom());
     }
 
     /**
@@ -70,10 +76,12 @@ public class StockRepository {
      */
     public void approvisionner(Ingredient ingredient, int quantite) {
         if (!peutApprovisionner(quantite)) {
+            logger.warn("Approvisionnement impossible : Les réserves sont pleines !");
             return;
         }
         int stockActuel = stockage.getIngredients().getOrDefault(ingredient, 0);
         stockage.ajouterIngredient(ingredient, stockActuel + quantite);
+        logger.info("Approvisionnement : +" + quantite + " " + ingredient.getNom());
     }
     /**
      * Vérifie si on a tous les ingrédients nécessaires pour préparer cette recette.

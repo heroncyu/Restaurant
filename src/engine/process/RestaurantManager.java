@@ -66,9 +66,9 @@ public class RestaurantManager {
                 blocksOccupees.add(map.getBlock(meuble.getPosition().getLine() - 1, meuble.getPosition().getColumn() - 1)); // Block du haut gauche
                 argentRepository.retirerMonnaie(GameConfiguration.PRIX_TABLE);
                 simulation.getDayStatistics().addAchat(GameConfiguration.PRIX_TABLE);
-                logger.trace("Table libre ajoutée");
+                logger.info("Table achetée et placée avec succès.");
             } else {
-                logger.trace("Veuillez placer la table dans la salle");
+                logger.warn("Tentative de placement de table échouée : Veuillez placer la table dans la salle");
             }
             
         } else if (meuble.getType().equals("FOUR")) {
@@ -78,9 +78,9 @@ public class RestaurantManager {
                 blocksOccupees.add(meuble.getPosition());
                 argentRepository.retirerMonnaie(GameConfiguration.PRIX_FOUR);
                 simulation.getDayStatistics().addAchat(GameConfiguration.PRIX_FOUR);
-                logger.trace("Four libre ajouté");
+                logger.info("Four acheté et placé avec succès.");
             } else {
-                logger.trace("Veuillez placer le four dans la cuisine");
+                logger.warn("Tentative de placement de four échouée : Veuillez placer le four dans la cuisine");
             }
 
         } else if (meuble.getType().equals("PLANTE")) { // Meuble de décoration
@@ -113,7 +113,7 @@ public class RestaurantManager {
             Meuble meuble = new Meuble(blockMeuble, meubleACreer);
             enregistrerMeuble(meuble, zoneMeuble);
         } else {
-            logger.trace("Veuillez placer le meuble dans une zone valide et non occupée");
+            logger.warn("Tentative de placer un meuble dans une zone invalide ou occupée.");
         }
     }
 
@@ -169,7 +169,7 @@ public class RestaurantManager {
                     zoneBlockSelec = null;
                     simulation.getZones().get("CONSTRUCTIBLE").getBlocks().clear();
                 } else {
-                    logger.trace("Pas assez d'argent pour agrandir la zone");
+                    logger.warn("Agrandissement impossible : Pas assez d'argent. (Requis : " + prix + ", Possédé : " + argentRepository.getMonnaie() + ")");
                 }
             } else {
                 zoneBlockSelec = null;
@@ -202,11 +202,11 @@ public class RestaurantManager {
         int nbServeurs = simulation.getManager().getServeurs().size();
 
         if (!SimulationUtility.peutAcheterServeur(simulation.getMeubles(), nbServeurs)) {
-            logger.trace("Pas assez de tables pour un nouveau serveur");
+            logger.warn("Embauche refusée : Pas assez de tables pour un nouveau serveur.");
             return false;
         }
         if (argentRepository.getMonnaie() < prix) {
-            logger.trace("Pas assez d'argent");
+            logger.warn("Embauche refusée : Pas assez d'argent pour un serveur.");
             return false;
         }
 
@@ -217,7 +217,7 @@ public class RestaurantManager {
         Serveur serveur = new Serveur(simulation.getComptoirS(), 1, GameConfiguration.SALAIRE_SERVEUR_BASE, nom);
         simulation.getManager().ajouterServeur(serveur);
 
-        logger.trace("Nouveau serveur : " + nom);
+        logger.info("Embauche réussie : " + nom);
         return true;
     }
 
@@ -231,11 +231,11 @@ public class RestaurantManager {
         int nbCuisiniers = simulation.getManager().getCuisiniers().size();
 
         if (!SimulationUtility.peutAcheterCuisinier(simulation.getMeubles(), nbCuisiniers)) {
-            logger.trace("Pas assez de fours pour un nouveau cuisinier");
+            logger.warn("Embauche refusée : Pas assez de fours pour un nouveau cuisinier.");
             return false;
         }
         if (argentRepository.getMonnaie() < prix) {
-            logger.trace("Pas assez d'argent");
+            logger.warn("Embauche refusée : Pas assez d'argent pour un cuisinier.");
             return false;
         }
 
@@ -246,7 +246,7 @@ public class RestaurantManager {
         Cuisinier cuisinier = new Cuisinier(simulation.getComptoirC(), 1, GameConfiguration.SALAIRE_CUISINIER_BASE, nom);
         simulation.getManager().ajouterCuisinier(cuisinier);
 
-        logger.trace("Nouveau cuisinier : " + nom);
+        logger.info("Embauche réussie : " + nom);
         return true;
     }
 
@@ -261,11 +261,11 @@ public class RestaurantManager {
         int prix = GameConfiguration.PRIX_AMELIORATION;
 
         if (serveur.getNiveau() >= 5) {
-            logger.trace("Serveur déjà au niveau maximum");
+            logger.warn("Amélioration impossible : Serveur déjà au niveau maximum.");
             return false;
         }
         if (argentRepository.getMonnaie() < prix) {
-            logger.trace("Pas assez d'argent");
+            logger.warn("Amélioration impossible : Pas assez d'argent.");
             return false;
         }
 
@@ -285,11 +285,11 @@ public class RestaurantManager {
         int prix = GameConfiguration.PRIX_AMELIORATION;
 
         if (cuisinier.getNiveau() >= 5) {
-            logger.trace("Cuisinier déjà au niveau maximum");
+            logger.warn("Amélioration impossible : Cuisinier déjà au niveau maximum.");
             return false;
         }
         if (argentRepository.getMonnaie() < prix) {
-            logger.trace("Pas assez d'argent");
+            logger.warn("Amélioration impossible : Pas assez d'argent.");
             return false;
         }
 

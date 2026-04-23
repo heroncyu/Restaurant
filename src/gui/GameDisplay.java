@@ -77,7 +77,7 @@ public class GameDisplay extends JPanel {
 
         for (Serveur serveur : simulation.getManager().getServeurs()) {
             String etat = simulation.getManager().getEtatServeur(serveur);
-            paintStrategy.paint(serveur, g, animationTick, etat);
+            paintStrategy.paint(serveur, g, animationTick);
         }
 
         if (restaurantManager.getConstructionMode() == 1) {

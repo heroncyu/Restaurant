@@ -141,7 +141,10 @@ public class MobileElementManager {
      * @return vrai si le personnage est arrivé, faux s'il est encore en chemin
      */
     public boolean moveElementUse(MobileElement element, Block pos) {
-        if (pos == null || element == null) return false;
+        if (pos == null || element == null) {
+            logger.warn("moveElementUse appelé avec un élément ou une position null !");
+            return false;
+        }
 
         Block actuel = element.getPosition();
 

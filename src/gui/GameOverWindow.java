@@ -31,6 +31,8 @@ import org.jfree.data.xy.XYSeriesCollection;
 import engine.process.ArgentRepository;
 import engine.process.SimulationUtility;
 import gui.util.FondPanel;
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
 
 /**
  * Fenêtre de fin de partie quand on n'a plus d'argent.
@@ -40,6 +42,8 @@ import gui.util.FondPanel;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class GameOverWindow extends JDialog {
+    private static Logger logger = LoggerUtility.getLogger(GameOverWindow.class, "html");
+
     private Image fondImage = SimulationUtility.lireImage("src/resources/fond_bois.png");
     private FondPanel panelPrincipal = new FondPanel(fondImage);
 
@@ -69,6 +73,8 @@ public class GameOverWindow extends JDialog {
      */
     public GameOverWindow(JFrame owner, HashMap<String, Integer> gameStats) {
         super(owner, "Fin de partie", true);
+
+        logger.info("Affichage de l'écran Game Over (faillite)");
 
         this.gameStats = gameStats;
 

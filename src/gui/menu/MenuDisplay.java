@@ -10,7 +10,10 @@ import engine.process.DayStatistics;
 import engine.process.RestaurantManager;
 import engine.process.Simulation;
 import engine.process.SimulationUtility;
+import engine.process.SimulationUtility;
 import gui.util.FondPanel;
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
 
 /**
  * Panneau situé à droite de l'écran avec les 4 gros boutons principaux.
@@ -20,6 +23,8 @@ import gui.util.FondPanel;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class MenuDisplay extends JPanel {
+    private static Logger logger = LoggerUtility.getLogger(MenuDisplay.class, "html");
+
 	private JFrame owner;
 	private FondPanel fondPanel;
 
@@ -68,6 +73,7 @@ public class MenuDisplay extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+            logger.trace("Ouverture du menu Personnel");
 			new PersonnelMenu(owner, simulation);
 		}
 	}
@@ -81,11 +87,13 @@ public class MenuDisplay extends JPanel {
 			} else {
 				restaurantManager.setConstructionMode(0);
 			}
+            logger.trace("Bascule du mode construction : " + restaurantManager.getConstructionMode());
 		}
 	}
 	private class IngredientButtonAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+            logger.trace("Ouverture du menu Stock/Ingrédients");
 			new IngredientMenu(owner,dayStatistics);
 		}
 	}
@@ -93,6 +101,7 @@ public class MenuDisplay extends JPanel {
 	private class MeubleButtonAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+            logger.trace("Ouverture du menu Meubles");
 			new MeubleMenu(owner,simulation);
 		}
 	}
