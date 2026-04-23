@@ -6,6 +6,7 @@ import engine.mobile.Cuisinier;
 import engine.mobile.Meuble;
 import engine.mobile.Serveur;
 import engine.prestige.Succes;
+import engine.process.FloatingText;
 import engine.process.RestaurantManager;
 import engine.process.Simulation;
 
@@ -82,6 +83,10 @@ public class GameDisplay extends JPanel {
         for (Serveur serveur : simulation.getManager().getServeurs()) {
             boolean enMouvement = simulation.getManager().isServeurMoving(serveur);
             paintStrategy.paint(serveur, g, animationTick, enMouvement);
+        }
+
+        for (FloatingText floatingText : simulation.getFloatingTexts()) {
+            paintStrategy.paint(floatingText, g);
         }
 
         if (restaurantManager.getConstructionMode() == 1) {

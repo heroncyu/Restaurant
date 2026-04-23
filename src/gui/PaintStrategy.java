@@ -9,6 +9,7 @@ import engine.mobile.Cuisinier;
 import engine.mobile.Meuble;
 import engine.mobile.Serveur;
 import engine.prestige.Succes;
+import engine.process.FloatingText;
 import engine.process.SimulationUtility;
 import gui.info.JourLabel;
 import gui.info.MonnaieLabel;
@@ -462,8 +463,9 @@ public class PaintStrategy {
             graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
         }
 
-        graphics.setColor(new Color(240, 231, 230));
-        graphics.setFont(new Font("Dialog", Font.PLAIN, 18));
+
+        graphics.setColor(new Color(0, 0, 0));
+        graphics.setFont(new Font("Segoe UI", Font.PLAIN, 16));
         graphics.drawString(cuisinier.getName(), x + 5, y + 5);
     }
 
@@ -522,9 +524,9 @@ public class PaintStrategy {
             graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
         }
 
-        graphics.setColor(new Color(240, 231, 230));
-        graphics.setFont(new Font("Dialog", Font.PLAIN, 18));
-        graphics.drawString(serveur.getName(), x + 5, y - 5); // Remonté un peu pour pas cacher la tête
+        graphics.setColor(new Color(0, 0, 0));
+        graphics.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        graphics.drawString(serveur.getName(), x + 5, y + 5);
     }
 
     /**
@@ -674,5 +676,34 @@ public class PaintStrategy {
         g2d.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         g2d.setColor(new Color(200, 160, 0));
         g2d.drawString("+" + s.getRecompense() + " gold", x + 20, y + 80);
+    }
+
+    /**
+     * Dessine un texte flottant (ex: "+150 G") et une petite pièce d'or à côté.
+     * Le texte se déplace vers le haut à chaque tour grâce à la mise à jour de ses coordonnées y.
+     *
+     * @param ft L'objet FloatingText contenant le texte et les coordonnées
+     * @param graphics L'outil de dessin de l'interface
+     */
+    public void paint(FloatingText ft, Graphics graphics) {
+        Graphics2D g2d = (Graphics2D) graphics;
+
+        g2d.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+        String msg = "+" + ft.getText();
+
+        g2d.setColor(Color.BLACK);
+        g2d.drawString(msg, ft.getX() + 1, ft.getY() + 1);
+        g2d.setColor(Color.WHITE);
+        g2d.drawString(msg, ft.getX(), ft.getY());
+
+        int textWidth = g2d.getFontMetrics().stringWidth(msg);
+        int coinX = ft.getX() + textWidth + 3;
+        int coinY = ft.getY() - 12;
+
+        g2d.setColor(new Color(255, 215, 0));
+        g2d.fillOval(coinX, coinY, 14, 14);
+        g2d.setColor(new Color(184, 134, 11));
+        g2d.setStroke(new BasicStroke(1.5f));
+        g2d.drawOval(coinX, coinY, 14, 14);
     }
 }

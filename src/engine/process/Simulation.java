@@ -169,6 +169,24 @@ public class Simulation {
             }
 
             SuccesRepository.getInstance().verifierSucces(dayStatistics);
+            updateFloatingText();
+        }
+    }
+
+    private void updateFloatingText(){
+        if(floatingTexts.size()>0){
+            ArrayList<FloatingText> aSupprimer = new ArrayList<>();
+            for( FloatingText floatingText : floatingTexts){
+                if(floatingText.getLife()>0){
+                    SimulationUtility.lowerLife(floatingText);
+                }
+                else{
+                    aSupprimer.add(floatingText);
+                }
+            }
+            for (FloatingText floatingText : aSupprimer) {
+                floatingTexts.remove(floatingText);
+            }
         }
     }
 
@@ -194,7 +212,7 @@ public class Simulation {
 
                     int pixelX = c.getPosition().getColumn() * GameConfiguration.BLOCK_SIZE;
                     int pixelY = c.getPosition().getLine() * GameConfiguration.BLOCK_SIZE;
-                    floatingTexts.add(new FloatingText(pixelX, pixelY, "+" + total + " G"));
+                    floatingTexts.add(new FloatingText(pixelX, pixelY, Integer.toString(total)) );
 
                     manager.libererTable(c);
                     manager.donnerDestinationClient(c, entree);

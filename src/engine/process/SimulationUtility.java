@@ -282,6 +282,22 @@ public class SimulationUtility {
     }
 
     /**
+     * Diminue la durée de vie d'un texte flottant d'une unité.
+     * Modifie également sa position Y pour créer un effet de déplacement vers le haut (flottaison).
+     *
+     * @param floatingText L'objet texte dont la vie et la position doivent être mises à jour
+     */
+    public static void lowerLife(FloatingText floatingText){
+        int nouveau = floatingText.getLife() -1;
+        floatingText.setLife(nouveau);
+        floatingText.setY(floatingText.getY() - 3);
+
+        if(nouveau <= 0) {
+            logger.trace("Le texte flottant [" + floatingText.getText() + "] a disparu.");
+        }
+    }
+
+    /**
      * Math.Random qui tire un nombre au hasard.
      * 
      * @param min plus petit possible

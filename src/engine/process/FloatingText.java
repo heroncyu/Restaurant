@@ -1,32 +1,37 @@
 package engine.process;
 
+/**
+ * Représente un texte visuel temporaire destiné à s'afficher sur l'écran de jeu.
+ * Il possède des coordonnées (x, y) et une durée de vie (life).
+ * Utilisé principalement pour afficher les gains d'argent au-dessus des clients.
+ *
+ * @author Sajid
+ * @version 1.1
+ */
 public class FloatingText {
     private int x;
     private int y;
-    private String text;
     private int life;
-    private int maxLife;
+    private String text;
 
+    /**
+     * Constructeur d'un texte flottant.
+     * @param x Position horizontale en pixels
+     * @param y Position verticale en pixels
+     * @param text Le texte à afficher
+     */
     public FloatingText(int x, int y, String text) {
         this.x = x;
         this.y = y;
+        this.life = 10;
         this.text = text;
-        this.maxLife = 15;
-        this.life = maxLife;
-    }
-
-    public void update() {
-        this.y -= 4;
-        this.life--;
-    }
-
-    public boolean isDead() {
-        return life <= 0;
     }
 
     public int getX() { return x; }
     public int getY() { return y; }
-    public String getText() { return text; }
+    public void setY(int y) { this.y = y; }
     public int getLife() { return life; }
-    public int getMaxLife() { return maxLife; }
+    public void setLife(int life) { this.life = life; }
+
+    public String getText() { return this.text;}
 }
