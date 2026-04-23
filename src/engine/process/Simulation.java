@@ -146,6 +146,9 @@ public class Simulation {
         if (restaurantManager.getConstructionMode() == 0 && !stop) {
             ArrayList<Recette> recettesDispos = SimulationUtility.recettesParNiveau(recettes, manager.getNiveauMaxCuisinier());
             alerteStock = !stockageRepository.auMoinsUneRecetteDisponible(recettesDispos);
+            if (alerteStock) {
+                logger.warn("ALERTE STOCK : Plus d'ingrédients suffisants pour préparer les recettes disponibles !");
+            }
 
             generateClient();
             satisfactionUpdate();
@@ -231,7 +234,7 @@ public class Simulation {
                             } else {
                                 manager.libererTable(c);
                                 manager.donnerDestinationClient(c, entree);
-                                logger.trace("aucun plat disponible, le client part");
+                                logger.warn("Aucun plat disponible (stock épuisé ou niveau insuffisant), le client part.");
                             }
                         }
                     }

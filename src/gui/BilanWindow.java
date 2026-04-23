@@ -23,6 +23,8 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import engine.process.ArgentRepository;
 import engine.process.DayStatistics;
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
 
 /**
  * Fenêtre qui s'affiche à la fin de chaque journée.
@@ -32,6 +34,8 @@ import engine.process.DayStatistics;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class BilanWindow extends JDialog {
+    private static Logger logger = LoggerUtility.getLogger(BilanWindow.class, "html");
+
     private ChartPanel panelGraph;
     private JPanel panelStats;
 
@@ -50,6 +54,8 @@ public class BilanWindow extends JDialog {
      */
     public BilanWindow(JFrame owner, DayStatistics dayStatistics) {
         super(owner, "Bilan du jour", true);
+
+        logger.info("Affichage du bilan de la journée");
 
         this.dayStatistics = dayStatistics;
 

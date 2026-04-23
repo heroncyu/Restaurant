@@ -9,7 +9,10 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.HashMap;
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
 
 /**
  * Classe boîte à outils avec plein de petites fonctions (random, pourboire, niveau...).
@@ -19,6 +22,7 @@ import java.util.HashMap;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class SimulationUtility {
+    private static Logger logger = LoggerUtility.getLogger(SimulationUtility.class, "html");
 
     private static ReputationRepository reputationRepository = ReputationRepository.getInstance();
     private static StockRepository stockageRepository = StockRepository.getInstance();
@@ -186,10 +190,12 @@ public class SimulationUtility {
         }
 
         if(bonNiveau.isEmpty()){
+            logger.warn("Aucune recette disponible pour le niveau actuel du cuisinier (" + niveauMaxCuisinier + ")");
             return null;
         }
 
         int index = (int) (Math.random() * bonNiveau.size());
+        logger.debug("Tirage d'une recette aléatoire parmi " + bonNiveau.size() + " possibles");
         return bonNiveau.get(index);
     }
     public static ArrayList<Recette> recettesParNiveau(ArrayList<Recette> recettes, int niveauMax) {
@@ -296,7 +302,7 @@ public class SimulationUtility {
         try {
             return ImageIO.read(new File(chemin));
         } catch (IOException e) {
-            System.err.println("-- Impossible de lire le fichier image !--" + chemin);
+            logger.error("-- Impossible de lire le fichier image ! -- " + chemin, e);
             return null;
         }
     }

@@ -1,6 +1,8 @@
 package engine.process;
 
 import engine.prestige.Proprete;
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
 
 /**
  * Classe gérant le niveau de propreté du restaurant.
@@ -10,6 +12,8 @@ import engine.prestige.Proprete;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class PropreteRepository {
+    private static Logger logger = LoggerUtility.getLogger(PropreteRepository.class, "html");
+
     private Proprete proprete = new Proprete(100);
     private static PropreteRepository instance = new PropreteRepository();
 
@@ -55,5 +59,9 @@ public class PropreteRepository {
             nouvelle = 0;
         }
         proprete.setScoreProprete(nouvelle);
+        logger.info("Modification de la propreté : " + (ajout > 0 ? "+" : "") + ajout + " (Total : " + nouvelle + ")");
+        if (nouvelle == 0) {
+            logger.warn("Alerte hygiène : La propreté est tombée à zéro !");
+        }
     }
 }

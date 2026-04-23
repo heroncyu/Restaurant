@@ -9,6 +9,8 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,6 +22,8 @@ import javax.swing.border.EmptyBorder;
 import engine.process.SimulationUtility;
 import gui.TutorielGUI;
 import gui.util.FondPanel;
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
 
 import java.awt.Image;
 
@@ -31,14 +35,16 @@ import java.awt.Image;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class EcranTitreGUI extends JFrame {
+    private static Logger logger = LoggerUtility.getLogger(EcranTitreGUI.class, "html");
+
     private Image fondImage = SimulationUtility.lireImage("src/resources/ecran_titre_fond.png");
 
     private JPanel boutonPanel = new JPanel();
     private FondPanel fondPanel;
 
-    private JButton jouerButton = new JButton("JOUER");
-    private JButton quitterButton = new JButton("QUITTER");
-    private JButton tutoButton = new JButton("TUTORIEL");
+    private JButton jouerButton = new MenuButton("JOUER");
+    private JButton quitterButton = new MenuButton("QUITTER");
+    private JButton tutoButton = new MenuButton("TUTORIEL");
 
     private JLabel creditLabel = new JLabel();
     private JLabel titreLabel = new JLabel();
@@ -50,9 +56,10 @@ public class EcranTitreGUI extends JFrame {
      */
     public EcranTitreGUI() {
         super("Restaurant");
-        setSize(1000, 800);
+        setSize(1280, 920);
         this.fondPanel = new FondPanel(fondImage);
 
+        logger.info("Initialisation de l'écran titre");
         init();
  
         setLocationRelativeTo(null);
@@ -91,35 +98,6 @@ public class EcranTitreGUI extends JFrame {
         jouerButton.addActionListener(new JouerButtonAction());
         tutoButton.addActionListener(new TutoButtonAction());
         quitterButton.addActionListener(new QuitterButtonAction());
-
-        jouerButton.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        tutoButton.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        quitterButton.setFont(new Font("Segoe UI", Font.BOLD, 20));
-
-        jouerButton.setForeground(Color.white);
-        tutoButton.setForeground(Color.white);
-        quitterButton.setForeground(Color.white);
-
-        jouerButton.setBackground(Color.gray);
-        tutoButton.setBackground(Color.gray);
-        quitterButton.setBackground(Color.gray);
-
-        jouerButton.setBorder(BorderFactory.createLineBorder(Color.black));
-        tutoButton.setBorder(BorderFactory.createLineBorder(Color.black));
-        quitterButton.setBorder(BorderFactory.createLineBorder(Color.black));
-
-
-        jouerButton.setContentAreaFilled(false);
-        tutoButton.setContentAreaFilled(false);
-        quitterButton.setContentAreaFilled(false);
-
-        jouerButton.setFocusPainted(false);
-        tutoButton.setFocusPainted(false);
-        quitterButton.setFocusPainted(false);
-
-        jouerButton.setOpaque(true);
-        tutoButton.setOpaque(true);
-        quitterButton.setOpaque(true);
     }
 
     private void initLabel() {
@@ -130,10 +108,16 @@ public class EcranTitreGUI extends JFrame {
         creditLabel.setOpaque(false);
         creditLabel.setHorizontalAlignment(JLabel.CENTER);
 
-        titreLabel.setText("Restaurant");
-
-        titreLabel.setFont(new Font("Segoe UI", Font.ITALIC, 80));
-        titreLabel.setForeground(Color.red);
+        Image logoImage = SimulationUtility.lireImage("src/resources/croustycoon_title_logo.png");
+        if (logoImage != null) {
+            Image scaledLogo = logoImage.getScaledInstance(500, -1, Image.SCALE_SMOOTH);
+            titreLabel.setIcon(new javax.swing.ImageIcon(scaledLogo));
+        } else {
+            titreLabel.setText("CrousTycoon");
+            titreLabel.setFont(new Font("Segoe UI", Font.ITALIC, 80));
+            titreLabel.setForeground(Color.red);
+        }
+        
         titreLabel.setOpaque(false);
         titreLabel.setHorizontalAlignment(JLabel.CENTER);
         titreLabel.setBorder(new EmptyBorder(100, 0, 0, 0));
@@ -142,6 +126,7 @@ public class EcranTitreGUI extends JFrame {
     private class JouerButtonAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            logger.trace("Bouton JOUER cliqué, lancement de MainGUI");
             dispose();
             MainGUI GUI = new MainGUI();
             Thread gameThread = new Thread(GUI);
@@ -152,6 +137,7 @@ public class EcranTitreGUI extends JFrame {
     private class TutoButtonAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            logger.trace("Bouton TUTORIEL cliqué, ouverture du tutoriel");
             new TutorielGUI(EcranTitreGUI.this);
         }
     }
@@ -159,7 +145,46 @@ public class EcranTitreGUI extends JFrame {
     private class QuitterButtonAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            logger.trace("Bouton QUITTER cliqué, fermeture de l'application");
             dispose();
+        }
+    }
+    private class MenuButton extends JButton {
+        private Color hoverBackgroundColor = new Color(255, 140, 0, 200); 
+        private Color normalBackgroundColor = new Color(0, 0, 0, 180); 
+        private Color pressedBackgroundColor = new Color(255, 69, 0, 220); 
+        private Color borderColor = new Color(255, 215, 0); 
+
+        public MenuButton(String text) {
+            super(text);
+            super.setContentAreaFilled(false);
+            setFocusPainted(false);
+            setOpaque(false);
+            setBorderPainted(false);
+            setFont(new Font("Segoe UI", Font.BOLD, 26));
+            setForeground(Color.WHITE);
+            setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            
+            if (getModel().isPressed()) {
+                g2.setColor(pressedBackgroundColor);
+            } else if (getModel().isRollover()) {
+                g2.setColor(hoverBackgroundColor);
+            } else {
+                g2.setColor(normalBackgroundColor);
+            }
+            g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 40, 40);
+            
+            g2.setStroke(new java.awt.BasicStroke(2.5f));
+            g2.setColor(borderColor);
+            g2.drawRoundRect(1, 1, getWidth() - 3, getHeight() - 3, 40, 40);
+            
+            super.paintComponent(g);
         }
     }
 }

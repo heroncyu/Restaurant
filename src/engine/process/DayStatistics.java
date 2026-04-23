@@ -4,6 +4,9 @@ import config.GameConfiguration;
 
 import java.util.HashMap;
 
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
+
 /**
  * Classe qui calcule le résumé comptable de la journée.
  * 
@@ -12,6 +15,8 @@ import java.util.HashMap;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class DayStatistics {
+    private static Logger logger = LoggerUtility.getLogger(DayStatistics.class, "html");
+
     private int nbJour;
     private int nbCommandesDuJour;
     private int nbCommandesTotal;
@@ -107,6 +112,7 @@ public class DayStatistics {
      */
     public void addCoutConstruction(int coutConstruction) {
         this.coutConstructionDuJour += coutConstruction;
+        logger.debug("Dépense (Construction) : " + coutConstruction);
     }
 
     /**
@@ -116,6 +122,7 @@ public class DayStatistics {
      */
     public void addRevenusCommandes(int coutCommandes) {
         this.revenusCommandesDuJour += coutCommandes;
+        logger.trace("Revenu (Commande) : " + coutCommandes);
     }
 
     /**
@@ -125,6 +132,7 @@ public class DayStatistics {
      */
     public void addCoutSalaires(int coutSalaires) {
         this.coutSalairesDuJour += coutSalaires;
+        logger.debug("Dépense (Salaires) : " + coutSalaires);
     }
 
     /**
@@ -134,6 +142,7 @@ public class DayStatistics {
      */
     public void addCoutLoyer(int coutLoyer) {
         this.coutLoyerDuJour += coutLoyer;
+        logger.debug("Dépense (Loyer) : " + coutLoyer);
     }
 
     /**
@@ -142,6 +151,7 @@ public class DayStatistics {
     public void addCommande() {
         this.nbCommandesDuJour++;
         this.nbCommandesTotal++;
+        logger.trace("Nouvelle commande enregistrée.");
     }
 
     /**
@@ -151,6 +161,7 @@ public class DayStatistics {
      */
     public void addRevenusPourboire(int pourboire) {
         this.revenusPourboireDuJour += pourboire;
+        if (pourboire > 0) logger.trace("Revenu (Pourboire) : " + pourboire);
     }
 
     /**
@@ -160,6 +171,7 @@ public class DayStatistics {
      */
     public void addAchat(int achat) {
         this.achatDujour += achat;
+        logger.debug("Dépense (Achats stocks/meubles) : " + achat);
     }
 
     /**
@@ -170,6 +182,7 @@ public class DayStatistics {
     public void addVenteRecette(String nomRecette){
         int actuel = ventesParRecette.getOrDefault(nomRecette,0);
         ventesParRecette.put(nomRecette,actuel+1);
+        logger.trace("Vente effectuée pour la recette : " + nomRecette);
     }
 
     public int getNbJour() {

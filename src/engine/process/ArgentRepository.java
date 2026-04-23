@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import engine.prestige.Argent;
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
 
 /**
  * Classe utilisant le pattern Singleton pour gérer l'argent du joueur.
@@ -15,6 +17,8 @@ import engine.prestige.Argent;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class ArgentRepository {
+    private static Logger logger = LoggerUtility.getLogger(ArgentRepository.class, "html");
+
 	private Argent argent = new Argent(INITIAL_MONEY);
     private List<Integer> argentHistory = new ArrayList<>();
     
@@ -71,6 +75,7 @@ public class ArgentRepository {
      */
     public void ajouterMonnaie(int ajout) {
         setMonnaie(getMonnaie() + ajout);
+        logger.info("Ajout d'argent : +" + ajout + " (Total : " + getMonnaie() + ")");
     }
 
     /**
@@ -80,6 +85,10 @@ public class ArgentRepository {
      */
     public void retirerMonnaie(int retrait) {
         setMonnaie(getMonnaie() - retrait);
+        logger.info("Retrait d'argent : -" + retrait + " (Total : " + getMonnaie() + ")");
+        if (getMonnaie() < 0) {
+            logger.warn("L'argent est passé en négatif ! Total : " + getMonnaie());
+        }
     }
 
     /**

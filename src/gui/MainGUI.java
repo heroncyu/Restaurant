@@ -49,6 +49,7 @@ public class MainGUI extends JFrame implements Runnable {
     }
 
     private void init() {
+        logger.info("Démarrage de la fenêtre principale du jeu (MainGUI)");
         simulation = new Simulation();
         dashboard = new GameDisplay(simulation.getMap(), simulation);
         infoDisplay = new InfoDisplay(this, simulation);
@@ -85,6 +86,8 @@ public class MainGUI extends JFrame implements Runnable {
                 int ligne = y / GameConfiguration.BLOCK_SIZE;
                 int colonne = x / GameConfiguration.BLOCK_SIZE;
 
+                logger.trace("Clic détecté sur la grille : ligne " + ligne + ", colonne " + colonne);
+
                 RestaurantManager restaurantManager = simulation.getRestaurantManager();
                 if (restaurantManager.getConstructionMode() == 1) {
                     restaurantManager.agrandirZone(ligne, colonne);
@@ -106,7 +109,7 @@ public class MainGUI extends JFrame implements Runnable {
             try {
                 Thread.sleep(GameConfiguration.GAME_SPEED / simulation.getSpeedMultiplier());
             } catch (InterruptedException e) {
-                logger.error(e.getMessage());
+                logger.fatal("La boucle principale du jeu a été interrompue !", e);
             }
             simulation.nextRound();
             if (simulation.checkFinJournee()) {

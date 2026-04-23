@@ -4,6 +4,9 @@ import engine.prestige.Succes;
 
 import java.util.ArrayList;
 
+import org.apache.log4j.Logger;
+import log.LoggerUtility;
+
 /**
  * Classe gérant les défis réalisés par le joueur.
  * Elle sauvegarde les succès complétés pendant la partie.
@@ -11,6 +14,8 @@ import java.util.ArrayList;
  * @author EL HAJAM Ayoub - HERON Sajid - BOUSSALEM Nassim
  */
 public class SuccesRepository {
+    private static Logger logger = LoggerUtility.getLogger(SuccesRepository.class, "html");
+
     private ArrayList<Succes> succes = new ArrayList<>();
     private static SuccesRepository instance = new SuccesRepository();
     private ArrayList<Succes> aAfficher = new ArrayList<>();
@@ -78,21 +83,23 @@ public class SuccesRepository {
     public void verifierSucces(DayStatistics dayStatistics) {
         for (Succes s : succes) {
             if (!s.isEstDebloque()) {
+                boolean unlock = false;
                 if (s.getNom().equals("Bon debut") && dayStatistics.getNbCommandesTotal() >= 10) {
-                    s.setEstDebloque(true);
-                    aAfficher.add(s);
+                    unlock = true;
                 } else if (s.getNom().equals("Restaurant populaire") && dayStatistics.getNbCommandesTotal() >= 50) {
-                    s.setEstDebloque(true);
-                    aAfficher.add(s);
+                    unlock = true;
                 } else if (s.getNom().equals("Riche marchand") && ArgentRepository.getInstance().getMonnaie() >= 2000) {
-                    s.setEstDebloque(true);
-                    aAfficher.add(s);
+                    unlock = true;
                 } else if (s.getNom().equals("Bonne reputation") && ReputationRepository.getInstance().getReputation() >= 75) {
-                    s.setEstDebloque(true);
-                    aAfficher.add(s);
+                    unlock = true;
                 } else if (s.getNom().equals("Semaine chargee") && dayStatistics.getNbJour() >= 7) {
+                    unlock = true;
+                }
+                
+                if (unlock) {
                     s.setEstDebloque(true);
                     aAfficher.add(s);
+                    logger.info("Nouveau succès débloqué : " + s.getNom());
                 }
             }
         }
