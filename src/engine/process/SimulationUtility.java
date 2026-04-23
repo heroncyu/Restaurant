@@ -24,6 +24,9 @@ public class SimulationUtility {
     private static StockRepository stockageRepository = StockRepository.getInstance();
     private static PropreteRepository propreteRepository = PropreteRepository.getInstance();
 
+    private static final String[] NOMS_CUISINIERS = {"Gordon", "Philippe", "Etienne", "Paul", "Alain", "Cyril", "Michel", "Auguste", "Joel"};
+    private static final String[] NOMS_SERVEUSES = {"Marie", "Helene", "Julie", "Sophie", "Lucie", "Emma", "Chloe", "Sarah", "Camille", "Lina"};
+
     /**
      * Calcule la qualité d'un plat en fonction du niveau en étoiles du cuisinier.
      * 
@@ -254,6 +257,22 @@ public class SimulationUtility {
         int nbTable = getNombreTables(meubles);
         int maxServeurs = nbTable/2;
         return nbServeurs < maxServeurs;
+    }
+
+    /**
+     * Permet d'avoir un prénom masculin aléatoire parmi une liste prédéfinie
+     * @return le prenom aléatoire qui sera assigné au nouveau cuisinier
+     */
+    public static String getRandomCuisinierName() {
+        return NOMS_CUISINIERS[getRandomNumber(0, NOMS_CUISINIERS.length - 1)];
+    }
+
+    /**
+     * Permet d'avoir un prénom féminin aléatoire parmi une liste prédéfinie
+     * @return le prenom aléatoire qui sera assigné au nouveau serveur
+     */
+    public static String getRandomServeuseName() {
+        return NOMS_SERVEUSES[getRandomNumber(0, NOMS_SERVEUSES.length - 1)];
     }
 
     /**

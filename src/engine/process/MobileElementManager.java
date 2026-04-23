@@ -227,9 +227,28 @@ public class MobileElementManager {
         clientDestinations.put(client, destination);
     }
 
+    /**
+     * Permet de savoir si un client est en mouvement
+     * @param client client concerné
+     * @return vrai si le client n'a pas de destination, faux dans le cas contraire
+     */
+    public boolean isClientMoving(Client client) {
+        return clientDestinations.get(client) != null;
+    }
+
 
 
     //Serveur
+
+    /**
+     * Permet de savoir si un serveur est en mouvement
+     * @param serveur serveur concerné
+     * @return faux si le serveur est libre, vrai sinon
+     */
+    public boolean isServeurMoving(Serveur serveur) {
+        String etat = serveurEtats.get(serveur);
+        return !GameConfiguration.ETAT_LIBRE.equals(etat);
+    }
 
     /**
      * Dit au serveur où il doit marcher.
@@ -313,6 +332,16 @@ public class MobileElementManager {
     }
 
     // Cuisinier
+
+    /**
+     * Permet de savoir si un cuisinier est en mouvement
+     * @param cuisinier cuisinier concerné
+     * @return faux si le cuisinier est libre ou entrain de cuisiner, vrai sinon
+     */
+    public boolean isCuisinierMoving(Cuisinier cuisinier) {
+        String etat = cuisinierEtats.get(cuisinier);
+        return !GameConfiguration.ETAT_LIBRE.equals(etat) && !GameConfiguration.ETAT_CUISINE.equals(etat);
+    }
 
     /**
      * Cherche un cuisinier disponible et avec un niveau suffisant pour faire cette recette.

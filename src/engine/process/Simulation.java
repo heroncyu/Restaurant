@@ -73,6 +73,8 @@ public class Simulation {
     private DayStatistics dayStatistics = new DayStatistics();
     private HashMap<String, Integer> gameStats = new HashMap<>();
 
+    private ArrayList<FloatingText> floatingTexts = new ArrayList<>();
+
     /**
      * Prépare toute la simulation de A à Z (carte, listes, recettes).
      */
@@ -186,6 +188,10 @@ public class Simulation {
                     int total = SimulationUtility.calculerTotal(c, commande, serveur, dayStatistics);
 
                     argentRepository.ajouterMonnaie(total);
+
+                    int pixelX = c.getPosition().getColumn() * GameConfiguration.BLOCK_SIZE;
+                    int pixelY = c.getPosition().getLine() * GameConfiguration.BLOCK_SIZE;
+                    floatingTexts.add(new FloatingText(pixelX, pixelY, "+" + total + " G"));
 
                     manager.libererTable(c);
                     manager.donnerDestinationClient(c, entree);
@@ -780,5 +786,9 @@ public class Simulation {
      */
     public HashMap<String, Integer> getGameStats() { 
         return gameStats; 
+    }
+
+    public ArrayList<FloatingText> getFloatingTexts() {
+        return floatingTexts;
     }
 }

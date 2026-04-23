@@ -106,8 +106,9 @@ public class GameBuilder {
     public static ArrayList<Cuisinier> buildCuisiniers(Map map) {
         ArrayList<Cuisinier> cuisiniers = new ArrayList<>();
         int h = map.getLineCount();
+        String nomCuisinier = SimulationUtility.getRandomCuisinierName();
 
-        cuisiniers.add(new Cuisinier(map.getBlock(h-3, 5), 1, 100, "Jean"));
+        cuisiniers.add(new Cuisinier(map.getBlock(h-3, 5), 1, 100, nomCuisinier));
         return cuisiniers;
     }
 
@@ -120,8 +121,9 @@ public class GameBuilder {
     public static ArrayList<Serveur> buildServeurs(Map map) {
         ArrayList<Serveur> serveurs = new ArrayList<>();
         int h = map.getLineCount();
+        String nomServeuse = SimulationUtility.getRandomServeuseName();
 
-        serveurs.add(new Serveur(map.getBlock(h-3, 10), 1, 50, "Marie"));
+        serveurs.add(new Serveur(map.getBlock(h-3, 10), 1, 50, nomServeuse));
         return serveurs;
     }
 
