@@ -39,6 +39,7 @@ public class PaintStrategy {
     private Image solCuisine = SimulationUtility.lireImage("src/resources/cuisine.jpg");
     private Image table = SimulationUtility.lireImage("src/resources/table.png");
     private Image four = SimulationUtility.lireImage("src/resources/four.png");
+    private Image fourAllume = SimulationUtility.lireImage("src/resources/four_allume.png");
     private Image plante = SimulationUtility.lireImage("src/resources/plante.png");
     private Image tapisEntree = SimulationUtility.lireImage("src/resources/tapis.png");
     private Image porteManteau = SimulationUtility.lireImage("src/resources/porte_manteau.png");
@@ -237,7 +238,7 @@ public class PaintStrategy {
      * @param meuble le meuble à dessiner
      * @param graphics pinceau
      */
-    public void paint(Meuble meuble, Graphics graphics) {
+    public void paint(Meuble meuble, Graphics graphics, boolean estAllume) {
         Block position = meuble.getPosition();
         int blockSize = BLOCK_SIZE;
 
@@ -247,8 +248,9 @@ public class PaintStrategy {
         String type = meuble.getType();
 
         if (type.equals("FOUR")) {
+            Image imageFour = estAllume ? fourAllume : four;
             if (four != null) {
-                graphics.drawImage(four, x - 10, y - 10, blockSize + 20, blockSize + 20, null);
+                graphics.drawImage(imageFour, x - 10, y - 10, blockSize + 20, blockSize + 20, null);
             } else {
                 graphics.setColor(new Color(240, 231, 230));
                 graphics.fillRect(x + 4, y + 4, blockSize - 10, blockSize - 10);
@@ -415,7 +417,7 @@ public class PaintStrategy {
      * @param cuisinier l'employé
      * @param graphics pinceau
      */
-    public void paint(Cuisinier cuisinier, Graphics graphics, int animationTick,boolean enMouvement) {
+    public void paint(Cuisinier cuisinier, Graphics graphics, int animationTick,boolean enMouvement, int pourcentageCuisson) {
         Block position = cuisinier.getPosition();
         int blockSize = BLOCK_SIZE;
 
@@ -461,6 +463,17 @@ public class PaintStrategy {
         else {
             graphics.setColor(Color.YELLOW);
             graphics.fillOval(x + (blockSize - 20) / 2, y + (blockSize - 20) / 2, 20, 20);
+        }
+
+        if (pourcentageCuisson >= 0) {
+            int largeurBarre = blockSize;
+            int remplissage = (int) (largeurBarre * (pourcentageCuisson / 100.0));
+
+            graphics.setColor(Color.BLACK);
+            graphics.fillRect(x, y + 30, largeurBarre, 6);
+
+            graphics.setColor(new Color(255, 165, 0));
+            graphics.fillRect(x + 1, y + 30, remplissage - 2, 4);
         }
 
 

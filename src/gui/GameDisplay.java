@@ -67,7 +67,11 @@ public class GameDisplay extends JPanel {
         RestaurantManager restaurantManager = simulation.getRestaurantManager();
 
         for (Meuble meuble : simulation.getMeubles()) {
-            paintStrategy.paint(meuble, g);
+            boolean estOccupe = false;
+            if (meuble.getType().equals("FOUR")) {
+                estOccupe = simulation.getManager().isFourAllume(meuble);
+            }
+            paintStrategy.paint(meuble, g, estOccupe);
         }
 
         for (Client client : simulation.getManager().getClients()) {
@@ -77,7 +81,10 @@ public class GameDisplay extends JPanel {
 
         for (Cuisinier cuisinier : simulation.getManager().getCuisiniers()) {
             boolean enMouvement = simulation.getManager().isCuisinierMoving(cuisinier);
-            paintStrategy.paint(cuisinier, g, animationTick, enMouvement);
+
+            int pourcentageCuisson = simulation.getPourcentageCuisson(cuisinier);
+
+            paintStrategy.paint(cuisinier, g, animationTick, enMouvement,pourcentageCuisson);
         }
 
         for (Serveur serveur : simulation.getManager().getServeurs()) {

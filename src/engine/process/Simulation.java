@@ -467,12 +467,16 @@ public class Simulation {
             if (GameConfiguration.ETAT_VA_CHERCHER_COMMANDE.equals(etat)) {
                 manager.changerEtatCuisinier(cuisinier, GameConfiguration.ETAT_VA_CUISINER);
                 Meuble fourReserve = manager.occuperProchainFour(cuisinier);
+
                 if(fourReserve != null){
-                    manager.donnerDestinationCuisinier(cuisinier,fourReserve.getPosition());
+                    Block caseDevantFour = map.getBlock(fourReserve.getPosition().getLine() + 1, fourReserve.getPosition().getColumn());
+                    manager.donnerDestinationCuisinier(cuisinier,caseDevantFour);
                     logger.trace(cuisinier.getName() + " a récupéré la commande, va cuisiner au four en " + fourReserve.getPosition().toString());
                 }
 
             } else if (GameConfiguration.ETAT_VA_CUISINER.equals(etat)) {
+                cuisinier.setDirection(GameConfiguration.HAUT);
+
                 Commande commande = manager.getCommandeCuisinier(cuisinier);
                 int duree = commande.getPlat().getRecette().getTempsPreparation();
 
@@ -614,10 +618,6 @@ public class Simulation {
         gameStats.put("construction", dayStatistics.getCoutConstructionDuJour() + gameStats.get("construction"));
         gameStats.put("pourboires", dayStatistics.getRevenusPourboireDuJour() + gameStats.get("pourboires"));
         gameStats.put("jour", dayStatistics.getNbJour());
-    }
-
-    private static int getRandomNumber(int min, int max) {
-        return (int) (Math.random() * (max + 1 - min)) + min;
     }
 
     /**
@@ -811,5 +811,25 @@ public class Simulation {
 
     public ArrayList<FloatingText> getFloatingTexts() {
         return floatingTexts;
+    }
+
+    /**
+     * Getter pour récupérer le temps restant d'un cuisinier (pour la barre de progression)
+     * @param cuisinier le cuisinier concerné
+     * @return le temps restant
+     */
+    public int getPourcentageCuisson(Cuisinier cuisinier) {
+        String etat = manager.getEtatCuisinier(cuisinier);
+        if (GameConfiguration.ETAT_CUISINE.equals(etat)) {
+            int tempsRestant = tempsCuisson.getOrDefault(cuisinier, 0);
+            Commande commande = manager.getCommandeCuisinier(cuisinier);
+            if (commande != null) {
+                int tempsTotal = commande.getPlat().getRecette().getTempsPreparation();
+                if (tempsTotal > 0) {
+                    return (int) (((tempsTotal - tempsRestant) / (double) tempsTotal) * 100);
+                }
+            }
+        }
+        return -1; //signifie ne cuisine pas
     }
 }

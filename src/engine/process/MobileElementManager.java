@@ -488,8 +488,21 @@ public class MobileElementManager {
         }
     }
 
-
-
+    /**
+     * Vérifie si le four est en cours d'utilisation
+     * @param four le four concerné
+     * @return vrai si il est occupé, faux sinon
+     */
+    public boolean isFourAllume(Meuble four) {
+        for (java.util.Map.Entry<Cuisinier, Meuble> entry : fourOccupe.entrySet()) {
+            if (entry.getValue() == four) {
+                Cuisinier cuisinier = entry.getKey();
+                String etat = cuisinierEtats.get(cuisinier);
+                return GameConfiguration.ETAT_CUISINE.equals(etat);
+            }
+        }
+        return false;
+    }
 
     // GETTERS
 
