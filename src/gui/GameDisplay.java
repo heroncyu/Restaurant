@@ -1,11 +1,13 @@
 package gui;
 
+import engine.map.Block;
 import engine.map.Map;
 import engine.mobile.Client;
 import engine.mobile.Cuisinier;
 import engine.mobile.Meuble;
 import engine.mobile.Serveur;
 import engine.prestige.Succes;
+import engine.process.FloatingText;
 import engine.process.RestaurantManager;
 import engine.process.Simulation;
 
@@ -57,35 +59,50 @@ public class GameDisplay extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        animationTick = (animationTick + 1) % 2;
+        if(!simulation.isStop()){
+            animationTick = (animationTick + 1) % 2;
+        }
 
         paintStrategy.paint(map, simulation.getZones(), g);
 
         RestaurantManager restaurantManager = simulation.getRestaurantManager();
 
+        for(Block positionArbre : simulation.getArbres()){
+            paintStrategy.paint(positionArbre, g, animationTick);
+        }
+
         for (Meuble meuble : simulation.getMeubles()) {
-            paintStrategy.paint(meuble, g);
+            boolean estOccupe = false;
+            if (meuble.getType().equals("FOUR")) {
+                estOccupe = simulation.getManager().isFourAllume(meuble);
+            }
+            paintStrategy.paint(meuble, g, estOccupe);
         }
 
         for (Client client : simulation.getManager().getClients()) {
-            paintStrategy.paint(client, g);
+            boolean enMouvement = simulation.getManager().isClientMoving(client);
+            paintStrategy.paint(client, g, animationTick, enMouvement);
         }
 
         for (Cuisinier cuisinier : simulation.getManager().getCuisiniers()) {
-            paintStrategy.paint(cuisinier, g);
+            boolean enMouvement = simulation.getManager().isCuisinierMoving(cuisinier);
+
+            int pourcentageCuisson = simulation.getPourcentageCuisson(cuisinier);
+
+            paintStrategy.paint(cuisinier, g, animationTick, enMouvement,pourcentageCuisson);
         }
 
         for (Serveur serveur : simulation.getManager().getServeurs()) {
-            String etat = simulation.getManager().getEtatServeur(serveur);
-            paintStrategy.paint(serveur, g, animationTick);
+            boolean enMouvement = simulation.getManager().isServeurMoving(serveur);
+            paintStrategy.paint(serveur, g, animationTick, enMouvement);
+        }
+
+        for (FloatingText floatingText : simulation.getFloatingTexts()) {
+            paintStrategy.paint(floatingText, g);
         }
 
         if (restaurantManager.getConstructionMode() == 1) {
-            paintStrategy.paintConstruction(g, "Agrandissement du terrain", restaurantManager.calculerPrixConstruction(), getWidth());
-        }
-        if (restaurantManager.getConstructionMode() == 2) {
-            paintStrategy.paintConstruction(g, "Placez votre nouveau meuble", 0, getWidth());
-            paintStrategy.paint(simulation.getBlocksOccupees(), g);
+            paintStrategy.paint(g, "Mode construction : Agrandissement du terrain", restaurantManager.calculerPrixConstruction());
         }
         if (succesEnCours != null) {
             paintStrategy.paint(succesEnCours, g, getWidth(), getHeight());
@@ -93,6 +110,11 @@ public class GameDisplay extends JPanel {
             if (tempsRestants <= 0) {
                 succesEnCours = null;
             }
+        }
+
+        if (restaurantManager.getConstructionMode() == 2) {
+            paintStrategy.paint(g, "Mode construction : Placez votre nouveau meuble", 0);
+            paintStrategy.paint(simulation.getBlocksOccupees(), g);
         }
 
         if(simulation.isAlerteStock()){

@@ -73,6 +73,10 @@ public class Simulation {
     private DayStatistics dayStatistics = new DayStatistics();
     private HashMap<String, Integer> gameStats = new HashMap<>();
 
+    private ArrayList<FloatingText> floatingTexts = new ArrayList<>();
+
+    private ArrayList<Block> arbres;
+
     /**
      * Prépare toute la simulation de A à Z (carte, listes, recettes).
      */
@@ -85,6 +89,7 @@ public class Simulation {
         map = GameBuilder.buildMap();
         zones = GameBuilder.buildZones(map);
         ArrayList<Meuble> meublesInitiaux = GameBuilder.buildMeubles(map);
+        arbres = GameBuilder.buildArbres(map);
         ArrayList<Serveur> serveurs = GameBuilder.buildServeurs(map);
         ArrayList<Cuisinier> cuisiniers = GameBuilder.buildCuisiniers(map);
 
@@ -198,6 +203,24 @@ public class Simulation {
             }
 
             SuccesRepository.getInstance().verifierSucces(dayStatistics);
+            updateFloatingText();
+        }
+    }
+
+    private void updateFloatingText(){
+        if(floatingTexts.size()>0){
+            ArrayList<FloatingText> aSupprimer = new ArrayList<>();
+            for( FloatingText floatingText : floatingTexts){
+                if(floatingText.getLife()>0){
+                    SimulationUtility.lowerLife(floatingText);
+                }
+                else{
+                    aSupprimer.add(floatingText);
+                }
+            }
+            for (FloatingText floatingText : aSupprimer) {
+                floatingTexts.remove(floatingText);
+            }
         }
     }
 
@@ -220,6 +243,10 @@ public class Simulation {
                     int total = SimulationUtility.calculerTotal(c, commande, serveur, dayStatistics);
 
                     argentRepository.ajouterMonnaie(total);
+
+                    int pixelX = c.getPosition().getColumn() * GameConfiguration.BLOCK_SIZE;
+                    int pixelY = c.getPosition().getLine() * GameConfiguration.BLOCK_SIZE;
+                    floatingTexts.add(new FloatingText(pixelX, pixelY, Integer.toString(total)) );
 
                     manager.libererTable(c);
                     manager.donnerDestinationClient(c, entree);
@@ -244,6 +271,7 @@ public class Simulation {
                                 logger.trace("un client est sorti");
                             }
                         } else {
+                            c.setDirection(GameConfiguration.HAUT);
                             Recette recette = SimulationUtility.choisirRecetteAlea(recettes, manager.getNiveauMaxCuisinier());
 
                             if (recette != null) {
@@ -474,12 +502,16 @@ public class Simulation {
             if (GameConfiguration.ETAT_VA_CHERCHER_COMMANDE.equals(etat)) {
                 manager.changerEtatCuisinier(cuisinier, GameConfiguration.ETAT_VA_CUISINER);
                 Meuble fourReserve = manager.occuperProchainFour(cuisinier);
+
                 if(fourReserve != null){
-                    manager.donnerDestinationCuisinier(cuisinier,fourReserve.getPosition());
+                    Block caseDevantFour = map.getBlock(fourReserve.getPosition().getLine() + 1, fourReserve.getPosition().getColumn());
+                    manager.donnerDestinationCuisinier(cuisinier,caseDevantFour);
                     logger.trace(cuisinier.getName() + " a récupéré la commande, va cuisiner au four en " + fourReserve.getPosition().toString());
                 }
 
             } else if (GameConfiguration.ETAT_VA_CUISINER.equals(etat)) {
+                cuisinier.setDirection(GameConfiguration.HAUT);
+
                 Commande commande = manager.getCommandeCuisinier(cuisinier);
                 int duree = commande.getPlat().getRecette().getTempsPreparation();
 
@@ -577,6 +609,8 @@ public class Simulation {
             stop = true;
             chronometre.init();
 
+            resetFinDeJournee();
+
             int loyer = ZoneManager.calculerLoyer(zones);
             argentRepository.retirerMonnaie(loyer);
             dayStatistics.addCoutLoyer(loyer);
@@ -623,8 +657,54 @@ public class Simulation {
         gameStats.put("jour", dayStatistics.getNbJour());
     }
 
-    private static int getRandomNumber(int min, int max) {
-        return (int) (Math.random() * (max + 1 - min)) + min;
+    /**
+     * Getter pour récupérer le temps restant d'un cuisinier (pour la barre de progression)
+     * @param cuisinier le cuisinier concerné
+     * @return le temps restant
+     */
+    public int getPourcentageCuisson(Cuisinier cuisinier) {
+        String etat = manager.getEtatCuisinier(cuisinier);
+        if (GameConfiguration.ETAT_CUISINE.equals(etat)) {
+            int tempsRestant = tempsCuisson.getOrDefault(cuisinier, 0);
+            Commande commande = manager.getCommandeCuisinier(cuisinier);
+            if (commande != null) {
+                int tempsTotal = commande.getPlat().getRecette().getTempsPreparation();
+                if (tempsTotal > 0) {
+                    return (int) (((tempsTotal - tempsRestant) / (double) tempsTotal) * 100);
+                }
+            }
+        }
+        return -1; //signifie ne cuisine pas
+    }
+
+    private void resetFinDeJournee() {
+        ArrayList<Client> clientsRestants = new ArrayList<>(manager.getClients());
+        for (Client c : clientsRestants) {
+            manager.libererTable(c);
+            manager.retirerClient(c);
+        }
+
+        commandesEnAttente.clear();
+        commandesACuisiner.clear();
+        commandesCuisson.clear();
+        commandesPretes.clear();
+        tempsCuisson.clear();
+        tempsManger.clear();
+        clientEnTrainManger.clear();
+        serveurQuiAServi.clear();
+        floatingTexts.clear();
+
+        for (Serveur serveur : manager.getServeurs()) {
+            manager.libererServeur(serveur);
+            manager.donnerDestinationServeur(serveur, comptoirS);
+            serveur.setDirection(GameConfiguration.BAS);
+        }
+        for (Cuisinier cuisinier : manager.getCuisiniers()) {
+            manager.libererCuisinier(cuisinier);
+            manager.libererFour(cuisinier);
+            manager.donnerDestinationCuisinier(cuisinier, comptoirC);
+            cuisinier.setDirection(GameConfiguration.BAS);
+        }
     }
 
     public Map getMap() {
@@ -714,5 +794,13 @@ public class Simulation {
 
     public ArrayList<Ingredient> getIngredients() {
         return ingredients;
+    }
+
+    public ArrayList<FloatingText> getFloatingTexts() {
+        return floatingTexts;
+    }
+
+    public ArrayList<Block> getArbres() {
+        return arbres;
     }
 }

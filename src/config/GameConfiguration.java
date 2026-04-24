@@ -25,7 +25,7 @@ public class GameConfiguration {
     public static final int WINDOW_WIDTH = GAME_WIDTH + MENU_PANEL_WIDTH;
     public static final int WINDOW_HEIGHT = GAME_HEIGHT + INFO_PANEL_HEIGHT + ORDERS_PANEL_HEIGHT;
 
-    public static final int GAME_SPEED = 250;
+    public static final int GAME_SPEED = 150;
     public static final int INITIAL_MONEY = 1550;
     public static final int END_OF_DAY_HOUR = 22;
     public static final int INITIAL_REPUTATION = 50;

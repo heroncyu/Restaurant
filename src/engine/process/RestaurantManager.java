@@ -156,6 +156,7 @@ public class RestaurantManager {
                     
                     for (Block block : construListTemp) {
                         ZoneManager.ajouterBlockDansZone(block, zoneDuBlockCible, zoneBlockSelec);
+                        simulation.getArbres().remove(block);
                         logger.trace("block ajouté à la zone " + zoneBlockSelec.getNom());
                     }
 
@@ -213,7 +214,7 @@ public class RestaurantManager {
         argentRepository.retirerMonnaie(prix);
         simulation.getDayStatistics().addCoutConstruction(prix);
 
-        String nom = "Serveur " + (nbServeurs + 1);
+        String nom = SimulationUtility.getRandomServeuseName();
         Serveur serveur = new Serveur(simulation.getComptoirS(), 1, GameConfiguration.SALAIRE_SERVEUR_BASE, nom);
         simulation.getManager().ajouterServeur(serveur);
 
@@ -242,7 +243,7 @@ public class RestaurantManager {
         argentRepository.retirerMonnaie(prix);
         simulation.getDayStatistics().addCoutConstruction(prix);
 
-        String nom = "Chef " + (nbCuisiniers + 1);
+        String nom = SimulationUtility.getRandomCuisinierName();;
         Cuisinier cuisinier = new Cuisinier(simulation.getComptoirC(), 1, GameConfiguration.SALAIRE_CUISINIER_BASE, nom);
         simulation.getManager().ajouterCuisinier(cuisinier);
 

@@ -74,17 +74,17 @@ public class SuccesMenu extends JDialog {
         infos.setOpaque(false);
 
         JLabel nomLabel = new JLabel(s.getNom());
-        nomLabel.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+        nomLabel.setFont(new Font("Segoe UI", Font.BOLD, 15));
         nomLabel.setForeground(Color.WHITE);
 
         JLabel descLabel = new JLabel(
                 s.getDescription() + "  —  Récompense : " + s.getRecompense() + " gold");
-        descLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 12));
+        descLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         descLabel.setForeground(Color.LIGHT_GRAY);
 
 
         JButton reclamer = new JButton();
-        reclamer.setFont(new Font("Comic Sans MS", Font.BOLD, 12));
+        reclamer.setFont(new Font("Segoe UI", Font.BOLD, 12));
         reclamer.setFocusPainted(false);
         reclamer.setOpaque(true);
         reclamer.setBorderPainted(false);

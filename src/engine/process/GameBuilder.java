@@ -7,6 +7,7 @@ import config.GameConfiguration;
 import engine.item.Ingredient;
 import engine.item.Recette;
 import engine.item.Stockage;
+import engine.map.Block;
 import engine.map.Map;
 import engine.map.Zone;
 import engine.mobile.Cuisinier;
@@ -111,8 +112,9 @@ public class GameBuilder {
     public static ArrayList<Cuisinier> buildCuisiniers(Map map) {
         ArrayList<Cuisinier> cuisiniers = new ArrayList<>();
         int h = map.getLineCount();
+        String nomCuisinier = SimulationUtility.getRandomCuisinierName();
 
-        cuisiniers.add(new Cuisinier(map.getBlock(h-3, 5), 1, 100, "Jean"));
+        cuisiniers.add(new Cuisinier(map.getBlock(h-3, 5), 1, 100, nomCuisinier));
         return cuisiniers;
     }
 
@@ -125,8 +127,9 @@ public class GameBuilder {
     public static ArrayList<Serveur> buildServeurs(Map map) {
         ArrayList<Serveur> serveurs = new ArrayList<>();
         int h = map.getLineCount();
+        String nomServeuse = SimulationUtility.getRandomServeuseName();
 
-        serveurs.add(new Serveur(map.getBlock(h-3, 10), 1, 50, "Marie"));
+        serveurs.add(new Serveur(map.getBlock(h-3, 10), 1, 50, nomServeuse));
         return serveurs;
     }
 
@@ -250,5 +253,18 @@ public class GameBuilder {
         succes.add(new Succes("Bonne reputation", "Atteindre 75 de reputation", 300));
         succes.add(new Succes("Semaine chargee", "Jouer 7 jours", 400));
         return succes;
+    }
+
+    public static ArrayList<Block> buildArbres(Map map) {
+        ArrayList<Block> arbres = new ArrayList<>();
+        int[][] coordsArbres = {
+                {4, 5}, {3, 16}, {6, 32}, {4, 40},
+                {16, 25}, {20, 35}, {15, 41}, {22, 28}
+        };
+
+        for (int[] coord : coordsArbres) {
+            arbres.add(map.getBlock(coord[0], coord[1]));
+        }
+        return arbres;
     }
 }
