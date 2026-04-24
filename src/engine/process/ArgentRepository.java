@@ -101,5 +101,9 @@ public class ArgentRepository {
     public List<Integer> getArgentHistory() {
         return argentHistory;
     }
+
+    public void setArgentHistory(List<Integer> argentHistory) {
+        this.argentHistory = argentHistory;
+    }
 }
 

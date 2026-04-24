@@ -34,7 +34,7 @@ public class Simulation {
     private MobileElementManager manager;
     private RestaurantManager restaurantManager;
 
-    private ArrayList<Meuble> meubles;
+    private ArrayList<Meuble> meubles = new ArrayList<Meuble>();
 
     private ArrayList<Recette> recettes;
     private ArrayList<Ingredient> ingredients;
@@ -84,7 +84,7 @@ public class Simulation {
 
         map = GameBuilder.buildMap();
         zones = GameBuilder.buildZones(map);
-        meubles = GameBuilder.buildMeubles(map);
+        ArrayList<Meuble> meublesInitiaux = GameBuilder.buildMeubles(map);
         ArrayList<Serveur> serveurs = GameBuilder.buildServeurs(map);
         ArrayList<Cuisinier> cuisiniers = GameBuilder.buildCuisiniers(map);
 
@@ -110,7 +110,7 @@ public class Simulation {
         comptoirC = map.getBlock(h-5, 9);
         entree = map.getBlock(h-1, 15);
 
-        for (Meuble meuble : new ArrayList<>(meubles)) {
+        for (Meuble meuble : meublesInitiaux) {
             Zone zoneMeuble = ZoneManager.getZone(meuble.getPosition(), zones);
             restaurantManager.enregistrerMeuble(meuble, zoneMeuble);
         }
@@ -135,6 +135,37 @@ public class Simulation {
     }
 
 
+
+
+    /**
+     * Nettoie tout l'état actuel (meubles, employés, zones, stats) pour préparer
+     * le chargement d'une nouvelle partie depuis une sauvegarde.
+     */
+    public void reinitialiserPourChargement() {
+        ArgentRepository.getInstance().reset();
+        PropreteRepository.getInstance().reset();
+        ReputationRepository.getInstance().reset();
+        SuccesRepository.getInstance().reset();
+
+        commandesEnAttente.clear();
+        commandesACuisiner.clear();
+        commandesCuisson.clear();
+        commandesPretes.clear();
+        
+        tempsCuisson.clear();
+        tempsManger.clear();
+        clientEnTrainManger.clear();
+        serveurQuiAServi.clear();
+
+        blocksOccupees.clear();
+        
+        meubles.clear();
+        manager.vider();
+        for (Zone zone : zones.values()) {
+            zone.getBlocks().clear();
+        }
+        gameStats.clear();
+    }
 
     /**
      * Fait avancer le jeu d'un instant (bouge les personnages, le chrono...).
@@ -596,192 +627,92 @@ public class Simulation {
         return (int) (Math.random() * (max + 1 - min)) + min;
     }
 
-    /**
-     * Renvoie la carte du jeu.
-     * 
-     * @return la carte en 2 dimensions
-     */
     public Map getMap() {
         return map;
     }
 
-    /**
-     * Renvoie un dictionnaire contenant les zones (Cuisine, Salle...).
-     * 
-     * @return les zones disponibles
-     */
     public HashMap<String, Zone> getZones() {
         return zones;
     }
 
-    /**
-     * Renvoie la liste de tous les meubles du restaurant.
-     * 
-     * @return la liste des meubles
-     */
     public ArrayList<Meuble> getMeubles() {
         return meubles;
     }
 
-    /**
-     * Renvoie l'horloge du jeu.
-     * 
-     * @return le chrono (Chronometer)
-     */
     public Chronometer getChronometre() {
         return chronometre;
     }
 
-    /**
-     * Renvoie l'objet qui gère les calculs d'argent pour aujourd'hui.
-     * 
-     * @return les statistiques financières du jour
-     */
+
     public DayStatistics getDayStatistics() {
         return dayStatistics;
     }
 
-    /**
-     * Renvoie le cahier de recettes avec les plats qu'on sait faire.
-     * 
-     * @return la liste des recettes
-     */
     public ArrayList<Recette> getRecettes() {
         return recettes;
     }
 
-    /**
-     * Indique si on manque d'ingrédients pour cuisiner.
-     * 
-     * @return vrai si le ventre est presque vide
-     */
     public boolean isAlerteStock() {
         return alerteStock;
     }
 
-    /**
-     * Indique si le jeu est actuellement arrêté (ex: la nuit ou entre 2 menus).
-     * 
-     * @return vrai si en pause
-     */
     public boolean isStop() {
         return stop;
     }
 
-    /**
-     * Force la simulation à s'arrêter ou à reprendre.
-     * 
-     * @param stop vrai pour mettre en pause
-     */
     public void setStop(boolean stop) {
         this.stop = stop;
     }
 
-    /**
-     * Change la vitesse du jeu.
-     * 
-     * @param speedMultiplier nouveau multiplicateur (x1, x2, x3)
-     */
     public void setSpeedMultiplier(int speedMultiplier) {
         this.speedMultiplier = speedMultiplier;
     }
 
-    /**
-     * Récupère la vitesse de la simulation.
-     * 
-     * @return la vitesse de jeu actuelle
-     */
     public int getSpeedMultiplier() {
         return speedMultiplier;
     }
 
-    /**
-     * Récupère le gestionnaire qui fait avancer tout le monde (clients, serveurs).
-     * 
-     * @return le coordinateur des mouvements
-     */
     public MobileElementManager getManager() {
         return this.manager;
     }
 
-    /**
-     * Renvoie les commandes prises qu'aucun serveur n'a encore emmenées en cuisine.
-     * 
-     * @return liste des commandes tout juste passées
-     */
     public ArrayList<Commande> getCommandesEnAttente() {
         return new ArrayList<>(commandesEnAttente);
     }
 
-    /**
-     * Renvoie toutes les commandes à faire par les cuisiniers.
-     * 
-     * @return liste des commandes prêtes à cuire
-     */
     public ArrayList<Commande> getCommandesACuisiner() {
         return new ArrayList<>(commandesACuisiner);
     }
 
-    /**
-     * Renvoie la liste des plats en plein dans le four.
-     * 
-     * @return commandes en préparation
-     */
     public ArrayList<Commande> getCommandesCuisson() {
         return new ArrayList<>(commandesCuisson);
     }
 
-    /**
-     * Renvoie la liste des plats cuits et chauds en attente d'être servis.
-     * 
-     * @return plats posés au comptoir
-     */
     public ArrayList<Commande> getCommandesPretes() {
         return new ArrayList<>(commandesPretes);
     }
 
-    /**
-     * Récupère toutes les cases de la grille où on ne peut pas marcher (murs, meubles).
-     * 
-     * @return liste des blocs bloqués
-     */
     public ArrayList<Block> getBlocksOccupees() {
         return blocksOccupees;
     }
 
-    /**
-     * Récupère la case qui sert de dépôt aux plats pour les cuisiniers.
-     * 
-     * @return case du comptoir
-     */
     public Block getComptoirC(){
         return comptoirC;
     }
 
-    /**
-     * Récupère la case du comptoir où les serveurs posent/prennent les plats.
-     * 
-     * @return case du passe plat
-     */
     public Block getComptoirS(){
         return comptoirS;
     }
 
-    /**
-     * Récupère le système gérant l'achat de meubles et de salariés.
-     * 
-     * @return manager du mode édition
-     */
     public RestaurantManager getRestaurantManager() { 
         return restaurantManager; 
     }
 
-    /**
-     * Récupère les compteurs globaux du jeu (tout ce qui a été vendu depuis le début).
-     * 
-     * @return grand tableau des totaux de la partie (Dico)
-     */
     public HashMap<String, Integer> getGameStats() { 
         return gameStats; 
+    }
+
+    public ArrayList<Ingredient> getIngredients() {
+        return ingredients;
     }
 }

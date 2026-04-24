@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import engine.process.SaveManager;
 import engine.process.SimulationUtility;
 import gui.TutorielGUI;
 import gui.util.FondPanel;
@@ -42,9 +43,10 @@ public class EcranTitreGUI extends JFrame {
     private JPanel boutonPanel = new JPanel();
     private FondPanel fondPanel;
 
-    private JButton jouerButton = new MenuButton("JOUER");
-    private JButton quitterButton = new MenuButton("QUITTER");
-    private JButton tutoButton = new MenuButton("TUTORIEL");
+    private JButton jouerButton    = new MenuButton("NOUVELLE PARTIE");
+    private JButton chargerButton  = new MenuButton("CHARGER");
+    private JButton quitterButton  = new MenuButton("QUITTER");
+    private JButton tutoButton     = new MenuButton("TUTORIEL");
 
     private JLabel creditLabel = new JLabel();
     private JLabel titreLabel = new JLabel();
@@ -69,15 +71,16 @@ public class EcranTitreGUI extends JFrame {
     }
 
     private void init() {
-        boutonPanel.setLayout(new GridLayout(3, 1, 0, 20));
+        boutonPanel.setLayout(new GridLayout(4, 1, 0, 20));
 
-        boutonPanel.setPreferredSize(new Dimension(350, 250));
+        boutonPanel.setPreferredSize(new Dimension(350, 330));
         boutonPanel.setOpaque(false);
 
         initBouton();
         initLabel();
 
         boutonPanel.add(jouerButton);
+        boutonPanel.add(chargerButton);
         boutonPanel.add(tutoButton);
         boutonPanel.add(quitterButton);
 
@@ -96,8 +99,14 @@ public class EcranTitreGUI extends JFrame {
 
     private void initBouton() {
         jouerButton.addActionListener(new JouerButtonAction());
+        chargerButton.addActionListener(new ChargerButtonAction());
         tutoButton.addActionListener(new TutoButtonAction());
         quitterButton.addActionListener(new QuitterButtonAction());
+
+        // Grise le bouton si aucune sauvegarde n'existe
+        if (!SaveManager.sauvegardeExiste()) {
+            chargerButton.setEnabled(false);
+        }
     }
 
     private void initLabel() {
@@ -129,6 +138,18 @@ public class EcranTitreGUI extends JFrame {
             logger.trace("Bouton JOUER cliqué, lancement de MainGUI");
             dispose();
             MainGUI GUI = new MainGUI();
+            Thread gameThread = new Thread(GUI);
+            gameThread.start();
+        }
+    }
+
+    private class ChargerButtonAction implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            logger.trace("Bouton CHARGER cliqué, lancement de MainGUI avec sauvegarde");
+            dispose();
+            MainGUI GUI = new MainGUI();
+            GUI.chargerSauvegarde();
             Thread gameThread = new Thread(GUI);
             gameThread.start();
         }

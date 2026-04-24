@@ -68,6 +68,27 @@ public class MobileElementManager {
         }
     }
 
+    /**
+     * Vide complètement les listes d'employés, de clients et tous leurs états.
+     * Utilisé lors du chargement d'une sauvegarde pour repartir de zéro.
+     */
+    public void vider() {
+        this.serveurs.clear();
+        this.cuisiniers.clear();
+        this.clients.clear();
+        this.serveurEtats.clear();
+        this.cuisinierEtats.clear();
+        this.serveurDestinations.clear();
+        this.cuisinierDestinations.clear();
+        this.serveurCommandes.clear();
+        this.cuisinierCommandes.clear();
+        this.tablesVides.clear();
+        this.foursVides.clear();
+        this.tableOccupee.clear();
+        this.fourOccupe.clear();
+        this.clientDestinations.clear();
+    }
+
 
 
     /**

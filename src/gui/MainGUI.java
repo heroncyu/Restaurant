@@ -15,6 +15,7 @@ import config.GameConfiguration;
 import engine.map.Block;
 import engine.mobile.Meuble;
 import engine.process.ArgentRepository;
+import engine.process.SaveManager;
 import engine.process.Simulation;
 import gui.info.InfoDisplay;
 import gui.menu.MenuDisplay;
@@ -76,6 +77,14 @@ public class MainGUI extends JFrame implements Runnable {
         setVisible(true);
     }
 
+    /**
+     * Charge une sauvegarde existante et l'applique à la simulation.
+     * Doit être appelée après le constructeur, avant le démarrage du thread.
+     */
+    public void chargerSauvegarde() {
+        SaveManager.charger(simulation);
+    }
+
     private class CliqueGauche extends MouseAdapter {
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -121,6 +130,7 @@ public class MainGUI extends JFrame implements Runnable {
                     new BilanWindow(this, simulation.getDayStatistics());
                     simulation.getDayStatistics().update();
                     simulation.setStop(false);
+                    SaveManager.sauvegarder(simulation);
                 }
             }
             Succes s = SuccesRepository.getInstance().Notification();

@@ -253,6 +253,10 @@ public class DayStatistics {
         this.nbCommandesDuJour = nbCommandesDuJour;
     }
 
+    public void setNbCommandesTotal(int nbCommandesTotal) {
+        this.nbCommandesTotal = nbCommandesTotal;
+    }
+
     public void setArgentJourPrecedent(int argentJourPrecedent) {
         this.argentJourPrecedent = argentJourPrecedent;
     }

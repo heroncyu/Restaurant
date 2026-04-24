@@ -59,7 +59,7 @@ public class GameOverWindow extends JDialog {
     private JTextArea textExplication = new JTextArea();
     private JLabel labelRemerciement = new JLabel();
 
-    private JButton btnRecommencer = new JButton("Recommencer");
+    private JButton btnRecommencer = new JButton("Retour au menu principal");
     private JButton btnSuivant = new JButton("Suivant");
     private JButton btnPrecedent = new JButton("Précédent");
 
@@ -82,7 +82,7 @@ public class GameOverWindow extends JDialog {
 
         init();
         
-        setSize(1000, 800);
+        setSize(1280, 920);
         setLocationRelativeTo(owner);
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setVisible(true);
@@ -138,8 +138,19 @@ public class GameOverWindow extends JDialog {
 
     private void initStats() {
         panelStats.setOpaque(false);
-        panelStats.setLayout(new GridLayout(gameStats.size(), 2, 20, 10));
-        panelStats.setBorder(new EmptyBorder(50, 50, 50, 50));
+        panelStats.setLayout(new BorderLayout());
+
+        JLabel titleLabel = new JLabel("Résumer de la partie");
+        titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        titleLabel.setBorder(new EmptyBorder(20, 0, 0, 0));
+        panelStats.add(titleLabel, BorderLayout.NORTH);
+
+        JPanel gridPanel = new JPanel();
+        gridPanel.setOpaque(false);
+        gridPanel.setLayout(new GridLayout(gameStats.size(), 2, 20, 10));
+        gridPanel.setBorder(new EmptyBorder(30, 50, 50, 50));
 
         Iterator<String> iterator = gameStats.keySet().iterator();
         while (iterator.hasNext()) {
@@ -186,10 +197,11 @@ public class GameOverWindow extends JDialog {
             valueLabel.setForeground(Color.WHITE);
             valueLabel.setHorizontalAlignment(JLabel.LEFT);
 
-            panelStats.add(keyLabel);
-            panelStats.add(valueLabel);
+            gridPanel.add(keyLabel);
+            gridPanel.add(valueLabel);
         }
 
+        panelStats.add(gridPanel, BorderLayout.CENTER);
         panelCards.add(panelStats, "Stats");
     }
 
@@ -234,7 +246,7 @@ public class GameOverWindow extends JDialog {
 
     private String getExplication() {
         String explication = "Malheureusement, votre restaurant a fait faillite. En effet, vous n'avez pas su gerer votre argent et vous êtes tombé en négatif à la fin de la journée, ce qui a entrainé la fermeture de votre restaurant. \n\n";
-        explication += "Mais ce n'est pas comme si vous n'aviez rien accompli. En effet, vous pouvez cliquer sur le bouton \"Suivant\" ci-dessous pour voir les différentes statistiques de votre partie ou cliquer sur le bouton \"Recommencer\" pour commencer une nouvelle partie en retournant à l'écran titre. ";
+        explication += "Mais ce n'est pas comme si vous n'aviez rien accompli. En effet, vous pouvez cliquer sur le bouton \"Suivant\" ci-dessous pour voir les différentes statistiques de votre partie ou cliquer sur le bouton \"Retour au menu principal\" pour commencer une nouvelle partie en retournant à l'écran titre. ";
         return explication;
     }
 
