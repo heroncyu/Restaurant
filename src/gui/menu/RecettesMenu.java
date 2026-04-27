@@ -99,7 +99,7 @@ public class RecettesMenu extends JDialog {
         infos.add(ventesLabel);
 
         if (!debloquee) {
-            JLabel verrou = new JLabel("VERROUILLE");
+            JLabel verrou = new JLabel("VERROUILLÉ");
             verrou.setFont(new Font("Segoe UI", Font.BOLD, 12));
             verrou.setForeground(Color.RED);
             infos.add(verrou);
@@ -107,8 +107,8 @@ public class RecettesMenu extends JDialog {
 
         carte.add(imgLabel, BorderLayout.WEST);
         carte.add(infos, BorderLayout.CENTER);
-        carte.setMaximumSize(new Dimension(560, 110));
-        carte.setPreferredSize(new Dimension(560, 110));
+        carte.setMaximumSize(new Dimension(560, 130));
+        carte.setPreferredSize(new Dimension(560, 130));
         return carte;
     }
 }
