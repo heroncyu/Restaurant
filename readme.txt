@@ -1,52 +1,63 @@
-====================================================================
-           GUIDE D'EXÉCUTION DU PROJET CROUSTYCOON (RESTAURANT)
-                            SOUS ECLIPSE
-====================================================================
+# CrousTycoon — Simulateur de Gestion de Restaurant
 
-Ce document explique comment importer et lancer le jeu de gestion de restaurant dans l'environnement de développement Eclipse.
+**CrousTycoon** est un jeu de gestion de restaurant en temps réel développé en **Java**. Dans ce simulateur, le joueur incarne un gérant qui doit faire prospérer son établissement jour après jour, en gérant son personnel, ses stocks, ses finances et la satisfaction de ses clients.
 
-PRÉREQUIS IMPORTANT
--------------------
-Le jeu a été développé pour être compilé et exécuté spécifiquement sous Java 8 (JRE / JDK 1.8). Assurez-vous que votre environnement Eclipse utilise bien cette version pour éviter toute erreur de compatibilité.
+Ce projet a été réalisé en trinôme sur une période de 4 mois dans le cadre de l'UE "Génie Logiciel" de notre deuxième année de Licence Informatique à CY Cergy Paris Université.
 
-1. IMPORTER LE PROJET
----------------------
-  a) Ouvrez Eclipse.
-  b) Dans la barre de menu supérieure, cliquez sur "File" puis sur "Import...".
-  c) Déroulez le dossier "General" et sélectionnez "Existing Projects into Workspace".
-  d) Cliquez sur "Next".
-  e) Cliquez sur "Browse..." à côté de "Select root directory" et sélectionnez le dossier racine du projet (le dossier qui contient src/, bin/, etc.).
-  f) Assurez-vous que le projet est bien coché dans la liste "Projects" puis cliquez sur "Finish".
+![Capture d'écran de l'interface du jeu](https://heroncyu.alwaysdata.net/images/glp.jpg)
+*Aperçu de la phase de service en temps réel.*
 
-2. VÉRIFIER LES DÉPENDANCES (Log4j, JFreeChart, JUnit)
-------------------------------------------------------
-  Le projet utilise des librairies externes. Si vous rencontrez des erreurs (petites croix rouges sur les fichiers) :
-  a) Faites un clic droit sur le dossier du projet dans le "Package Explorer" à gauche.
-  b) Allez dans "Build Path" > "Configure Build Path...".
-  c) Allez dans l'onglet "Libraries".
-  d) Pour Log4j et JFreeChart : cliquez sur "Add External JARs..." et sélectionnez les fichiers .jar respectifs.
-  e) Pour JUnit : s'il n'est pas déjà configuré, cliquez sur "Add Library...", sélectionnez "JUnit", choisissez la version et cliquez sur "Finish".
-  f) Cliquez enfin sur "Apply and Close".
+## Fonctionnalités principales (Gameplay)
 
-3. LANCER LE JEU
-----------------
-  Le point d'entrée principal de l'application est situé dans le package "app".
-  
-  a) Dans le "Package Explorer", ouvrez le dossier "src" puis le package "app".
-  b) Repérez le fichier nommé "Main.java".
-  c) Faites un clic droit sur ce fichier.
-  d) Allez dans "Run As" > "Java Application".
+Le jeu se divise en deux phases distinctes :
+* **La phase de service (Jour) :** Simulation en temps réel. Les clients arrivent, s'installent, commandent et mangent. Le joueur doit gérer les alertes de stocks, la propreté de la salle, et peut étendre son restaurant (mode construction) ou acheter des meubles.
+* **La phase de gestion (Nuit) :** Affichage d'un bilan financier détaillé (courbes de bénéfices, dépenses, salaires) permettant de prendre des décisions stratégiques pour le lendemain.
 
-Le jeu devrait alors se compiler et la fenêtre principale de CrousTycoon va s'ouvrir. 
+## Architecture et Choix Techniques
 
-4. EXÉCUTER LES TESTS (JUnit)
------------------------------
-  Le projet contient plusieurs tests unitaires pour vérifier le bon fonctionnement du moteur.
-  
-  a) Dans le "Package Explorer", ouvrez le dossier "src" puis le package "test" (ou "test.unit" s'il existe).
-  b) Vous y trouverez des fichiers comme TestSimulation.java, TestDayStatistics.java, etc.
-  c) Pour lancer tous les tests d'un coup, faites un clic droit sur le package "test".
-  d) Allez dans "Run As" > "JUnit Test".
-  e) La vue JUnit s'ouvrira dans Eclipse avec une barre verte si tout fonctionne correctement.
+Ce projet a été conçu avec une approche rigoureuse d'ingénierie logicielle pour garantir un code maintenable et évolutif :
 
-Bon jeu !
+* **Architecture MVC :** Séparation stricte entre le Modèle (logique métier, boucle de jeu), la Vue (affichage graphique avec **Java Swing**) et le Contrôleur (gestion des clics et événements).
+* **Design Patterns :**
+  * *Factory* : Création dynamique des différents types de clients (Standard, Star, Critique).
+  * *Singleton* : Gestion centralisée des dépôts de données (ArgentRepository, StockRepository).
+  * *Strategy* : Délégation du rendu visuel de la grille (PaintStrategy).
+* **Outils & Bibliothèques externes :**
+  * **JFreeChart :** Génération des graphiques financiers dans le bilan de fin de journée.
+  * **Log4j 2 :** Traçabilité des événements et débogage.
+  * **JUnit 5 :** Tests unitaires validant la logique complexe (machine à états des entités, calculs économiques).
+
+---
+
+## Guide d'installation et d'exécution (sous Eclipse)
+
+### Prérequis
+Le jeu a été développé pour être compilé et exécuté sous **Java 8 (JRE / JDK 1.8)**. Assurez-vous que votre environnement Eclipse utilise cette version.
+
+### 1. Importer le projet
+1. Dans Eclipse, allez dans `File` > `Import...`.
+2. Déroulez `General` > `Existing Projects into Workspace` > `Next`.
+3. Cliquez sur `Browse...` (Select root directory) et sélectionnez le dossier racine du projet.
+4. Assurez-vous que le projet est coché puis cliquez sur `Finish`.
+
+### 2. Configurer les dépendances (Log4j, JFreeChart, JUnit)
+*Le projet utilise des librairies externes situées dans le dossier `lib/`.*
+1. Faites un clic droit sur le projet > `Build Path` > `Configure Build Path...`.
+2. Onglet `Libraries` :
+   * **Pour Log4j et JFreeChart :** Cliquez sur `Add External JARs...` et sélectionnez les fichiers `.jar` associés.
+   * **Pour JUnit :** S'il n'est pas configuré, cliquez sur `Add Library...` > `JUnit` > `Finish`.
+3. Cliquez sur `Apply and Close`.
+
+### 3. Lancer le jeu
+1. Dans le *Package Explorer*, ouvrez `src` > package `app`.
+2. Faites un clic droit sur `Main.java` > `Run As` > `Java Application`.
+
+### 4. Lancer les tests unitaires
+1. Ouvrez le dossier `src` > package `test`.
+2. Clic droit sur le package `test` > `Run As` > `JUnit Test`.
+3. La vue JUnit s'ouvrira (barre verte si tous les tests passent !).
+
+## Auteurs
+* **EL HAJAM Ayoub**
+* **HERON Sajid**
+* **BOUSSALEM Nassim**
